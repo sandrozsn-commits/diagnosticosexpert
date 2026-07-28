@@ -126,6 +126,10 @@
   --accent-foreground: oklch(0.984 0.003 247.858);
   --destructive: oklch(0.704 0.191 22.216);
   --destructive-foreground: oklch(0.984 0.003 247.858);
+  --success: oklch(0.7 0.15 152);
+  --success-foreground: oklch(0.14 0.02 152);
+  --warning: oklch(0.8 0.15 75);
+  --warning-foreground: oklch(0.2 0.04 75);
   --border: oklch(1 0 0 / 10%);
   --input: oklch(1 0 0 / 15%);
   --ring: oklch(0.551 0.027 264.364);
@@ -152,5 +156,11 @@
   body {
     background-color: var(--color-background);
     color: var(--color-foreground);
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1, h2, h3 {
+    letter-spacing: -0.02em;
   }
 }
