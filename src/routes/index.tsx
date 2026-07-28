@@ -17,7 +17,7 @@ export const Route = createFileRoute("/")({
       { property: "og:title", content: "Laboratório de Diagnóstico em Comandos Elétricos" },
       {
         property: "og:description",
-        content: "Aprenda diagnosticando falhas reais em painéis industriais. Casos investigativos, XP e conquistas.",
+        content: "Simulador de falhas em comandos elétricos industriais: resolva casos reais por árvore de decisões, ganhe XP e domine o raciocínio de diagnóstico.",
       },
     ],
   }),
