@@ -7,12 +7,12 @@ import { Award, Flame, Lock } from "lucide-react";
 export const Route = createFileRoute("/progresso")({
   head: () => ({
     meta: [
-      { title: "Seu progresso — Laboratório de Diagnóstico" },
+      { title: "Seu desempenho — Central de Ocorrências" },
       {
         name: "description",
-        content: "Acompanhe XP, nível, precisão de diagnóstico, conquistas e as áreas em que você mais erra.",
+        content: "Acompanhe XP, nível, precisão de diagnóstico, conquistas e as áreas com mais diagnósticos incorretos.",
       },
-      { property: "og:title", content: "Seu progresso — Laboratório de Diagnóstico" },
+      { property: "og:title", content: "Seu desempenho — Central de Ocorrências" },
       { property: "og:description", content: "XP, nível, precisão, conquistas e pontos fracos por categoria." },
     ],
   }),
@@ -28,9 +28,9 @@ function ProgressPage() {
 
   return (
     <AppShell>
-      <h1 className="text-3xl font-semibold">Seu progresso</h1>
+      <h1 className="text-3xl font-semibold">Seu desempenho técnico</h1>
       <p className="mt-2 text-sm text-muted-foreground">
-        Precisão é o número de decisões corretas sobre o total de decisões tomadas.
+        Precisão é o número de ações técnicas corretas sobre o total de ações tomadas.
       </p>
 
       <section className="mt-8 rounded-xl border border-border p-5">
@@ -54,8 +54,8 @@ function ProgressPage() {
       </section>
 
       <section className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <Box label="Resolvidos" value={`${stats.solvedCount}`} />
-        <Box label="Pendentes" value={`${stats.pending}`} />
+        <Box label="Encerradas" value={`${stats.solvedCount}`} />
+        <Box label="Em aberto" value={`${stats.pending}`} />
         <Box label="Precisão" value={`${stats.precision}%`} />
         <Box label="Tempo médio" value={stats.avgSeconds ? `${Math.round(stats.avgSeconds / 60)} min` : "—"} />
       </section>
@@ -82,7 +82,7 @@ function ProgressPage() {
         <h2 className="text-lg font-semibold">Onde você mais erra</h2>
         {weakest.length === 0 ? (
           <p className="mt-3 text-sm text-muted-foreground">
-            Resolva alguns casos para o sistema mapear seus pontos fracos.
+            Atenda algumas ocorrências para o sistema mapear seus pontos fracos.
           </p>
         ) : (
           <ul className="mt-4 divide-y divide-border overflow-hidden rounded-xl border border-border">
@@ -99,7 +99,7 @@ function ProgressPage() {
       </section>
 
       <section className="mt-10">
-        <h2 className="text-lg font-semibold">Casos pendentes</h2>
+        <h2 className="text-lg font-semibold">Ocorrências em aberto</h2>
         <ul className="mt-4 space-y-2">
           {CASES.filter((c) => !stats.solvedIds.has(c.id)).map((c) => (
             <li key={c.id}>
