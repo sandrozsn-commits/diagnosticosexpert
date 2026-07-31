@@ -11,17 +11,17 @@ export function AppShell({ children }: { children: ReactNode }) {
             <span className="flex size-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
               <Zap className="size-4" />
             </span>
-            Laboratório de Diagnóstico
+            Central de Diagnóstico
           </Link>
           <nav className="ml-auto flex items-center gap-1 text-sm">
-            <NavLink to="/">Casos</NavLink>
+            <NavLink to="/">Ocorrências</NavLink>
             <NavLink to="/progresso">Progresso</NavLink>
           </nav>
         </div>
       </header>
       <main className="mx-auto max-w-6xl px-5 py-10">{children}</main>
       <footer className="border-t border-border py-8 text-center text-xs text-muted-foreground">
-        Comandos elétricos industriais — aprenda diagnosticando, não decorando.
+        Comandos elétricos industriais — atendimento técnico simulado.
       </footer>
     </div>
   );
