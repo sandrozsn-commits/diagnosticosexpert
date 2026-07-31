@@ -1,24 +1,28 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { CASES, CATEGORIES, type Level } from "@/data/cases";
+import { briefingOf, occurrenceCode } from "@/data/occurrence";
 import { useProgress, statsOf, levelOf } from "@/lib/progress";
 import { AppShell } from "@/components/app-shell";
-import { CheckCircle2, Clock, Flame, Target } from "lucide-react";
+import { CheckCircle2, Clock, Cpu, Flame, Radio, Target, Wrench } from "lucide-react";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Laboratório de Diagnóstico em Comandos Elétricos" },
+      { title: "Central de Ocorrências — Diagnóstico em Comandos Elétricos" },
       {
         name: "description",
         content:
-          "Simulador de falhas em comandos elétricos industriais: resolva casos reais por árvore de decisões, ganhe XP e domine o raciocínio de diagnóstico.",
+          "Assuma chamados técnicos reais de manutenção industrial e desenvolva seu raciocínio de diagnóstico em comandos elétricos.",
       },
-      { property: "og:title", content: "Laboratório de Diagnóstico em Comandos Elétricos" },
+      { property: "og:title", content: "Central de Ocorrências — Diagnóstico em Comandos Elétricos" },
       {
         property: "og:description",
-        content: "Simulador de falhas em comandos elétricos industriais: resolva casos reais por árvore de decisões, ganhe XP e domine o raciocínio de diagnóstico.",
+        content:
+          "Assuma chamados técnicos reais de manutenção industrial e desenvolva seu raciocínio de diagnóstico em comandos elétricos.",
       },
+      { property: "og:type", content: "website" },
+      { name: "twitter:card", content: "summary_large_image" },
     ],
   }),
   component: Index,
@@ -52,16 +56,18 @@ function Index() {
   return (
     <AppShell>
       <section className="max-w-2xl">
-        <p className="text-sm font-medium text-primary">Simulador de falhas industriais</p>
-        <h1 className="mt-3 text-4xl font-semibold">Descubra o defeito. Não decore a resposta.</h1>
+        <p className="font-mono text-xs uppercase tracking-widest text-primary">
+          Manutenção elétrica industrial
+        </p>
+        <h1 className="mt-3 text-4xl font-semibold">Central de Ocorrências</h1>
         <p className="mt-4 text-base leading-relaxed text-muted-foreground">
-          Cada caso é uma ocorrência real de campo. Você decide o que medir, o sistema responde com a
-          leitura do instrumento, e o defeito só aparece quando o seu raciocínio chega lá.
+          Assuma chamados técnicos reais e desenvolva seu raciocínio de diagnóstico em comandos
+          elétricos.
         </p>
       </section>
 
       <section className="mt-10 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <Stat icon={<CheckCircle2 className="size-4" />} label="Casos resolvidos" value={`${stats.solvedCount}/${CASES.length}`} />
+        <Stat icon={<CheckCircle2 className="size-4" />} label="Ocorrências encerradas" value={`${stats.solvedCount}/${CASES.length}`} />
         <Stat icon={<Target className="size-4" />} label="Precisão" value={`${stats.precision}%`} />
         <Stat icon={<Clock className="size-4" />} label="Tempo médio" value={stats.avgSeconds ? `${Math.round(stats.avgSeconds / 60)} min` : "—"} />
         <Stat icon={<Flame className="size-4" />} label="Sequência" value={`${progress.streak} dia${progress.streak === 1 ? "" : "s"}`} />
@@ -95,39 +101,74 @@ function Index() {
           ))}
         </div>
 
-        <ul className="mt-6 divide-y divide-border overflow-hidden rounded-xl border border-border">
+        <div className="mt-6 grid gap-4 lg:grid-cols-2">
           {filtered.map((c) => {
             const solved = stats.solvedIds.has(c.id);
+            const b = briefingOf(c);
             return (
-              <li key={c.id}>
-                <Link
-                  to="/caso/$caseId"
-                  params={{ caseId: c.id }}
-                  className="flex flex-col gap-2 px-5 py-4 transition-colors hover:bg-secondary/60 sm:flex-row sm:items-center sm:gap-5"
-                >
+              <article
+                key={c.id}
+                className="flex flex-col rounded-xl border border-border bg-card p-5 transition-colors hover:border-primary/40"
+              >
+                <div className="flex items-center justify-between gap-3">
                   <span className="font-mono text-xs text-muted-foreground">
-                    #{String(c.number).padStart(2, "0")}
+                    Ocorrência {occurrenceCode(c.number)}
                   </span>
-                  <span className="flex-1">
-                    <span className="flex items-center gap-2 font-medium">
-                      {c.title}
-                      {solved && <CheckCircle2 className="size-4 text-success" />}
-                    </span>
-                    <span className="mt-1 line-clamp-1 block text-sm text-muted-foreground">{c.symptom}</span>
+                  <span
+                    className={`rounded-md px-2 py-0.5 font-mono text-[10px] uppercase tracking-wide ${
+                      solved
+                        ? "bg-success/10 text-success"
+                        : "bg-secondary text-secondary-foreground"
+                    }`}
+                  >
+                    {solved ? "Encerrada" : "Aberta"}
                   </span>
-                  <span className="flex items-center gap-2 text-xs text-muted-foreground">
-                    <Badge>{c.category}</Badge>
-                    <Badge>{LEVEL_LABEL[c.level]}</Badge>
-                    <span>{c.minutes} min</span>
-                    <span className="font-medium text-primary">+{c.xp} XP</span>
+                </div>
+
+                <h2 className="mt-3 text-lg font-semibold">{c.title}</h2>
+
+                <dl className="mt-4 grid grid-cols-2 gap-3 text-xs">
+                  <Field icon={<Wrench className="size-3.5" />} label="Equipamento" value={b.equipment} />
+                  <Field icon={<Cpu className="size-3.5" />} label="Sistema" value={b.system} />
+                  <Field icon={<Radio className="size-3.5" />} label="Dificuldade" value={LEVEL_LABEL[c.level]} />
+                  <Field icon={<Clock className="size-3.5" />} label="Tempo estimado" value={`${c.minutes} min`} />
+                </dl>
+
+                <div className="mt-4 rounded-lg bg-secondary/60 p-3">
+                  <span className="block text-[10px] uppercase tracking-wide text-muted-foreground">
+                    Sintoma relatado
                   </span>
-                </Link>
-              </li>
+                  <p className="mt-1 line-clamp-2 text-sm text-muted-foreground">{c.symptom}</p>
+                </div>
+
+                <div className="mt-5 flex items-center justify-between">
+                  <span className="text-xs font-medium text-primary">+{c.xp} XP</span>
+                  <Link
+                    to="/caso/$caseId"
+                    params={{ caseId: c.id }}
+                    className="rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
+                  >
+                    Assumir Ocorrência
+                  </Link>
+                </div>
+              </article>
             );
           })}
-        </ul>
+        </div>
       </section>
     </AppShell>
+  );
+}
+
+function Field({ icon, label, value }: { icon: React.ReactNode; label: string; value: string }) {
+  return (
+    <div>
+      <dt className="flex items-center gap-1.5 text-[10px] uppercase tracking-wide text-muted-foreground">
+        {icon}
+        {label}
+      </dt>
+      <dd className="mt-0.5 text-sm">{value}</dd>
+    </div>
   );
 }
 
@@ -141,10 +182,6 @@ function Stat({ icon, label, value }: { icon: React.ReactNode; label: string; va
       <div className="mt-2 text-2xl font-semibold">{value}</div>
     </div>
   );
-}
-
-function Badge({ children }: { children: React.ReactNode }) {
-  return <span className="rounded-md bg-secondary px-2 py-0.5 text-xs text-secondary-foreground">{children}</span>;
 }
 
 function Chip({
