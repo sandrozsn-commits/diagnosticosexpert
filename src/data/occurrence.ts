@@ -64,6 +64,15 @@ const PRIORITY_BY_LEVEL: Record<Level, OccurrenceBriefing["priority"]> = {
 };
 
 export function briefingOf(c: DiagCase): OccurrenceBriefing {
+  if (c.equipment && c.company) {
+    return {
+      company: c.company,
+      sector: c.sector ?? "Manutenção elétrica",
+      equipment: c.equipment,
+      system: c.system ?? c.category,
+      priority: c.priority ?? PRIORITY_BY_LEVEL[c.level],
+    };
+  }
   return (
     BRIEFINGS[c.id] ?? {
       company: "Planta Industrial",
