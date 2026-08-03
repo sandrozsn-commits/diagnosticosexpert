@@ -4,6 +4,8 @@ import { getCase, type CaseNode, type Level } from "@/data/cases";
 import { briefingOf, occurrenceCode } from "@/data/occurrence";
 import { useProgress } from "@/lib/progress";
 import { AppShell } from "@/components/app-shell";
+import { CircuitDiagram } from "@/components/circuit-diagram";
+import { circuitOf } from "@/data/circuits";
 import { ArrowLeft, CheckCircle2, ClipboardList, RotateCcw, TriangleAlert } from "lucide-react";
 
 export const Route = createFileRoute("/caso/$caseId")({
@@ -53,6 +55,7 @@ function CasePage() {
   const { caseId } = Route.useParams();
   const diagCase = getCase(caseId)!;
   const briefing = briefingOf(diagCase);
+  const circuit = diagCase.circuitId ? circuitOf(diagCase.circuitId) : undefined;
   const { recordResult } = useProgress();
 
   const [started, setStarted] = useState(false);
@@ -286,9 +289,13 @@ function CasePage() {
             </ul>
           </Panel>
           <Panel title="Diagrama de comando">
-            <pre className="overflow-x-auto whitespace-pre-wrap font-mono text-xs leading-relaxed text-muted-foreground">
-              {diagCase.diagram.join("\n")}
-            </pre>
+            {circuit ? (
+              <CircuitDiagram spec={circuit.diagram} />
+            ) : (
+              <pre className="overflow-x-auto whitespace-pre-wrap font-mono text-xs leading-relaxed text-muted-foreground">
+                {(diagCase.diagram ?? []).join("\n")}
+              </pre>
+            )}
           </Panel>
         </aside>
       </div>
