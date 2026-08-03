@@ -29,8 +29,15 @@ export type DiagCase = {
   category: string;
   minutes: number;
   xp: number;
+  objective?: string;
+  circuitId?: string;
+  equipment?: string;
+  company?: string;
+  sector?: string;
+  system?: string;
+  priority?: "Baixa" | "Média" | "Alta";
   components: string[];
-  diagram: string[];
+  diagram?: string[];
   root: string;
   nodes: Record<string, CaseNode>;
   fault: string;
