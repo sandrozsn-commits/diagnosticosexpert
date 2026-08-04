@@ -1,6 +1,8 @@
 /**
  * Renderizador de diagramas de comando em SVG.
- * Puramente ilustrativo nesta etapa (sem interação).
+ * Simbologia ABNT / IEC 60617 no estilo CAD SIMU:
+ * barramentos horizontais no topo, ramais verticais, terminais numerados.
+ * Puramente ilustrativo (sem interação).
  */
 
 export type DiagramElement = {
@@ -22,196 +24,358 @@ export type DiagramSpec = {
   rungs: DiagramRung[];
 };
 
-const LEFT = 34;
-const RIGHT = 386;
-const TOP = 34;
+/* ---------------- geometria ---------------- */
 
-function rungY(i: number) {
-  return TOP + i * 62;
+const COL_W = 190;
+const PAD_L = 54;
+const PAD_R = 26;
+const TOP = 34;
+const STEP = 62;
+const BRANCH_DX = 54;
+
+const TERMINALS: Record<DiagramElement["t"], [string, string] | null> = {
+  no: ["13", "14"],
+  nc: ["11", "12"],
+  coil: ["A1", "A2"],
+  fuse: ["1", "2"],
+  thermal: ["95", "96"],
+  breaker: ["1", "2"],
+  sensor: ["3", "4"],
+  motor: null,
+  box: ["A1", "A2"],
+  wire: null,
+};
+
+/** separa "KM1 13/14 (selo)" em rótulo e par de terminais */
+function parseLabel(el: DiagramElement) {
+  const raw = el.label ?? "";
+  const all = [...raw.matchAll(/(\d{1,2})\s*\/\s*(\d{1,2})/g)];
+  const m = all[0];
+  const terminals = m ? ([m[1], m[2]] as [string, string]) : TERMINALS[el.t];
+  let text = raw;
+  for (const hit of all) text = text.replace(hit[0], "");
+  text = text
+    .replace(/·+/g, " ")
+    .replace(/\s{2,}/g, " ")
+    .trim();
+  return { text, terminals };
 }
 
-function Element({ el, cx, cy }: { el: DiagramElement; cx: number; cy: number }) {
-  const label = el.label ? (
+/* ---------------- símbolos ---------------- */
+
+function Symbol({
+  el,
+  x,
+  y,
+  side = "left",
+}: {
+  el: DiagramElement;
+  x: number;
+  y: number;
+  side?: "left" | "right" | "above";
+}) {
+  const { text, terminals } = parseLabel(el);
+  const isButton = /^-?S\d/i.test(text) || /botoeira/i.test(text);
+  const leftGap = el.t === "motor" ? 34 : el.t === "box" ? 26 : isButton ? 26 : 22;
+
+  const name = text ? (
     <text
-      x={cx}
-      y={cy - 16}
-      textAnchor="middle"
-      className="fill-muted-foreground"
-      fontSize="9"
+      x={side === "above" ? x : side === "left" ? x - leftGap : x + 30}
+      y={side === "above" ? y - 26 : y + 3}
+      textAnchor={side === "above" ? "middle" : side === "left" ? "end" : "start"}
+      fontSize="8.5"
       fontFamily="ui-monospace, monospace"
+      className="fill-muted-foreground"
+      stroke="none"
     >
-      {el.label}
+      {text}
     </text>
+  ) : null;
+
+
+
+  const term = terminals ? (
+    <>
+      <text
+        x={x + 15}
+        y={y - 12}
+        fontSize="7"
+        fontFamily="ui-monospace, monospace"
+        className="fill-muted-foreground"
+        stroke="none"
+      >
+        {terminals[0]}
+      </text>
+      <text
+        x={x + 15}
+        y={y + 18}
+        fontSize="7"
+        fontFamily="ui-monospace, monospace"
+        className="fill-muted-foreground"
+        stroke="none"
+      >
+        {terminals[1]}
+      </text>
+    </>
   ) : null;
 
   switch (el.t) {
     case "wire":
-      return <>{label}</>;
+      return null;
+
+    /* contato NA: lâmina inclinada, terminal superior aberto */
     case "no":
-      return (
-        <>
-          {label}
-          <line x1={cx - 10} y1={cy - 7} x2={cx - 10} y2={cy + 7} />
-          <line x1={cx + 10} y1={cy - 7} x2={cx + 10} y2={cy + 7} />
-          <line x1={cx - 10} y1={cy + 6} x2={cx + 10} y2={cy - 6} />
-        </>
-      );
-    case "nc":
-      return (
-        <>
-          {label}
-          <line x1={cx - 10} y1={cy - 7} x2={cx - 10} y2={cy + 7} />
-          <line x1={cx + 10} y1={cy - 7} x2={cx + 10} y2={cy + 7} />
-          <line x1={cx - 10} y1={cy + 6} x2={cx + 10} y2={cy - 6} />
-          <line x1={cx - 13} y1={cy - 9} x2={cx + 6} y2={cy + 10} />
-        </>
-      );
-    case "coil":
-      return (
-        <>
-          {label}
-          <rect x={cx - 14} y={cy - 9} width="28" height="18" rx="2" />
-          <line x1={cx} y1={cy - 9} x2={cx} y2={cy + 9} />
-        </>
-      );
-    case "fuse":
-      return (
-        <>
-          {label}
-          <rect x={cx - 12} y={cy - 6} width="24" height="12" rx="1" />
-        </>
-      );
     case "breaker":
       return (
         <>
-          {label}
-          <line x1={cx - 10} y1={cy} x2={cx - 10} y2={cy - 8} />
-          <line x1={cx - 10} y1={cy - 8} x2={cx + 9} y2={cy + 4} />
-          <line x1={cx + 10} y1={cy - 8} x2={cx + 10} y2={cy + 8} />
-          <line x1={cx + 4} y1={cy - 12} x2={cx + 14} y2={cy - 12} />
+          {name}
+          {term}
+          <line x1={x} y1={y - 14} x2={x} y2={y - 10} />
+          <line x1={x} y1={y + 10} x2={x} y2={y + 14} />
+          <line x1={x} y1={y + 10} x2={x + 11} y2={y - 11} />
+          {el.t === "breaker" && (
+            <>
+              <path d={`M${x - 4} ${y - 14} l4 4 l-4 4`} fill="none" />
+              <path d={`M${x - 4} ${y - 6} l4 4 l-4 4`} fill="none" />
+            </>
+          )}
+          {isButton && (
+            <>
+              <line x1={x - 12} y1={y} x2={x + 5} y2={y} strokeDasharray="2 2" />
+              <line x1={x - 12} y1={y - 4} x2={x - 12} y2={y + 4} />
+            </>
+          )}
         </>
       );
+
+    /* contato NF: lâmina inclinada apoiada na barra do terminal superior */
+    case "nc":
+      return (
+        <>
+          {name}
+          {term}
+          <line x1={x} y1={y - 14} x2={x} y2={y - 10} />
+          <line x1={x} y1={y + 10} x2={x} y2={y + 14} />
+          <line x1={x} y1={y + 10} x2={x + 11} y2={y - 11} />
+          <line x1={x + 5} y1={y - 10} x2={x + 14} y2={y - 10} />
+          <line x1={x + 11} y1={y - 10} x2={x + 11} y2={y - 14} />
+          {isButton && (
+            <>
+              <line x1={x - 12} y1={y} x2={x + 5} y2={y} strokeDasharray="2 2" />
+              <line x1={x - 12} y1={y - 4} x2={x - 12} y2={y + 4} />
+            </>
+          )}
+        </>
+      );
+
+    /* bobina de contator: retângulo A1/A2 */
+    case "coil":
+      return (
+        <>
+          {name}
+          {term}
+          <line x1={x} y1={y - 14} x2={x} y2={y - 10} />
+          <line x1={x} y1={y + 10} x2={x} y2={y + 14} />
+          <rect x={x - 13} y={y - 10} width="26" height="20" />
+        </>
+      );
+
+    /* fusível: retângulo com traço axial */
+    case "fuse":
+      return (
+        <>
+          {name}
+          {term}
+          <line x1={x} y1={y - 14} x2={x} y2={y - 11} />
+          <line x1={x} y1={y + 11} x2={x} y2={y + 14} />
+          <rect x={x - 7} y={y - 11} width="14" height="22" />
+          <line x1={x} y1={y - 11} x2={x} y2={y + 11} />
+        </>
+      );
+
+    /* relé térmico: retângulo com elemento bimetálico */
     case "thermal":
       return (
         <>
-          {label}
-          <rect x={cx - 14} y={cy - 8} width="28" height="16" rx="2" />
-          <path d={`M${cx - 8} ${cy + 3} l4 -6 l4 6 l4 -6`} fill="none" />
+          {name}
+          {term}
+          <line x1={x} y1={y - 14} x2={x} y2={y - 11} />
+          <line x1={x} y1={y + 11} x2={x} y2={y + 14} />
+          <rect x={x - 11} y={y - 11} width="22" height="22" />
+          <path d={`M${x - 5} ${y + 6} q5 -6 0 -12`} fill="none" />
+          <line x1={x - 5} y1={y} x2={x + 7} y2={y} />
         </>
       );
+
+    /* sensor de proximidade: losango com terminais */
     case "sensor":
       return (
         <>
-          {label}
-          <rect x={cx - 12} y={cy - 9} width="24" height="18" rx="2" />
-          <path d={`M${cx - 5} ${cy - 4} l10 8 M${cx - 5} ${cy + 4} l10 -8`} />
+          {name}
+          {term}
+          <line x1={x} y1={y - 14} x2={x} y2={y - 11} />
+          <line x1={x} y1={y + 11} x2={x} y2={y + 14} />
+          <path d={`M${x} ${y - 11} l11 11 l-11 11 l-11 -11 Z`} />
+          <line x1={x - 4} y1={y} x2={x + 4} y2={y} />
         </>
       );
+
+    /* motor trifásico */
     case "motor":
       return (
         <>
-          {label}
-          <circle cx={cx} cy={cy} r="14" />
-          <text x={cx} y={cy + 3.5} textAnchor="middle" fontSize="9" className="fill-current" stroke="none">
+          {name}
+          <line x1={x} y1={y - 20} x2={x} y2={y - 16} />
+          <circle cx={x} cy={y + 2} r="18" />
+          <text
+            x={x}
+            y={y - 2}
+            textAnchor="middle"
+            fontSize="9"
+            fontFamily="ui-monospace, monospace"
+            className="fill-current"
+            stroke="none"
+          >
             M
+          </text>
+          <text
+            x={x}
+            y={y + 10}
+            textAnchor="middle"
+            fontSize="8"
+            fontFamily="ui-monospace, monospace"
+            className="fill-current"
+            stroke="none"
+          >
+            3~
           </text>
         </>
       );
+
+    /* bloco genérico (temporizador, soft-starter, inversor) */
     case "box":
       return (
         <>
-          {label}
-          <rect x={cx - 30} y={cy - 14} width="60" height="28" rx="3" />
+          {name}
+          {term}
+          <line x1={x} y1={y - 18} x2={x} y2={y - 14} />
+          <line x1={x} y1={y + 14} x2={x} y2={y + 18} />
+          <rect x={x - 17} y={y - 14} width="34" height="28" />
+          <path d={`M${x - 8} ${y - 6} h16 M${x} ${y - 6} v8`} fill="none" />
         </>
       );
   }
 }
 
-function positions(n: number) {
-  const usable = RIGHT - LEFT;
-  const step = usable / (n + 1);
-  return Array.from({ length: n }, (_, i) => LEFT + step * (i + 1));
+/* ---------------- diagrama ---------------- */
+
+function Node({ x, y }: { x: number; y: number }) {
+  return <circle cx={x} cy={y} r="2.2" className="fill-current" stroke="none" />;
 }
 
 export function CircuitDiagram({ spec, className }: { spec: DiagramSpec; className?: string }) {
-  const height = rungY(spec.rungs.length - 1) + 60;
+  const cols = spec.rungs.length;
+  const maxEls = Math.max(...spec.rungs.map((r) => r.els.length));
+  const width = PAD_L + cols * COL_W + PAD_R;
+  const bottom = TOP + (maxEls + 1) * STEP;
+  const height = bottom + 30;
 
   return (
     <figure className={className}>
       <svg
-        viewBox={`0 0 420 ${height}`}
+        viewBox={`0 0 ${width} ${height}`}
         role="img"
         aria-label={`Diagrama de comando — ${spec.title}`}
         className="h-auto w-full text-foreground"
         stroke="currentColor"
-        strokeWidth="1.3"
+        strokeWidth="1.15"
         fill="none"
         strokeLinecap="round"
       >
-        {/* trilhos */}
-        <line x1={LEFT} y1={TOP - 18} x2={LEFT} y2={height - 26} />
-        <line x1={RIGHT} y1={TOP - 18} x2={RIGHT} y2={height - 26} />
-        <text x={LEFT} y={TOP - 24} fontSize="9" textAnchor="middle" className="fill-muted-foreground" stroke="none">
+        <defs>
+          <pattern id="cad-grid" width="12" height="12" patternUnits="userSpaceOnUse">
+            <circle cx="0.6" cy="0.6" r="0.5" className="fill-muted-foreground/40" stroke="none" />
+          </pattern>
+        </defs>
+        <rect x="0" y="0" width={width} height={height} fill="url(#cad-grid)" stroke="none" />
+
+        {/* barramentos */}
+        <line x1={PAD_L - 30} y1={TOP} x2={width - 10} y2={TOP} />
+        <line x1={PAD_L - 30} y1={bottom} x2={width - 10} y2={bottom} />
+        <text
+          x={PAD_L - 30}
+          y={TOP - 8}
+          fontSize="8.5"
+          fontFamily="ui-monospace, monospace"
+          className="fill-muted-foreground"
+          stroke="none"
+        >
           {spec.leftRail}
         </text>
-        <text x={RIGHT} y={TOP - 24} fontSize="9" textAnchor="middle" className="fill-muted-foreground" stroke="none">
+        <text
+          x={PAD_L - 30}
+          y={bottom + 14}
+          fontSize="8.5"
+          fontFamily="ui-monospace, monospace"
+          className="fill-muted-foreground"
+          stroke="none"
+        >
           {spec.rightRail}
         </text>
 
         {spec.rungs.map((rung, ri) => {
-          const y = rungY(ri);
-          const xs = positions(rung.els.length);
-          const nodes = [LEFT, ...xs.map((x, i) => (i < xs.length - 1 ? (x + xs[i + 1]) / 2 : RIGHT))];
+          const x = PAD_L + ri * COL_W + COL_W / 2;
+          const ys = rung.els.map((_, i) => TOP + (i + 1) * STEP);
+
+          const branch = rung.branch;
+          const bTop = branch ? ys[branch.from] - STEP / 2 : 0;
+          const bBottom = branch ? ys[Math.min(branch.to, ys.length - 1)] + STEP / 2 : 0;
+          const bx = x + BRANCH_DX;
 
           return (
             <g key={ri}>
-              <line x1={LEFT} y1={y} x2={RIGHT} y2={y} />
+              {/* condutor vertical do ramal */}
+              <line x1={x} y1={TOP} x2={x} y2={bottom} />
+              <Node x={x} y={TOP} />
+              <Node x={x} y={bottom} />
+
               {rung.els.map((el, i) => (
-                <g key={i}>
-                  <Element el={el} cx={xs[i]} cy={y} />
-                </g>
+                <Symbol key={i} el={el} x={x} y={ys[i]} />
               ))}
-              {rung.branch && (() => {
-                const a = rung.branch.from === 0 ? LEFT : (xs[rung.branch.from - 1] + xs[rung.branch.from]) / 2;
-                const b =
-                  rung.branch.to >= xs.length - 1
-                    ? Math.min(RIGHT, xs[xs.length - 1] + 26)
-                    : (xs[rung.branch.to] + xs[rung.branch.to + 1]) / 2;
-                const by = y + 30;
-                const bxs = Array.from(
-                  { length: rung.branch.els.length },
-                  (_, i) => a + ((b - a) / (rung.branch!.els.length + 1)) * (i + 1),
-                );
-                return (
-                  <g>
-                    <path d={`M${a} ${y} V${by} H${b} V${y}`} />
-                    {rung.branch.els.map((el, i) => (
-                      <g key={i}>
-                        <Element el={el} cx={bxs[i]} cy={by} />
-                      </g>
-                    ))}
-                  </g>
-                );
-              })()}
-              {rung.note && (
-                <text
-                  x={LEFT}
-                  y={y + (rung.branch ? 48 : 22)}
-                  fontSize="8.5"
-                  className="fill-muted-foreground"
-                  stroke="none"
-                >
-                  {rung.note}
-                </text>
+
+              {branch && (
+                <>
+                  <path d={`M${x} ${bTop} H${bx} V${bBottom} H${x}`} />
+                  <Node x={x} y={bTop} />
+                  <Node x={x} y={bBottom} />
+                  {branch.els.map((el, i) => (
+                    <Symbol
+                      key={i}
+                      el={el}
+                      x={bx}
+                      side="right"
+                      y={bTop + ((bBottom - bTop) / (branch.els.length + 1)) * (i + 1)}
+                    />
+
+                  ))}
+                </>
               )}
-              {/* nós de conexão */}
-              {nodes.slice(0, 0)}
             </g>
           );
         })}
       </svg>
-      <figcaption className="mt-2 text-[10px] uppercase tracking-wide text-muted-foreground">
-        {spec.title}
+
+      <figcaption className="mt-2 space-y-1">
+        <span className="block text-[10px] uppercase tracking-wide text-muted-foreground">
+          {spec.title} — simbologia ABNT/IEC
+        </span>
+        {spec.rungs
+          .filter((r) => r.note)
+          .map((r, i) => (
+            <span key={i} className="block text-[10px] leading-relaxed text-muted-foreground">
+              • {r.note}
+            </span>
+          ))}
       </figcaption>
     </figure>
   );
