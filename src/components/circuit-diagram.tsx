@@ -49,9 +49,15 @@ const TERMINALS: Record<DiagramElement["t"], [string, string] | null> = {
 /** separa "KM1 13/14 (selo)" em rótulo e par de terminais */
 function parseLabel(el: DiagramElement) {
   const raw = el.label ?? "";
-  const m = raw.match(/(\d{1,2})\s*\/\s*(\d{1,2})/);
+  const all = [...raw.matchAll(/(\d{1,2})\s*\/\s*(\d{1,2})/g)];
+  const m = all[0];
   const terminals = m ? ([m[1], m[2]] as [string, string]) : TERMINALS[el.t];
-  const text = m ? raw.replace(m[0], "").replace(/\s{2,}/g, " ").trim() : raw;
+  let text = raw;
+  for (const hit of all) text = text.replace(hit[0], "");
+  text = text
+    .replace(/·+/g, " ")
+    .replace(/\s{2,}/g, " ")
+    .trim();
   return { text, terminals };
 }
 
@@ -66,16 +72,17 @@ function Symbol({
   el: DiagramElement;
   x: number;
   y: number;
-  side?: "left" | "right";
+  side?: "left" | "right" | "above";
 }) {
   const { text, terminals } = parseLabel(el);
   const isButton = /^-?S\d/i.test(text) || /botoeira/i.test(text);
+  const leftGap = el.t === "motor" ? 34 : isButton ? 26 : 16;
 
   const name = text ? (
     <text
-      x={side === "left" ? x - (isButton ? 26 : 16) : x + 28}
-      y={y + 3}
-      textAnchor={side === "left" ? "end" : "start"}
+      x={side === "above" ? x : side === "left" ? x - leftGap : x + 30}
+      y={side === "above" ? y - 26 : y + 3}
+      textAnchor={side === "above" ? "middle" : side === "left" ? "end" : "start"}
       fontSize="8.5"
       fontFamily="ui-monospace, monospace"
       className="fill-muted-foreground"
@@ -84,6 +91,7 @@ function Symbol({
       {text}
     </text>
   ) : null;
+
 
 
   const term = terminals ? (
