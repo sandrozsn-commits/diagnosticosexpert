@@ -76,7 +76,7 @@ function Symbol({
 }) {
   const { text, terminals } = parseLabel(el);
   const isButton = /^-?S\d/i.test(text) || /botoeira/i.test(text);
-  const leftGap = el.t === "motor" ? 34 : el.t === "box" ? 24 : isButton ? 26 : 16;
+  const leftGap = el.t === "motor" ? 34 : el.t === "box" ? 26 : isButton ? 26 : 22;
 
   const name = text ? (
     <text
