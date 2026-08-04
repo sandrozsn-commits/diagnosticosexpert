@@ -353,7 +353,7 @@ export function CircuitDiagram({ spec, className }: { spec: DiagramSpec; classNa
                       key={i}
                       el={el}
                       x={bx}
-                      side="above"
+                      side="right"
                       y={bTop + ((bBottom - bTop) / (branch.els.length + 1)) * (i + 1)}
                     />
 
