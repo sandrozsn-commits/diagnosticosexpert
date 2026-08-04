@@ -26,7 +26,7 @@ export type DiagramSpec = {
 
 /* ---------------- geometria ---------------- */
 
-const COL_W = 150;
+const COL_W = 190;
 const PAD_L = 54;
 const PAD_R = 26;
 const TOP = 34;
