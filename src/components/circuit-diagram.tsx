@@ -57,15 +57,25 @@ function parseLabel(el: DiagramElement) {
 
 /* ---------------- símbolos ---------------- */
 
-function Symbol({ el, x, y }: { el: DiagramElement; x: number; y: number }) {
+function Symbol({
+  el,
+  x,
+  y,
+  side = "left",
+}: {
+  el: DiagramElement;
+  x: number;
+  y: number;
+  side?: "left" | "right";
+}) {
   const { text, terminals } = parseLabel(el);
   const isButton = /^-?S\d/i.test(text) || /botoeira/i.test(text);
 
   const name = text ? (
     <text
-      x={x - 16}
+      x={side === "left" ? x - (isButton ? 26 : 16) : x + 28}
       y={y + 3}
-      textAnchor="end"
+      textAnchor={side === "left" ? "end" : "start"}
       fontSize="8.5"
       fontFamily="ui-monospace, monospace"
       className="fill-muted-foreground"
@@ -74,6 +84,7 @@ function Symbol({ el, x, y }: { el: DiagramElement; x: number; y: number }) {
       {text}
     </text>
   ) : null;
+
 
   const term = terminals ? (
     <>
