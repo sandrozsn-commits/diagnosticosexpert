@@ -289,15 +289,15 @@ function CasePage() {
               ))}
             </ul>
           </Panel>
-          <Panel title="Diagrama de comando">
-            {circuit ? (
-              <CircuitDiagram spec={circuit.diagram} />
-            ) : (
-              <pre className="overflow-x-auto whitespace-pre-wrap font-mono text-xs leading-relaxed text-muted-foreground">
-                {(diagCase.diagram ?? []).join("\n")}
-              </pre>
-            )}
+          <Panel title="Diagrama interativo">
+            <InteractiveCircuit />
           </Panel>
+          {circuit && (
+            <Panel title="Diagrama de comando">
+              <CircuitDiagram spec={circuit.diagram} />
+            </Panel>
+          )}
+
         </aside>
       </div>
     </AppShell>
