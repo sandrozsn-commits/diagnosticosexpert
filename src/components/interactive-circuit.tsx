@@ -305,111 +305,112 @@ export function InteractiveCircuit({ className }: { className?: string }) {
           N
         </Txt>
 
-        {/* ramal principal x=300 */}
+        {/* ramal principal x=300 — série: F1 → FT1 95/96 → S0 → (S1 // selo) → bobina */}
         {/* L1 -> F1 */}
-        <line x1="300" y1="34" x2="300" y2="60" className={`${w(live)} ${flow(live)}`} />
+        <line x1="300" y1="34" x2="300" y2="50" className={`${w(live)} ${flow(live)}`} />
         {/* F1 */}
-        <rect x="292" y="60" width="16" height="26" className={w(live)} />
-        <line x1="300" y1="60" x2="300" y2="86" className={w(live)} />
-        <Txt x={286} y={76} anchor="end">
+        <rect x="292" y="50" width="16" height="26" className={w(live)} />
+        <line x1="300" y1="50" x2="300" y2="76" className={w(live)} />
+        <Txt x={286} y={66} anchor="end">
           F1
         </Txt>
-        <Hit id="f1" x={272} y={56} w={56} h={34} />
+        <Hit id="f1" x={272} y={46} w={56} h={34} />
 
-        {/* F1 -> S0 */}
-        <line x1="300" y1="86" x2="300" y2="116" className={`${w(live)} ${flow(live)}`} />
+        {/* F1 -> FT1 95/96 */}
+        <line x1="300" y1="76" x2="300" y2="92" className={`${w(live)} ${flow(live)}`} />
+        {/* contato FT1 95/96 (NF) em série */}
+        <g className={w(live)}>
+          <line x1="300" y1="92" x2="300" y2="98" />
+          <line x1="300" y1="120" x2="300" y2="126" />
+          <line x1="300" y1="120" x2="311" y2="99" />
+          <line x1="305" y1="98" x2="314" y2="98" />
+          <line x1="311" y1="98" x2="311" y2="94" />
+        </g>
+        <Txt x={284} y={105} anchor="end">
+          FT1
+        </Txt>
+        <Txt x={284} y={117} anchor="end">
+          95/96
+        </Txt>
+        <Hit id="ft1" x={266} y={88} w={62} h={42} />
+
+        {/* FT1 -> S0 */}
+        <line x1="300" y1="126" x2="300" y2="142" className={`${w(live)} ${flow(live)}`} />
         {/* S0 NF */}
         <g className={w(live)}>
-          <line x1="300" y1="116" x2="300" y2="122" />
-          <line x1="300" y1="144" x2="300" y2="150" />
-          <line x1="300" y1="144" x2="311" y2="123" />
-          <line x1="305" y1="122" x2="314" y2="122" />
-          <line x1="311" y1="122" x2="311" y2="118" />
-          <line x1="288" y1="133" x2="305" y2="133" strokeDasharray="2 2" />
+          <line x1="300" y1="142" x2="300" y2="148" />
+          <line x1="300" y1="170" x2="300" y2="176" />
+          <line x1="300" y1="170" x2="311" y2="149" />
+          <line x1="305" y1="148" x2="314" y2="148" />
+          <line x1="311" y1="148" x2="311" y2="144" />
+          <line x1="288" y1="159" x2="305" y2="159" strokeDasharray="2 2" />
         </g>
-        <Txt x={284} y={128} anchor="end">
+        <Txt x={284} y={155} anchor="end">
           S0
         </Txt>
-        <Txt x={284} y={140} anchor="end">
+        <Txt x={284} y={167} anchor="end">
           NF
         </Txt>
-        <Hit id="s0" x={266} y={112} w={62} h={42} />
+        <Hit id="s0" x={266} y={138} w={62} h={42} />
 
         {/* S0 -> nó do selo */}
-        <line x1="300" y1="150" x2="300" y2="180" className={`${w(live)} ${flow(live)}`} />
-        <circle cx="300" cy="180" r="2.6" className={live ? "fill-primary" : "fill-muted-foreground"} stroke="none" />
+        <line x1="300" y1="176" x2="300" y2="200" className={`${w(live)} ${flow(live)}`} />
+        <circle cx="300" cy="200" r="2.6" className={live ? "fill-primary" : "fill-muted-foreground"} stroke="none" />
 
         {/* S1 NA */}
         <g className={w(coilOn)}>
-          <line x1="300" y1="180" x2="300" y2="196" />
-          <line x1="300" y1="218" x2="300" y2="234" />
+          <line x1="300" y1="200" x2="300" y2="216" />
+          <line x1="300" y1="238" x2="300" y2="254" />
           {coilOn && phase === 2 ? (
-            <line x1="300" y1="196" x2="300" y2="218" />
+            <line x1="300" y1="216" x2="300" y2="238" />
           ) : (
-            <line x1="300" y1="218" x2="311" y2="197" />
+            <line x1="300" y1="238" x2="311" y2="217" />
           )}
-          <line x1="288" y1="207" x2="305" y2="207" strokeDasharray="2 2" />
+          <line x1="288" y1="227" x2="305" y2="227" strokeDasharray="2 2" />
         </g>
-        <Txt x={284} y={202} anchor="end">
+        <Txt x={284} y={222} anchor="end">
           S1
         </Txt>
-        <Txt x={284} y={214} anchor="end">
+        <Txt x={284} y={234} anchor="end">
           NA
         </Txt>
-        <Hit id="s1" x={266} y={190} w={62} h={40} />
+        <Hit id="s1" x={266} y={210} w={62} h={40} />
 
         {/* ramo de selo x=380 */}
-        <path d="M300 180 H380 V234 H300" className={`${w(running)} ${flow(running)}`} />
+        <path d="M300 200 H380 V254 H300" className={`${w(running)} ${flow(running)}`} />
         <g className={w(running)}>
-          <line x1="380" y1="196" x2="380" y2="200" />
-          <line x1="380" y1="214" x2="380" y2="218" />
+          <line x1="380" y1="216" x2="380" y2="220" />
+          <line x1="380" y1="234" x2="380" y2="238" />
           {running ? (
-            <line x1="380" y1="200" x2="380" y2="214" />
+            <line x1="380" y1="220" x2="380" y2="234" />
           ) : (
-            <line x1="380" y1="214" x2="391" y2="197" />
+            <line x1="380" y1="234" x2="391" y2="217" />
           )}
         </g>
-        <Txt x={398} y={202}>
+        <Txt x={398} y={222}>
           KM1 13/14
         </Txt>
-        <Txt x={398} y={214}>
+        <Txt x={398} y={234}>
           selo
         </Txt>
-        <Hit id="selo" x={366} y={190} w={110} h={38} />
-        <circle cx="300" cy="234" r="2.6" className={running || coilOn ? "fill-primary" : "fill-muted-foreground"} stroke="none" />
+        <Hit id="selo" x={366} y={210} w={110} h={38} />
+        <circle cx="300" cy="254" r="2.6" className={running || coilOn ? "fill-primary" : "fill-muted-foreground"} stroke="none" />
 
         {/* nó -> bobina */}
-        <line x1="300" y1="234" x2="300" y2="280" className={`${w(coilOn)} ${flow(coilOn)}`} />
-        <rect x="278" y="280" width="44" height="28" rx="2" className={w(coilOn)} />
-        <Txt x={272} y={288} anchor="end">
+        <line x1="300" y1="254" x2="300" y2="296" className={`${w(coilOn)} ${flow(coilOn)}`} />
+        <rect x="278" y="296" width="44" height="28" rx="2" className={w(coilOn)} />
+        <Txt x={272} y={304} anchor="end">
           A1
         </Txt>
-        <Txt x={272} y={306} anchor="end">
+        <Txt x={272} y={322} anchor="end">
           A2
         </Txt>
-        <Txt x={330} y={298}>
+        <Txt x={330} y={314}>
           KM1
         </Txt>
-        <Hit id="coil" x={276} y={278} w={48} h={32} />
-        <line x1="300" y1="308" x2="300" y2="366" className={`${w(coilOn)} ${flow(coilOn)}`} />
+        <Hit id="coil" x={276} y={294} w={48} h={32} />
+        <line x1="300" y1="324" x2="300" y2="366" className={`${w(coilOn)} ${flow(coilOn)}`} />
 
-        {/* contato FT1 95/96 no comando */}
-        <g className={w(live)}>
-          <line x1="440" y1="34" x2="440" y2="60" className={`${w(live)} ${flow(live)}`} />
-          <line x1="440" y1="60" x2="440" y2="66" />
-          <line x1="440" y1="88" x2="440" y2="94" />
-          <line x1="440" y1="88" x2="451" y2="67" />
-          <line x1="445" y1="66" x2="454" y2="66" />
-          <line x1="451" y1="66" x2="451" y2="62" />
-        </g>
-        <Txt x={424} y={72} anchor="end">
-          FT1
-        </Txt>
-        <Txt x={424} y={84} anchor="end">
-          95/96
-        </Txt>
-        <path d="M440 94 V116 H300" className={w(live)} strokeDasharray="3 3" />
-        <Hit id="ft1" x={410} y={56} w={56} h={44} />
       </svg>
 
       {/* ---------- controles ---------- */}
