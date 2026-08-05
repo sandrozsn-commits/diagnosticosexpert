@@ -5,6 +5,7 @@ import { briefingOf, occurrenceCode } from "@/data/occurrence";
 import { useProgress } from "@/lib/progress";
 import { AppShell } from "@/components/app-shell";
 import { CircuitDiagram } from "@/components/circuit-diagram";
+import { InteractiveCircuit } from "@/components/interactive-circuit";
 import { circuitOf } from "@/data/circuits";
 import { ArrowLeft, CheckCircle2, ClipboardList, RotateCcw, TriangleAlert } from "lucide-react";
 
@@ -288,15 +289,15 @@ function CasePage() {
               ))}
             </ul>
           </Panel>
-          <Panel title="Diagrama de comando">
-            {circuit ? (
-              <CircuitDiagram spec={circuit.diagram} />
-            ) : (
-              <pre className="overflow-x-auto whitespace-pre-wrap font-mono text-xs leading-relaxed text-muted-foreground">
-                {(diagCase.diagram ?? []).join("\n")}
-              </pre>
-            )}
+          <Panel title="Diagrama interativo">
+            <InteractiveCircuit />
           </Panel>
+          {circuit && (
+            <Panel title="Diagrama de comando">
+              <CircuitDiagram spec={circuit.diagram} />
+            </Panel>
+          )}
+
         </aside>
       </div>
     </AppShell>
