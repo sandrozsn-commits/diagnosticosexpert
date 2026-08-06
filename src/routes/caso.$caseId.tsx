@@ -69,12 +69,15 @@ function CasePage() {
 
   const current = history[history.length - 1].node;
   const steps = history.length - 1;
+  const paused = current.outcome === "wrong";
+  const secondsRef = useRef(0);
+  secondsRef.current = seconds;
 
   useEffect(() => {
-    if (finished || !started) return;
-    const t = setInterval(() => setSeconds(Math.floor((Date.now() - startedRef.current) / 1000)), 1000);
+    if (finished || !started || paused) return;
+    const t = setInterval(() => setSeconds((s) => s + 1), 1000);
     return () => clearInterval(t);
-  }, [finished, started]);
+  }, [finished, started, paused]);
 
   useEffect(() => {
     if (!started) return;
@@ -100,7 +103,7 @@ function CasePage() {
         solved: true,
         steps: steps + 1,
         mistakes,
-        seconds: Math.floor((Date.now() - startedRef.current) / 1000),
+        seconds: secondsRef.current,
         xp: earnedXp,
         at: new Date().toISOString(),
       });
@@ -108,8 +111,13 @@ function CasePage() {
   }
 
   function backOneStep() {
-    setHistory((h) => h.slice(0, -1));
+    setHistory((h) => {
+      const back = h.slice(0, -1);
+      const last = back[back.length - 1];
+      return [...back.slice(0, -1), { node: last.node }];
+    });
   }
+
 
   function restart() {
     setHistory([{ node: diagCase.nodes[diagCase.root] }]);
@@ -328,7 +336,7 @@ function NodeCard({
     >
       <div className="mb-3 flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
         <ClipboardList className="size-3.5" />
-        Etapa de Diagnóstico {String(index + 1).padStart(2, "0")}
+        {wrong ? "Análise da ação escolhida" : `Etapa de Diagnóstico ${String(index + 1).padStart(2, "0")}`}
       </div>
 
       {wrong && (
@@ -352,7 +360,32 @@ function NodeCard({
         </div>
       )}
 
+      {wrong && (node.reason || node.consequence) && (
+        <div className="mt-4 space-y-3">
+          {node.reason && (
+            <div className="rounded-lg border border-destructive/30 bg-background/60 p-3">
+              <span className="block text-[10px] uppercase tracking-wide text-muted-foreground">
+                Por que está tecnicamente errado
+              </span>
+              <p className="mt-1 text-sm leading-relaxed">{node.reason}</p>
+            </div>
+          )}
+          {node.consequence && (
+            <div className="rounded-lg border border-destructive/30 bg-background/60 p-3">
+              <span className="block text-[10px] uppercase tracking-wide text-muted-foreground">
+                O que isso causaria em um painel real
+              </span>
+              <p className="mt-1 text-sm leading-relaxed">{node.consequence}</p>
+            </div>
+          )}
+          <p className="text-xs text-muted-foreground">
+            O erro fica registrado no relatório, mas a ocorrência continua aberta — o cronômetro está pausado.
+          </p>
+        </div>
+      )}
+
       {node.explanation && <p className="mt-3 text-sm text-muted-foreground">{node.explanation}</p>}
+
 
       {node.options && (
         <>
@@ -384,9 +417,9 @@ function NodeCard({
       {isCurrent && wrong && (
         <button
           onClick={onBack}
-          className="mt-4 inline-flex items-center gap-2 rounded-md border border-border px-3 py-1.5 text-sm transition-colors hover:bg-secondary"
+          className="mt-4 inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
         >
-          <ArrowLeft className="size-4" /> Retomar a investigação por outra linha
+          <RotateCcw className="size-4" /> Entendi, tentar de novo
         </button>
       )}
     </article>
