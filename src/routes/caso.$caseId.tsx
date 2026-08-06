@@ -69,12 +69,15 @@ function CasePage() {
 
   const current = history[history.length - 1].node;
   const steps = history.length - 1;
+  const paused = current.outcome === "wrong";
+  const secondsRef = useRef(0);
+  secondsRef.current = seconds;
 
   useEffect(() => {
-    if (finished || !started) return;
-    const t = setInterval(() => setSeconds(Math.floor((Date.now() - startedRef.current) / 1000)), 1000);
+    if (finished || !started || paused) return;
+    const t = setInterval(() => setSeconds((s) => s + 1), 1000);
     return () => clearInterval(t);
-  }, [finished, started]);
+  }, [finished, started, paused]);
 
   useEffect(() => {
     if (!started) return;
@@ -100,7 +103,7 @@ function CasePage() {
         solved: true,
         steps: steps + 1,
         mistakes,
-        seconds: Math.floor((Date.now() - startedRef.current) / 1000),
+        seconds: secondsRef.current,
         xp: earnedXp,
         at: new Date().toISOString(),
       });
@@ -108,8 +111,13 @@ function CasePage() {
   }
 
   function backOneStep() {
-    setHistory((h) => h.slice(0, -1));
+    setHistory((h) => {
+      const back = h.slice(0, -1);
+      const last = back[back.length - 1];
+      return [...back.slice(0, -1), { node: last.node }];
+    });
   }
+
 
   function restart() {
     setHistory([{ node: diagCase.nodes[diagCase.root] }]);
