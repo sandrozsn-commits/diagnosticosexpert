@@ -18,6 +18,10 @@ export type CaseNode = {
   /** nó final */
   outcome?: "solved" | "wrong";
   explanation?: string;
+  /** por que a ação escolhida está tecnicamente errada */
+  reason?: string;
+  /** o que essa escolha causaria em um painel real */
+  consequence?: string;
 };
 
 export type DiagCase = {
