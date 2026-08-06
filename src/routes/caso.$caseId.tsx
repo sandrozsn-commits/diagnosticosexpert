@@ -7,6 +7,12 @@ import { AppShell } from "@/components/app-shell";
 import { CircuitDiagram } from "@/components/circuit-diagram";
 import { InteractiveCircuit } from "@/components/interactive-circuit";
 import { circuitOf } from "@/data/circuits";
+import {
+  ResultShare,
+  formatDuration,
+  performancePercentile,
+  statusPhrase,
+} from "@/components/result-share";
 import { ArrowLeft, CheckCircle2, ClipboardList, RotateCcw, TriangleAlert } from "lucide-react";
 
 export const Route = createFileRoute("/caso/$caseId")({
@@ -91,6 +97,10 @@ function CasePage() {
 
   const clock = `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
   const status = finished ? "Encerrada" : started ? "Em Investigação" : "Aguardando atendimento";
+  const percentile = performancePercentile(seconds, diagCase.minutes, mistakes);
+  const statusLine = statusPhrase(seconds, percentile);
+  const accuracy = Math.max(0, Math.round((steps / Math.max(steps + mistakes, 1)) * 100));
+  const caseUrl = typeof window !== "undefined" ? window.location.href : `/caso/${diagCase.id}`;
 
   function choose(label: string, nextId: string) {
     const next = diagCase.nodes[nextId];
@@ -221,9 +231,37 @@ function CasePage() {
                     <h2 className="text-lg font-semibold">Ocorrência Encerrada</h2>
                   </div>
 
-                  <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                  <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                    <Metric label="Tempo total" value={formatDuration(seconds)} />
+                    <Metric label="Erros" value={String(mistakes)} />
+                    <Metric label="XP ganho" value={`+${earnedXp}`} highlight />
+                  </div>
+
+                  <div className="mt-4 rounded-lg border border-primary/40 bg-primary/10 p-4">
+                    <p className="text-sm font-medium leading-relaxed">{statusLine}</p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Precisão de {accuracy}% nesta ocorrência • {steps} ações técnicas registradas
+                    </p>
+                  </div>
+
+                  <ResultShare
+                    data={{
+                      occurrenceCode: occurrenceCode(diagCase.number),
+                      title: diagCase.title,
+                      system: briefing.system,
+                      seconds,
+                      mistakes,
+                      xp: earnedXp,
+                      accuracy,
+                      percentile,
+                      statusLine,
+                    }}
+                    caseUrl={caseUrl}
+                  />
+
+                  <div className="mt-6 grid gap-4 sm:grid-cols-2">
                     <Brief label="Diagnóstico encontrado" value={diagCase.fault} />
-                    <Brief label="Tempo gasto" value={clock} />
+                    <Brief label="Tempo estimado" value={`${diagCase.minutes} min`} />
                   </div>
 
                   <h3 className="mt-6 text-sm font-semibold">Resumo técnico</h3>
@@ -244,9 +282,6 @@ function CasePage() {
                   </ul>
 
                   <div className="mt-6 flex flex-wrap items-center gap-3">
-                    <span className="rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground">
-                      +{earnedXp} XP
-                    </span>
                     <button
                       onClick={restart}
                       className="inline-flex items-center gap-2 rounded-md border border-border px-3 py-1.5 text-sm transition-colors hover:bg-secondary"
@@ -423,6 +458,15 @@ function NodeCard({
         </button>
       )}
     </article>
+  );
+}
+
+function Metric({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
+  return (
+    <div className="rounded-lg border border-border bg-card p-4">
+      <span className="block text-[10px] uppercase tracking-wide text-muted-foreground">{label}</span>
+      <span className={`mt-1 block text-2xl font-semibold ${highlight ? "text-primary" : ""}`}>{value}</span>
+    </div>
   );
 }
 
