@@ -221,9 +221,37 @@ function CasePage() {
                     <h2 className="text-lg font-semibold">Ocorrência Encerrada</h2>
                   </div>
 
-                  <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                  <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                    <Metric label="Tempo total" value={formatDuration(seconds)} />
+                    <Metric label="Erros" value={String(mistakes)} />
+                    <Metric label="XP ganho" value={`+${earnedXp}`} highlight />
+                  </div>
+
+                  <div className="mt-4 rounded-lg border border-primary/40 bg-primary/10 p-4">
+                    <p className="text-sm font-medium leading-relaxed">{statusLine}</p>
+                    <p className="mt-1 text-xs text-muted-foreground">
+                      Precisão de {accuracy}% nesta ocorrência • {steps} ações técnicas registradas
+                    </p>
+                  </div>
+
+                  <ResultShare
+                    data={{
+                      occurrenceCode: occurrenceCode(diagCase.number),
+                      title: diagCase.title,
+                      system: briefing.system,
+                      seconds,
+                      mistakes,
+                      xp: earnedXp,
+                      accuracy,
+                      percentile,
+                      statusLine,
+                    }}
+                    caseUrl={caseUrl}
+                  />
+
+                  <div className="mt-6 grid gap-4 sm:grid-cols-2">
                     <Brief label="Diagnóstico encontrado" value={diagCase.fault} />
-                    <Brief label="Tempo gasto" value={clock} />
+                    <Brief label="Tempo estimado" value={`${diagCase.minutes} min`} />
                   </div>
 
                   <h3 className="mt-6 text-sm font-semibold">Resumo técnico</h3>
@@ -244,9 +272,6 @@ function CasePage() {
                   </ul>
 
                   <div className="mt-6 flex flex-wrap items-center gap-3">
-                    <span className="rounded-md bg-primary px-3 py-1.5 text-sm font-medium text-primary-foreground">
-                      +{earnedXp} XP
-                    </span>
                     <button
                       onClick={restart}
                       className="inline-flex items-center gap-2 rounded-md border border-border px-3 py-1.5 text-sm transition-colors hover:bg-secondary"
