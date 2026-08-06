@@ -86,9 +86,10 @@ function buildNodes(spec: OccurrenceSpec): Record<string, CaseNode> {
   spec.diagnosis.wrong.forEach(([label, why], j) => {
     nodes[`dw${j}`] = {
       id: `dw${j}`,
-      situation: why,
+      situation: `Laudo proposto: “${label}”.`,
       outcome: "wrong",
-      explanation: `“${label}” não é compatível com as evidências coletadas.`,
+      reason: `As medições realizadas apontam para ${spec.fault.toLowerCase()}. “${label}” não explica o conjunto de leituras obtidas durante a investigação.`,
+      consequence: why,
     };
   });
 
