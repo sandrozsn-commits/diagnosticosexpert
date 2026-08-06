@@ -62,9 +62,10 @@ function buildNodes(spec: OccurrenceSpec): Record<string, CaseNode> {
       const wid = `w${i}_${j}`;
       nodes[wid] = {
         id: wid,
-        situation: consequence,
+        situation: `Ação executada: “${label}”.`,
         outcome: "wrong",
-        explanation: `Ação improdutiva: “${label}”. Retome a investigação pela linha lógica correta.`,
+        reason: `Nesta etapa a evidência disponível é: ${step.reading ?? step.situation} Escolher “${label}” não testa a hipótese em aberto — a ação não isola o trecho suspeito do circuito nem produz nova medição que confirme ou descarte a causa.`,
+        consequence,
       };
     });
   });
