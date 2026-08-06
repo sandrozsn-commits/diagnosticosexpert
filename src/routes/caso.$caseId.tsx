@@ -417,9 +417,9 @@ function NodeCard({
       {isCurrent && wrong && (
         <button
           onClick={onBack}
-          className="mt-4 inline-flex items-center gap-2 rounded-md border border-border px-3 py-1.5 text-sm transition-colors hover:bg-secondary"
+          className="mt-4 inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90"
         >
-          <ArrowLeft className="size-4" /> Retomar a investigação por outra linha
+          <RotateCcw className="size-4" /> Entendi, tentar de novo
         </button>
       )}
     </article>
