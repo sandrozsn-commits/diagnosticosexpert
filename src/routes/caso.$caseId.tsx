@@ -7,6 +7,12 @@ import { AppShell } from "@/components/app-shell";
 import { CircuitDiagram } from "@/components/circuit-diagram";
 import { InteractiveCircuit } from "@/components/interactive-circuit";
 import { circuitOf } from "@/data/circuits";
+import {
+  ResultShare,
+  formatDuration,
+  performancePercentile,
+  statusPhrase,
+} from "@/components/result-share";
 import { ArrowLeft, CheckCircle2, ClipboardList, RotateCcw, TriangleAlert } from "lucide-react";
 
 export const Route = createFileRoute("/caso/$caseId")({
