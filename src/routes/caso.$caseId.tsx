@@ -97,6 +97,10 @@ function CasePage() {
 
   const clock = `${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`;
   const status = finished ? "Encerrada" : started ? "Em Investigação" : "Aguardando atendimento";
+  const percentile = performancePercentile(seconds, diagCase.minutes, mistakes);
+  const statusLine = statusPhrase(seconds, percentile);
+  const accuracy = Math.max(0, Math.round((steps / Math.max(steps + mistakes, 1)) * 100));
+  const caseUrl = typeof window !== "undefined" ? window.location.href : `/caso/${diagCase.id}`;
 
   function choose(label: string, nextId: string) {
     const next = diagCase.nodes[nextId];
