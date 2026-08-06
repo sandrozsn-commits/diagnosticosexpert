@@ -461,6 +461,15 @@ function NodeCard({
   );
 }
 
+function Metric({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
+  return (
+    <div className="rounded-lg border border-border bg-card p-4">
+      <span className="block text-[10px] uppercase tracking-wide text-muted-foreground">{label}</span>
+      <span className={`mt-1 block text-2xl font-semibold ${highlight ? "text-primary" : ""}`}>{value}</span>
+    </div>
+  );
+}
+
 function Brief({ label, value }: { label: string; value: string }) {
   return (
     <div>
