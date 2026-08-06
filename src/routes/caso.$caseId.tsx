@@ -336,7 +336,7 @@ function NodeCard({
     >
       <div className="mb-3 flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
         <ClipboardList className="size-3.5" />
-        Etapa de Diagnóstico {String(index + 1).padStart(2, "0")}
+        {wrong ? "Análise da ação escolhida" : `Etapa de Diagnóstico ${String(index + 1).padStart(2, "0")}`}
       </div>
 
       {wrong && (
@@ -360,7 +360,32 @@ function NodeCard({
         </div>
       )}
 
+      {wrong && (node.reason || node.consequence) && (
+        <div className="mt-4 space-y-3">
+          {node.reason && (
+            <div className="rounded-lg border border-destructive/30 bg-background/60 p-3">
+              <span className="block text-[10px] uppercase tracking-wide text-muted-foreground">
+                Por que está tecnicamente errado
+              </span>
+              <p className="mt-1 text-sm leading-relaxed">{node.reason}</p>
+            </div>
+          )}
+          {node.consequence && (
+            <div className="rounded-lg border border-destructive/30 bg-background/60 p-3">
+              <span className="block text-[10px] uppercase tracking-wide text-muted-foreground">
+                O que isso causaria em um painel real
+              </span>
+              <p className="mt-1 text-sm leading-relaxed">{node.consequence}</p>
+            </div>
+          )}
+          <p className="text-xs text-muted-foreground">
+            O erro fica registrado no relatório, mas a ocorrência continua aberta — o cronômetro está pausado.
+          </p>
+        </div>
+      )}
+
       {node.explanation && <p className="mt-3 text-sm text-muted-foreground">{node.explanation}</p>}
+
 
       {node.options && (
         <>
