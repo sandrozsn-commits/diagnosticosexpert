@@ -20,6 +20,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         wrong: [
           ["Substituir o contator KM1 imediatamente", "Contator trocado sem evidência: falha permanece idêntica e uma hora de produção é perdida."],
           ["Abrir a caixa de ligação do motor", "O motor sequer é energizado; a inspeção não gera nenhuma informação nova."],
+          ["Trocar a botoeira S1", "A botoeira apresenta continuidade normal e o comando não responde."],
+          ["Rearmar relé térmico sem teste", "O térmico não está atuado; rearmar não altera o estado do circuito."],
         ],
       },
       {
@@ -29,6 +31,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         wrong: [
           ["Trocar os fusíveis F1 e F2", "Os fusíveis estão íntegros — havia tensão medida logo após eles."],
           ["Aumentar o ajuste de corrente do relé térmico", "Alterar o ajuste não restabelece o contato auxiliar e mascara a proteção do motor."],
+          ["Substituir a bobina de KM1", "A bobina não recebe tensão; a troca não corrige o problema de alimentação."],
+          ["Testar isolamento do motor", "O motor ainda não foi energizado; testar isolamento é inútil neste momento."],
         ],
       },
       {
@@ -38,6 +42,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         wrong: [
           ["Fazer um jumper sobre o contato 95/96", "Prática proibida: elimina a proteção térmica do motor e cria risco de incêndio."],
           ["Substituir a botoeira S1", "A botoeira apresentou continuidade normal no teste."],
+          ["Trocar disjuntor de força Q1", "Q1 está ligado e conduzindo corrente para o circuito de potência."],
+          ["Substituir contator KM1", "O intertravamento é elétrico, não mecânico na armadura do contator."],
         ],
       },
     ],
@@ -46,6 +52,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
       wrong: [
         ["Bobina de KM1 queimada", "A bobina nunca recebeu tensão: não é possível afirmar que esteja danificada."],
         ["Fusível de comando aberto", "Havia 220 V medidos após F1."],
+        ["Defeito no motor", "O motor não foi testado; o comando não enviou sinal."],
+        ["Falha na botoeira Liga S1", "A botoeira S1 apresentou continuidade normal no teste."],
       ],
     },
     fault: "Relé térmico FT1 atuado e não rearmado",
