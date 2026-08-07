@@ -208,6 +208,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         wrong: [
           ["Pressionar S0 várias vezes com o motor girando", "A insistência mantém a máquina em condição insegura e não gera informação técnica."],
           ["Trocar a botoeira S0 com o painel energizado", "Intervenção com circuito energizado em condição de falha — risco grave de acidente."],
+          ["Medir corrente do motor", "Medição irrelevante; o motor não deveria estar rodando."],
+          ["Bater no contator com martelo", "Prática perigosa; pode soltar temporariamente mas danifica o componente."],
         ],
       },
       {
@@ -217,6 +219,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         wrong: [
           ["Substituir o relé térmico", "O relé térmico não mantém a potência fechada."],
           ["Refazer a fiação da botoeira S0", "O comando já está comprovadamente desenergizado."],
+          ["Trocar o motor", "O motor funciona até demais; a falha é na manobra."],
+          ["Limpar contatos com lixa", "Contatos soldados não devem ser lixados; o contator deve ser trocado."],
         ],
       },
     ],
@@ -225,6 +229,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
       wrong: [
         ["Botoeira S0 com contato NF em curto", "A bobina está com 0 V: o comando abriu corretamente."],
         ["Selo de KM1 permanentemente fechado", "O selo alimentaria a bobina, que estaria energizada."],
+        ["Falha no disjuntor principal", "O disjuntor interrompeu a carga; ele está operando."],
+        ["Erro na lógica de intertravamento", "Partida direta simples não possui intertravamento elétrico complexo."],
       ],
     },
     fault: "Contatos principais de KM1 soldados por sobrecorrente repetida",
@@ -270,6 +276,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         wrong: [
           ["Substituir a bobina do contator", "A bobina responde corretamente quando alimentada de forma estável por S1."],
           ["Verificar o ajuste do relé térmico", "O relé térmico não interfere na estabilidade do selo."],
+          ["Limpar o núcleo magnético", "O chiado/vibração via selo indica falha de continuidade elétrica."],
+          ["Trocar botoeira S0", "S0 é NF e está em série; mau contato nela afetaria também S1."],
         ],
       },
       {
@@ -279,6 +287,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         wrong: [
           ["Jumpear o selo para manter o motor ligado", "Improviso que elimina a função de retenção e cria acionamento sem segurança."],
           ["Substituir a botoeira S1", "S1 alimenta a bobina de forma estável."],
+          ["Trocar o relé térmico FT1", "FT1 é o elemento de proteção, não de retenção."],
+          ["Aumentar a bitola dos cabos de comando", "Tensão com S1 pressionado é estável; queda é localizada no selo."],
         ],
       },
     ],
@@ -287,6 +297,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
       wrong: [
         ["Bobina de KM1 com espiras em curto", "A bobina mantém o contator firme quando alimentada por S1."],
         ["Subtensão geral da rede", "A tensão medida com S1 pressionado é estável em 218 V."],
+        ["Núcleo magnético sujo", "A instabilidade é dependente da fonte de alimentação (S1 vs Selo)."],
+        ["Vibração mecânica do painel", "Causa remota; o problema elétrico no selo é evidente."],
       ],
     },
     fault: "Contato de selo KM1 13/14 com mau contato",
