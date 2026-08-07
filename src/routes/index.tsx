@@ -57,7 +57,7 @@ function Index() {
     <AppShell>
       <section className="max-w-2xl">
         <p className="font-mono text-xs uppercase tracking-widest text-primary">
-          Manutenção elétrica industrial • Execute esta instrucao no projeto: você disse que corrigiu X e Y, mas ao acessar o link em produção nada mudou — confirme se o deploy foi publicado"
+          Manutenção elétrica industrial
         </p>
         <h1 className="mt-3 text-4xl font-semibold">Central de Ocorrências</h1>
         <p className="mt-4 text-base leading-relaxed text-muted-foreground">
