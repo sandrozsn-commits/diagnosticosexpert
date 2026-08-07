@@ -284,4 +284,43 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
       "Queda de tensão em contatos oxidados",
     ],
   },
+  {
+    id: "pd-06",
+    title: "Motor parte, mas protege por sobrecarga logo após",
+    level: "intermediario",
+    minutes: 10,
+    xp: 150,
+    equipment: "Motor 10 cv",
+    company: "Metalúrgica Alfa",
+    sector: "Moagem",
+    symptom: "Motor parte normalmente, mas após 5 segundos, FT1 desarma.",
+    objective: "Verificar se é falha real de sobrecarga ou problema no ajuste.",
+    steps: [
+      {
+        situation: "Partida completa com desarme térmico imediato.",
+        correct: "Medir corrente de regime após a partida",
+        wrong: [
+          ["Substituir relé térmico", "Antes de trocar, medir corrente é obrigatório."],
+        ],
+      },
+      {
+        situation: "Medição de corrente de regime.",
+        reading: "Corrente = 13 A. In nominal = 14 A. FT1 ajustado para 10 A.",
+        correct: "Ajustar FT1 para a corrente nominal",
+        wrong: [
+          ["Trocar motor", "Corrente dentro da nominal."],
+        ],
+      },
+    ],
+    diagnosis: {
+      correct: "FT1 ajustado abaixo da nominal",
+      wrong: [
+        ["Motor com defeito", "Corrente na nominal."],
+      ],
+    },
+    fault: "Ajuste incorreto do FT1",
+    technical: "Relé térmico desarmando por ajuste baixo.",
+    checklist: ["Medir corrente", "Ajustar FT1"],
+    lessons: ["Ajuste correto de FT1"],
+  },
 ];

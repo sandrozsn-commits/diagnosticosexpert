@@ -4,7 +4,7 @@ export const REVERSAO_AUTOMATICA: OccurrenceSpec[] = [
   {
     id: "ra-01",
     title: "Reversão automática não ocorre no tempo programado",
-    level: "intermediario",
+    level: "iniciante",
     minutes: 12,
     xp: 180,
     equipment: "Motor 5 cv c/ reversão automática temporizada",
@@ -55,6 +55,129 @@ export const REVERSAO_AUTOMATICA: OccurrenceSpec[] = [
   },
   {
     id: "ra-02",
+    title: "Motor reverte com atraso progressivo",
+    level: "intermediario",
+    minutes: 10,
+    xp: 150,
+    equipment: "Motor 5 cv",
+    company: "Distribuidora Central de Grãos",
+    sector: "Logística",
+    symptom: "O ciclo de reversão está ficando cada vez mais longo ao longo do dia.",
+    objective: "Identificar aquecimento excessivo no temporizador.",
+    steps: [
+      {
+        situation: "Temporizador operando em ambiente com alta temperatura.",
+        correct: "Medir a temperatura interna do painel",
+        wrong: [
+          ["Trocar o motor", "O motor não controla o tempo de reversão."],
+        ],
+      },
+      {
+        situation: "Monitoramento do componente.",
+        reading: "Temperatura do temporizador = 75°C. Limite técnico = 55°C.",
+        correct: "Melhorar a ventilação do painel",
+        wrong: [
+          ["Reduzir carga do motor", "O calor é ambiental/painel, não do motor."],
+        ],
+      },
+    ],
+    diagnosis: {
+      correct: "Deriva térmica no temporizador por falta de ventilação",
+      wrong: [
+        ["Desgaste mecânico", "Componente eletrônico."],
+      ],
+    },
+    fault: "Superaquecimento do temporizador",
+    technical: "O calor altera a constante de tempo dos circuitos analógicos de temporização.",
+    checklist: ["Verificar ventiladores do painel", "Limpar filtros"],
+    lessons: ["Impacto da temperatura na precisão eletrônica"],
+  },
+  {
+    id: "ra-03",
+    title: "Ciclo de reversão não inicia após parada de emergência",
+    level: "intermediario",
+    minutes: 10,
+    xp: 160,
+    equipment: "Motor 3 cv",
+    company: "Distribuidora Central de Grãos",
+    sector: "Silo",
+    symptom: "Após rearmar a emergência, o sistema não retoma o ciclo automático.",
+    objective: "Identificar falta de pulso de 'reset/start' na lógica.",
+    steps: [
+      {
+        situation: "Emergência rearmada, mas contatores não atracam.",
+        correct: "Verificar tensão na entrada de 'start' do temporizador de ciclo",
+        wrong: [
+          ["Trocar o temporizador", "Pode ser apenas falta de comando de partida."],
+          ["Substituir os fusíveis", "A sinaleira de painel ligado está acesa."],
+        ],
+      },
+      {
+        situation: "Análise da série de comando.",
+        reading: "Tensão presente após a emergência, mas o contato NA de KM1 (selo de partida) não fechou.",
+        correct: "Pressionar botão 'Reset/Liga' para reiniciar a lógica",
+        wrong: [
+          ["Jumpear a emergência", "Ação perigosa e desnecessária."],
+          ["Inverter o sentido do motor", "O motor já está no sentido correto."],
+        ],
+      },
+    ],
+    diagnosis: {
+      correct: "Lógica aguardando pulso de inicialização após queda de energia/emergência",
+      wrong: [
+        ["Falha no temporizador", "O componente está íntegro, apenas aguardando comando."],
+        ["Curto-circuito", "Não houve desarme de proteção."],
+      ],
+    },
+    fault: "Procedimento de reinicialização não executado",
+    technical: "Sistemas automáticos costumam exigir um pulso manual de confirmação após paradas de segurança.",
+    checklist: ["Rearmar emergência", "Pressionar botão de liga"],
+    lessons: ["Diferença entre rearmar hardware e reiniciar lógica"],
+  },
+  {
+    id: "ra-04",
+    title: "Reversão instável com vibração no contator",
+    level: "avancado",
+    minutes: 12,
+    xp: 190,
+    equipment: "Motor 5 cv",
+    company: "Fabricante Nortel",
+    sector: "Transporte",
+    symptom: "No momento da troca de sentido, o contator vibra intensamente antes de estabilizar.",
+    objective: "Detectar tempo morto insuficiente.",
+    steps: [
+      {
+        situation: "Vibração audível na transição.",
+        correct: "Medir o tempo de intervalo entre a saída de KM1 e entrada de KM2",
+        wrong: [
+          ["Trocar contator", "Vibração pode ser lógica (tempo morto)."],
+          ["Lubrificar o motor", "O ruído é elétrico/magnético no contator."],
+        ],
+      },
+      {
+        situation: "Leitura do osciloscópio/cronômetro digital.",
+        reading: "Intervalo = 10ms. Recomendado = 50ms para extinção de arco.",
+        correct: "Aumentar o tempo morto no temporizador de transição",
+        wrong: [
+          ["Trocar mola do contator", "Não resolve a sobreposição de sinais."],
+          ["Aumentar a bitola dos cabos", "A queda de tensão não é a causa primária aqui."],
+        ],
+      },
+    ],
+    diagnosis: {
+      correct: "Tempo morto insuficiente causando arco elétrico residual",
+      wrong: [
+        ["Bobina fraca", "Vibração ocorre apenas na troca."],
+        ["Falta de fase", "O motor gira normalmente após a transição."],
+      ],
+    },
+    fault: "Ajuste de tempo morto muito baixo",
+    technical: "O arco elétrico de um contator deve extinguir-se totalmente antes do outro fechar.",
+    checklist: ["Aumentar tempo de pausa", "Verificar câmaras de extinção"],
+    lessons: ["Importância do tempo morto em reversões"],
+  },
+  {
+    id: "ra-05",
     title: "Motor reverte em ciclo contínuo sem parar",
     level: "avancado",
     minutes: 14,
