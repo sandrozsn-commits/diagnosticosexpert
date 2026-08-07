@@ -19,6 +19,8 @@ export const REVERSAO: OccurrenceSpec[] = [
         wrong: [
           ["Trocar as fases na saída de KM2", "A inversão de fases altera o sentido de rotação, não a falha de acionamento da bobina."],
           ["Substituir o contator KM2", "Ainda não se sabe se a bobina recebe tensão."],
+          ["Trocar a botoeira S1", "S1 controla o sentido horário, que funciona corretamente."],
+          ["Reapertar disjuntor de potência", "O motor funciona no outro sentido; a potência está OK."],
         ],
       },
       {
@@ -28,6 +30,8 @@ export const REVERSAO: OccurrenceSpec[] = [
         wrong: [
           ["Verificar o relé térmico FT1", "O relé térmico é comum aos dois ramos e o sentido horário funciona."],
           ["Trocar os fusíveis de comando", "F1 alimenta ambos os ramos, e o horário está operando."],
+          ["Substituir a bobina de KM1", "KM1 é do sentido oposto; não interfere no acionamento de KM2."],
+          ["Medir isolamento do motor", "O motor funciona no sentido horário; o isolamento não é a causa."],
         ],
       },
     ],
@@ -36,6 +40,8 @@ export const REVERSAO: OccurrenceSpec[] = [
       wrong: [
         ["Intertravamento elétrico atuando indevidamente", "O contato NF de KM1 apresentou continuidade normal."],
         ["Bobina de KM2 queimada", "A bobina sequer recebeu tensão para ser avaliada."],
+        ["Falta de fase", "O motor funciona no outro sentido."],
+        ["Falha no selo de KM2", "A falha é na partida, não na retenção."],
       ],
     },
     fault: "Botoeira S2 com contato NA defeituoso",
@@ -71,6 +77,8 @@ export const REVERSAO: OccurrenceSpec[] = [
         wrong: [
           ["Trocar motor", "O motor funciona enquanto o botão é pressionado."],
           ["Inverter as fases", "O motor já gira no sentido correto."],
+          ["Substituir a botoeira S2", "S2 fecha o circuito; o motor parte."],
+          ["Verificar fusíveis de potência", "O motor gira; a potência está íntegra."],
         ],
       },
       {
@@ -80,6 +88,8 @@ export const REVERSAO: OccurrenceSpec[] = [
         wrong: [
           ["Aumentar tempo de partida", "O problema é de retenção elétrica, não tempo."],
           ["Trocar o contator KM1", "KM1 é do sentido oposto."],
+          ["Limpar anéis do motor", "O motor é de gaiola (Partida Direta com Reversão)."],
+          ["Substituir disjuntor de comando", "O comando está energizado; o motor parte por S2."],
         ],
       },
     ],
@@ -88,6 +98,8 @@ export const REVERSAO: OccurrenceSpec[] = [
       wrong: [
         ["Botoeira S2 com defeito", "O motor parte, logo o botão fecha o circuito."],
         ["Falta de fase", "O motor gira normalmente enquanto pressionado."],
+        ["Bobina de KM2 queimada", "A bobina atrai a armadura; ela está operando."],
+        ["Erro no intertravamento NF", "O motor parte; o intertravamento permitiu a energização."],
       ],
     },
     fault: "Mau contato no auxiliar de KM2",
@@ -113,6 +125,8 @@ export const REVERSAO: OccurrenceSpec[] = [
         wrong: [
           ["Testar as bobinas de KM1 e KM2 com megômetro", "Duas bobinas com falha simultânea é hipótese improvável frente a um elemento comum."],
           ["Substituir as botoeiras S1 e S2", "Ambas as botoeiras defeituosas ao mesmo tempo é hipótese remota."],
+          ["Trocar o motor", "Nenhum contator atraca; a falha é no comando."],
+          ["Aumentar bitola dos cabos", "O comando está morto; queda de tensão não é a causa principal."],
         ],
       },
       {
@@ -122,6 +136,8 @@ export const REVERSAO: OccurrenceSpec[] = [
         wrong: [
           ["Verificar os contatos de intertravamento", "O intertravamento fica após S0, que já apresenta 0 V."],
           ["Trocar o relé térmico", "Havia 220 V na saída do relé térmico."],
+          ["Limpar contatos de KM1", "O comando não chega a KM1."],
+          ["Substituir temporizador", "Este circuito de reversão simples não usa temporizadores."],
         ],
       },
     ],
@@ -130,6 +146,8 @@ export const REVERSAO: OccurrenceSpec[] = [
       wrong: [
         ["Fusível de comando F1 aberto", "Havia 220 V medidos após F1."],
         ["Ambas as bobinas queimadas", "As bobinas não recebem tensão em razão da série aberta antes delas."],
+        ["FT1 atuado", "Havia tensão na saída de FT1."],
+        ["Falta de fase na potência", "O comando nem sequer aciona os contatores."],
       ],
     },
     fault: "Contato NF da botoeira de parada S0 aberto",
