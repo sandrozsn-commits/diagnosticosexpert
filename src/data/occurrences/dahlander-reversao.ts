@@ -144,6 +144,9 @@ export const DAHLANDER_REVERSAO: OccurrenceSpec[] = [
         correct: "Comparar intertravamento de baixa com o de alta",
         wrong: [
           ["Trocar térmico", "Desarme é por curto (disjuntor)."],
+          ["Substituir o motor", "Funciona em baixa; o problema é na alta."],
+          ["Inverter as fases da rede", "A inversão não corrige falta de intertravamento."],
+          ["Trocar a botoeira S4", "A botoeira liga o circuito que entra em curto."],
         ],
       },
     ],
