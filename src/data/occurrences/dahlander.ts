@@ -211,7 +211,7 @@ export const DAHLANDER: OccurrenceSpec[] = [
   },
   {
     id: "dh-05",
-    title: "Motor esquenta em velocidade baixa, mas funciona normal em alta",
+    title: "Motor esquenta excessivamente em velocidade baixa, mas funciona normal em alta",
     level: "avancado",
     minutes: 14,
     xp: 210,

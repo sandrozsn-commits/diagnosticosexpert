@@ -159,7 +159,7 @@ export const ROTOR_BOBINADO: OccurrenceSpec[] = [
   },
   {
     id: "rb-04",
-    title: "Motor não atinge a velocidade nominal, para em estágio intermediário",
+    title: "Motor não atinge a velocidade nominal, para em um estágio intermediário",
     level: "intermediario",
     minutes: 13,
     xp: 200,
@@ -211,7 +211,7 @@ export const ROTOR_BOBINADO: OccurrenceSpec[] = [
   },
   {
     id: "rb-05",
-    title: "Motor com torque insuficiente após manutenção, mas funciona em vazio",
+    title: "Motor com torque de partida insuficiente após manutenção, mas funciona bem em vazio",
     level: "avancado",
     minutes: 15,
     xp: 225,
