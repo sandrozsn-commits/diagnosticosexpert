@@ -34,11 +34,11 @@ export const DirectStartDiagram = () => {
             ======================================================== */}
         <g stroke="#111827" strokeWidth="2">
           {/* Barramentos e Identificação */}
-          <text x="70" y="85" fontSize="22" fontWeight="bold" fill="#111827">L1</text>
-          <Wire x1="100" y1="80" x2="600" y2="80" />
+          <text x={70} y={85} fontSize={22} fontWeight="bold" fill="#111827">L1</text>
+          <Wire x1={100} y1={80} x2={600} y2={80} />
           
-          <text x="70" y="855" fontSize="22" fontWeight="bold" fill="#111827">N</text>
-          <Wire x1="100" y1="850" x2="400" y2="850" />
+          <text x={70} y={855} fontSize={22} fontWeight="bold" fill="#111827">N</text>
+          <Wire x1={100} y1={850} x2={400} y2={850} />
 
           {/* Q2 - Disjuntor monopolar */}
           <BreakerSinglePole x={200} y={150} label="Q2" />
