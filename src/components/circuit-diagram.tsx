@@ -122,45 +122,43 @@ function Symbol({
     case "wire":
       return null;
 
-    /* contato NA: lâmina inclinada, terminal superior aberto */
+    /* contato NA: duas barras paralelas pequenas e verticais */
     case "no":
     case "breaker":
       return (
         <>
           {name}
           {term}
-          <line x1={x} y1={y - 14} x2={x} y2={y - 10} />
-          <line x1={x} y1={y + 10} x2={x} y2={y + 14} />
-          <line x1={x} y1={y + 10} x2={x + 11} y2={y - 11} />
+          <line x1={x} y1={y - 14} x2={x} y2={y - 7} />
+          <line x1={x} y1={y + 7} x2={x} y2={y + 14} />
+          <line x1={x - 6} y1={y - 7} x2={x + 6} y2={y - 7} />
+          <line x1={x - 6} y1={y + 7} x2={x + 6} y2={y + 7} />
           {el.t === "breaker" && (
-            <>
-              <path d={`M${x - 4} ${y - 14} l4 4 l-4 4`} fill="none" />
-              <path d={`M${x - 4} ${y - 6} l4 4 l-4 4`} fill="none" />
-            </>
+            <path d={`M${x - 8} ${y - 10} l4 4 l-4 4`} fill="none" />
           )}
           {isButton && (
             <>
-              <line x1={x - 12} y1={y} x2={x + 5} y2={y} strokeDasharray="2 2" />
+              <line x1={x - 12} y1={y} x2={x - 6} y2={y} strokeDasharray="2 2" />
               <line x1={x - 12} y1={y - 4} x2={x - 12} y2={y + 4} />
             </>
           )}
         </>
       );
 
-    /* contato NF: lâmina inclinada apoiada na barra do terminal superior */
+    /* contato NF: duas barras paralelas cortadas por uma linha transversal */
     case "nc":
       return (
         <>
           {name}
           {term}
-          <line x1={x} y1={y - 14} x2={x} y2={y - 10} />
-          <line x1={x} y1={y + 10} x2={x} y2={y + 14} />
-          <line x1={x} y1={y + 10} x2={x + 11} y2={y - 11} />
-          <line x1={x + 5} y1={y - 10} x2={x + 14} y2={y - 10} />
-          <line x1={x + 11} y1={y - 10} x2={x + 11} y2={y - 14} />
+          <line x1={x} y1={y - 14} x2={x} y2={y - 7} />
+          <line x1={x} y1={y + 7} x2={x} y2={y + 14} />
+          <line x1={x - 6} y1={y - 7} x2={x + 6} y2={y - 7} />
+          <line x1={x - 6} y1={y + 7} x2={x + 6} y2={y + 7} />
+          <line x1={x - 8} y1={y + 5} x2={x + 8} y2={y - 5} />
           {isButton && (
             <>
-              <line x1={x - 12} y1={y} x2={x + 5} y2={y} strokeDasharray="2 2" />
+              <line x1={x - 12} y1={y} x2={x - 6} y2={y} strokeDasharray="2 2" />
               <line x1={x - 12} y1={y - 4} x2={x - 12} y2={y + 4} />
             </>
           )}
