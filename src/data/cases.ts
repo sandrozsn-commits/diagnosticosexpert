@@ -48,7 +48,7 @@ export type DiagCase = {
   technical: string;
   checklist: string[];
   lessons: string[];
-  circuitDiagramSpec?: import("./circuits").DiagramSpec;
+  circuitDiagramSpec?: any;
 };
 
 import { CIRCUITS, circuitOf } from "@/data/circuits";
