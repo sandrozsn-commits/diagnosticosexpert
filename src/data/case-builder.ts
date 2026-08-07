@@ -140,5 +140,31 @@ export function buildCases(circuit: Circuit, specs: OccurrenceSpec[], startNumbe
     technical: spec.technical,
     checklist: spec.checklist,
     lessons: spec.lessons,
+    diagram: circuit.diagram.rungs.flatMap(rung => rung.els.map(el => el.label || el.t)),
+  }));
+}
+  return specs.map((spec, i) => ({
+    id: spec.id,
+    number: startNumber + i,
+    title: spec.title,
+    symptom: spec.symptom,
+    objective: spec.objective,
+    level: spec.level,
+    category: circuit.name,
+    circuitId: circuit.id,
+    minutes: spec.minutes,
+    xp: spec.xp,
+    equipment: spec.equipment,
+    company: spec.company,
+    sector: spec.sector,
+    system: circuit.name,
+    priority: spec.priority ?? PRIORITY_BY_LEVEL[spec.level],
+    components: circuit.components,
+    root: "s0",
+    nodes: buildNodes(spec),
+    fault: spec.fault,
+    technical: spec.technical,
+    checklist: spec.checklist,
+    lessons: spec.lessons,
   }));
 }
