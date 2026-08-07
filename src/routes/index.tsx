@@ -1,4 +1,4 @@
-// Execute esta instrucao no projeto: Refinar as 3 ocorrências de "Revisão Necessária" para eliminar redundâncias. APENAS ISSO POR ENQUANTO.  NÃO  inicie a implementação técnica das categorias de acionamento eletrônico (Soft-Starter e Inversores).
+// Execute esta instrucao no projeto: Faça uma auditoria completa e identifique falhas, duplicidades, erros e demais problemas
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { CASES, CATEGORIES, type Level } from "@/data/cases";
