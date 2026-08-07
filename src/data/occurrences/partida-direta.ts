@@ -267,6 +267,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         wrong: [
           ["Apertar o contator com a mão para estabilizar", "Intervenção insegura em equipamento energizado e sem valor diagnóstico."],
           ["Trocar o motor de posição no barramento", "A instabilidade está no comando, não na potência."],
+          ["Substituir disjuntor Q1", "Q1 está conduzindo; o chiado é no contator."],
+          ["Medir isolamento do motor", "O problema é claramente de acionamento magnético."],
         ],
       },
       {
@@ -333,6 +335,9 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         correct: "Medir corrente de regime após a partida",
         wrong: [
           ["Substituir relé térmico", "Antes de trocar, medir corrente é obrigatório."],
+          ["Trocar motor", "Sem evidência de falha no motor, a troca é prematura."],
+          ["Aumentar a bitola dos cabos", "A queda de tensão não foi medida nem é suspeita."],
+          ["Limpar contatos do contator", "O problema é o ajuste do térmico, não mau contato."],
         ],
       },
       {
@@ -341,6 +346,9 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         correct: "Ajustar FT1 para a corrente nominal",
         wrong: [
           ["Trocar motor", "Corrente dentro da nominal."],
+          ["Substituir disjuntor de comando", "O disjuntor não interfere no ajuste do térmico."],
+          ["Inverter fases", "O motor gira normalmente; não há falta de fase."],
+          ["Trocar botoeira S0", "S0 é NF e funciona; o problema é o térmico."],
         ],
       },
     ],
@@ -348,6 +356,9 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
       correct: "FT1 ajustado abaixo da nominal",
       wrong: [
         ["Motor com defeito", "Corrente na nominal."],
+        ["Falta de fase", "Corrente equilibrada nas três fases."],
+        ["Curto-circuito", "O desarme seria instantâneo e via disjuntor."],
+        ["Falha no selo", "O motor parte e roda por 5 segundos; o selo está OK."],
       ],
     },
     fault: "Ajuste incorreto do FT1",
