@@ -184,6 +184,8 @@ export const REVERSAO: OccurrenceSpec[] = [
         wrong: [
           ["Substituir os dois contatores", "Componentes novos reproduzirão o mesmo comportamento se a lógica estiver errada."],
           ["Ajustar o relé térmico para valor máximo", "Ajuste não guarda relação com a impossibilidade de acionamento."],
+          ["Trocar as fases de entrada", "Isso mudaria o sentido, mas não corrigiria a lógica de intertravamento."],
+          ["Medir isolamento do motor", "O problema é de comando elétrico pulsante."],
         ],
       },
       {
@@ -194,6 +196,8 @@ export const REVERSAO: OccurrenceSpec[] = [
         wrong: [
           ["Retirar os contatos de intertravamento do circuito", "Removê-los elimina a proteção contra curto entre fases."],
           ["Trocar as botoeiras de posição", "As botoeiras não participam do erro de intertravamento."],
+          ["Substituir a bobina do contator", "A bobina está operando (gera pulso)."],
+          ["Aumentar a bitola dos cabos de comando", "Não há queda de tensão; há erro de lógica."],
         ],
       },
     ],
@@ -201,7 +205,9 @@ export const REVERSAO: OccurrenceSpec[] = [
       correct: "Intertravamento invertido: cada contator abre o próprio contato NF (auto-intertravamento)",
       wrong: [
         ["Bobinas com tensão incorreta", "As bobinas atracam momentaneamente, o que comprova tensão adequada."],
-        ["Botoeiras com contatos trocados", "As botoeiras energizam corretamente os ramos."],
+        ["Botoeira S1 e S2 com contatos trocados", "As botoeiras energizam corretamente os ramos."],
+        ["FT1 atuado", "O comando recebe energia até os contatores."],
+        ["Curto-circuito na carga", "O disjuntor de potência não desarmou."],
       ],
     },
     fault: "Erro de montagem: contatos de intertravamento ligados no ramo do próprio contator",
@@ -238,6 +244,8 @@ export const REVERSAO: OccurrenceSpec[] = [
         wrong: [
           ["Religar o disjuntor e repetir o comando", "Nova tentativa reproduz o curto entre fases e pode danificar contatores e cabos."],
           ["Aumentar a curva do disjuntor", "Mascarar a proteção diante de um curto franco é conduta inaceitável."],
+          ["Trocar o motor", "O curto ocorre no painel (fechamento simultâneo de fases)."],
+          ["Medir corrente de regime", "Não é possível atingir regime devido ao curto imediato."],
         ],
       },
       {
@@ -247,6 +255,8 @@ export const REVERSAO: OccurrenceSpec[] = [
         wrong: [
           ["Substituir as duas botoeiras", "As botoeiras atuam corretamente: o problema aparece com o contator já energizado."],
           ["Inverter os cabos de intertravamento", "Alterar a fiação sem diagnóstico cria uma segunda falha sobre a primeira."],
+          ["Trocar os fusíveis de potência", "Os fusíveis abriram devido ao curto; trocá-los sem resolver a causa é inútil."],
+          ["Ajustar relé térmico", "O térmico não protege contra curto-circuito entre fases."],
         ],
       },
     ],
@@ -255,6 +265,8 @@ export const REVERSAO: OccurrenceSpec[] = [
       wrong: [
         ["Falta de intertravamento mecânico", "O bloqueio mecânico existe; a falha está no contato elétrico que permite energizar as duas bobinas."],
         ["Botoeiras S1 e S2 acionadas juntas", "O comando anti-horário foi acionado isoladamente."],
+        ["Bobina de KM2 queimada", "O curto ocorre pelo fechamento simultâneo; KM2 atraca."],
+        ["Falta de fase", "O curto prova que as fases estão presentes."],
       ],
     },
     fault: "Bloco auxiliar NF de KM1 danificado, anulando o intertravamento elétrico",
