@@ -55,11 +55,11 @@ export const CIRCUITS: Circuit[] = [
             { t: "fuse", label: "F2 (1A)" },
             { t: "nc", label: "FT1 95/96" },
             { t: "nc", label: "S0" },
-            { t: "no", label: "S1" },
+            { t: "no", label: "S1 13/14" },
             { t: "coil", label: "KM1 (A1-A2)" },
           ],
           branch: { from: 4, to: 4, els: [{ t: "no", label: "KM1 13/14 (selo)" }] },
-          note: "Circuito de Comando (220 V~)",
+          note: "1. CIRCUITO DE COMANDO (220 V~)",
         },
         {
           els: [
@@ -69,7 +69,7 @@ export const CIRCUITS: Circuit[] = [
             { t: "thermal", label: "FT1" },
             { t: "motor", label: "M1 3~" },
           ],
-          note: "Circuito de Potência (L1 / L2 / L3)",
+          note: "2. CIRCUITO DE POTÊNCIA",
         },
       ],
     },
