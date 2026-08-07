@@ -1,3 +1,4 @@
+// Execute esta instrucao no projeto: Sim, prosseguir com a implementação de mais casos.
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { CASES, CATEGORIES, type Level } from "@/data/cases";
