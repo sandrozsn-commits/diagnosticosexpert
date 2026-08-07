@@ -90,6 +90,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         wrong: [
           ["Manter o motor ligado para observar o comportamento", "Motor mantido em falta de fase: aquecimento severo e risco de queima do enrolamento."],
           ["Trocar a botoeira S1", "O comando funcionou corretamente: KM1 atracou."],
+          ["Inverter as fases de entrada", "Isso não resolve a falta de uma fase; apenas inverte o sentido."],
+          ["Reapertar disjuntor de comando", "A falha está na potência, não no comando."],
         ],
       },
       {
@@ -99,6 +101,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         wrong: [
           ["Medir a resistência de isolamento do motor", "Medida válida em outro contexto, mas o desequilíbrio já aponta falta de fase na alimentação."],
           ["Reapertar apenas os bornes do motor", "O aperto não explica a ausência total de tensão em uma das fases."],
+          ["Trocar o motor", "O problema é na alimentação; o novo motor também zumbiria."],
+          ["Testar contatos auxiliares", "A falha é no circuito de potência."],
         ],
       },
     ],
@@ -107,6 +111,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
       wrong: [
         ["Rotor travado mecanicamente", "Com rotor travado haveria tensão equilibrada nas três fases."],
         ["Contator subdimensionado", "O contator fechou corretamente e conduz nas fases íntegras."],
+        ["Curto-circuito no motor", "Haveria desarme imediato por sobrecorrente/disjuntor."],
+        ["Falta de fase na rede geral", "As fases L1-L2 e L2-L3 estão normais; apenas a saída L3 falhou."],
       ],
     },
     fault: "Fusível de potência aberto (falta de fase em L3)",
@@ -143,6 +149,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         wrong: [
           ["Rearmar repetidamente até o motor permanecer ligado", "Rearmes sucessivos degradam o relé e não revelam nada sobre a corrente real."],
           ["Substituir o relé térmico por outro igual", "Sem conhecer a corrente do motor, a troca é um chute."],
+          ["Aumentar o ajuste para o máximo", "Perda total de proteção; o motor pode queimar sem aviso."],
+          ["Trocar os fusíveis de potência", "O motor parte; os fusíveis estão conduzindo."],
         ],
       },
       {
@@ -152,6 +160,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         wrong: [
           ["Verificar o alinhamento mecânico da carga", "As correntes estão equilibradas e dentro da nominal — não há sobrecarga mecânica."],
           ["Medir isolamento do enrolamento", "O motor opera com corrente normal; o isolamento não é o ponto em questão."],
+          ["Substituir o contator", "O contator está mantendo o motor rodando por 10s."],
+          ["Limpar terminais do motor", "Não há indícios de mau contato; corrente está estável."],
         ],
       },
     ],
@@ -160,6 +170,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
       wrong: [
         ["Sobrecarga mecânica na carga acionada", "As três correntes estão dentro da corrente nominal de placa."],
         ["Desequilíbrio de tensão da rede", "As correntes estão equilibradas entre as fases."],
+        ["Curto entre espiras", "A corrente seria muito mais alta e desequilibrada."],
+        ["Falha no temporizador", "Partida direta simples não usa temporizador de partida."],
       ],
     },
     fault: "Ajuste incorreto do relé térmico FT1 (9 A para um motor de 14,5 A)",
