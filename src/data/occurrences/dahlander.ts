@@ -167,7 +167,7 @@ export const DAHLANDER: OccurrenceSpec[] = [
     company: "Indústria de Plásticos Rio Bonito",
     sector: "Extrusora",
     priority: "Média",
-    symptom: "A baixa velocidade funciona bem. Ao acionar S2 para trocar para alta, o motor dá um solavanco brusco, faz um estalo alto, e só depois estabiliza.",
+    symptom: "A baixa velocidade funciona bem. Ao acionar S2 para trocar para alta, o motor dá um solavanco brusco, faz um estalo alto, e só depois de um instante estabiliza na velocidade alta.",
     objective: "Diagnosticar a falha na transição entre os enrolamentos Dahlander.",
     steps: [
       {
@@ -219,7 +219,7 @@ export const DAHLANDER: OccurrenceSpec[] = [
     company: "Frigorífico Serra Fria",
     sector: "Câmara de resfriamento — ventilador",
     priority: "Média",
-    symptom: "Em velocidade alta opera normal. Em velocidade baixa, o relé térmico FT1 desarma por sobrecorrente em menos de 20 minutos.",
+    symptom: "Em velocidade alta opera normal. Em velocidade baixa, em menos de 20 minutos o relé térmico FT1 desarma por sobrecorrente, mesmo com a mesma carga do ventilador.",
     objective: "Identificar o erro de parametrização da proteção térmica em baixa velocidade.",
     steps: [
       {
