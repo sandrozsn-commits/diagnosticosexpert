@@ -3,143 +3,106 @@ import React from 'react';
 /**
  * Componente de Diagrama Elétrico: Partida Direta com Selo
  * Simbologia Técnica baseada na IEC 60617.
- * Circuito de Comando (220V~) e Circuito de Potência.
+ * Reprodução fiel da composição gráfica industrial.
  */
 export const DirectStartDiagram = () => {
   return (
-    <div className="w-full bg-white p-4 overflow-auto">
+    <div className="w-full bg-white p-4 overflow-auto border border-border rounded-lg">
       <svg
         viewBox="0 0 1000 700"
         width="100%"
         height="auto"
         preserveAspectRatio="xMidYMid meet"
         xmlns="http://www.w3.org/2000/svg"
-        className="font-mono"
+        className="font-sans"
       >
-        {/* Fundo Branco */}
         <rect width="1000" height="700" fill="#ffffff" />
 
         {/* --- 1. CIRCUITO DE COMANDO --- */}
         <g stroke="#000000" strokeWidth="2" fill="none">
-          {/* Títulos */}
-          <text x="50" y="40" fontSize="18" fontWeight="bold" fill="#000" stroke="none">1. DIAGRAMA DE COMANDO</text>
+          <text x="50" y="40" fontSize="20" fontWeight="bold" stroke="none" fill="#000">1. DIAGRAMA DE COMANDO</text>
           
-          {/* Trilho Superior L1 */}
-          <line x1="150" y1="80" x2="350" y2="80" />
-          <text x="130" y="85" fontSize="14" fill="#000" stroke="none">L1</text>
-          <circle cx="250" cy="80" r="3" fill="#000" />
+          {/* Condutor vertical principal (L1) */}
+          <line x1="250" y1="80" x2="250" y2="460" />
+          <text x="235" y="70" fontSize="16" stroke="none" fill="#000">L1</text>
 
-          {/* Q1 - Disjuntor de Comando */}
-          <line x1="250" y1="80" x2="250" y2="110" />
-          <rect x="240" y="110" width="20" height="30" />
-          <text x="270" y="130" fontSize="14" fill="#000" stroke="none">Q1</text>
-          <line x1="250" y1="140" x2="250" y2="160" />
+          {/* Q1 */}
+          <rect x="240" y="100" width="20" height="30" />
+          <text x="270" y="125" fontSize="16" stroke="none" fill="#000">Q1</text>
 
-          {/* F1 - Fusível */}
-          <rect x="242" y="160" width="16" height="30" />
-          <line x1="250" y1="160" x2="250" y2="190" />
-          <text x="270" y="180" fontSize="14" fill="#000" stroke="none">F1</text>
-          <line x1="250" y1="190" x2="250" y2="210" />
+          {/* F1 */}
+          <rect x="242" y="150" width="16" height="30" />
+          <text x="270" y="175" fontSize="16" stroke="none" fill="#000">F1</text>
 
-          {/* FT1 - Contato Térmico (95-96) NF */}
+          {/* FT1 - NF (95-96) */}
           <line x1="240" y1="210" x2="260" y2="210" />
           <line x1="240" y1="240" x2="260" y2="240" />
           <line x1="250" y1="210" x2="250" y2="240" />
-          <line x1="242" y1="242" x2="258" y2="208" /> {/* Traço transversal NF */}
-          <text x="215" y="215" fontSize="10" fill="#000" stroke="none">95</text>
-          <text x="215" y="240" fontSize="10" fill="#000" stroke="none">96</text>
-          <text x="270" y="230" fontSize="14" fill="#000" stroke="none">FT1</text>
-          <line x1="250" y1="240" x2="250" y2="260" />
+          <line x1="242" y1="242" x2="258" y2="208" />
+          <text x="270" y="235" fontSize="16" stroke="none" fill="#000">FT1</text>
 
-          {/* S0 - Botoeira PARADA NF */}
-          <line x1="240" y1="260" x2="260" y2="260" />
-          <line x1="240" y1="290" x2="260" y2="290" />
-          <line x1="250" y1="260" x2="250" y2="290" />
-          <line x1="242" y1="292" x2="258" y2="258" /> {/* Traço transversal NF */}
-          <text x="270" y="280" fontSize="14" fill="#000" stroke="none">S0</text>
-          <line x1="250" y1="290" x2="250" y2="310" />
+          {/* S0 - NF */}
+          <line x1="240" y1="270" x2="260" y2="270" />
+          <line x1="240" y1="300" x2="260" y2="300" />
+          <line x1="250" y1="270" x2="250" y2="300" />
+          <line x1="242" y1="302" x2="258" y2="268" />
+          <text x="270" y="295" fontSize="16" stroke="none" fill="#000">S0</text>
 
-          {/* Nó de entrada do paralelo */}
-          <circle cx="250" cy="310" r="3" fill="#000" />
+          {/* NÓ E RAMO DE SELO */}
+          <circle cx="250" y="320" r="3" fill="#000" />
           
-          {/* Paralelo S1 e KM1 NA */}
-          <line x1="250" y1="310" x2="250" y2="330" />
+          {/* Vertical após S0 */}
+          <line x1="250" y1="320" x2="250" y2="410" />
           
-          {/* Ramo S1 (NA) */}
-          <line x1="250" y1="310" x2="180" y2="310" />
-          <line x1="180" y1="310" x2="180" y2="330" />
-          <line x1="170" y1="330" x2="190" y2="330" />
-          <line x1="170" y1="360" x2="190" y2="360" />
-          <line x1="180" y1="360" x2="180" y2="380" />
-          <text x="155" y="335" fontSize="10" fill="#000" stroke="none">13</text>
-          <text x="155" y="360" fontSize="10" fill="#000" stroke="none">14</text>
-          <text x="195" y="350" fontSize="14" fill="#000" stroke="none">S1</text>
-          
-          {/* Ramo KM1 Selo (NA) */}
-          <line x1="250" y1="310" x2="320" y2="310" />
-          <line x1="320" y1="310" x2="320" y2="330" />
-          <line x1="310" y1="330" x2="330" y2="330" />
-          <line x1="310" y1="360" x2="330" y2="360" />
-          <line x1="320" y1="360" x2="320" y2="380" />
-          <text x="335" y="335" fontSize="10" fill="#000" stroke="none">13</text>
-          <text x="335" y="360" fontSize="10" fill="#000" stroke="none">14</text>
-          <text x="275" y="350" fontSize="14" fill="#000" stroke="none">KM1 (selo)</text>
+          {/* Derivação esquerda (S1 - NA) */}
+          <line x1="250" y1="320" x2="180" y2="320" />
+          <line x1="180" y1="320" x2="180" y2="340" />
+          <line x1="170" y1="340" x2="190" y2="340" />
+          <line x1="170" y1="370" x2="190" y2="370" />
+          <line x1="180" y1="370" x2="180" y2="390" />
+          <line x1="180" y1="390" x2="250" y2="390" />
+          <text x="140" y="365" fontSize="16" stroke="none" fill="#000">S1</text>
 
-          {/* Nó de saída do paralelo */}
-          <line x1="180" y1="380" x2="320" y2="380" />
-          <circle cx="250" cy="380" r="3" fill="#000" />
-          <line x1="250" y1="380" x2="250" y2="410" />
+          {/* Derivação direita (KM1 - NA Selo) */}
+          <line x1="250" y1="320" x2="320" y2="320" />
+          <line x1="320" y1="320" x2="320" y2="340" />
+          <line x1="310" y1="340" x2="330" y2="340" />
+          <line x1="310" y1="370" x2="330" y2="370" />
+          <line x1="320" y1="370" x2="320" y2="390" />
+          <line x1="320" y1="390" x2="250" y2="390" />
+          <text x="340" y="365" fontSize="16" stroke="none" fill="#000">KM1</text>
 
           {/* KM1 - Bobina */}
-          <rect x="230" y="410" width="40" height="25" />
-          <text x="240" y="428" fontSize="12" fontWeight="bold" fill="#000" stroke="none">KM1</text>
-          <text x="215" y="415" fontSize="10" fill="#000" stroke="none">A1</text>
-          <text x="215" y="440" fontSize="10" fill="#000" stroke="none">A2</text>
-          <line x1="250" y1="435" x2="250" y2="460" />
+          <rect x="230" y="410" width="40" height="30" />
+          <text x="280" y="430" fontSize="16" stroke="none" fill="#000">KM1</text>
 
-          {/* Trilho Inferior N */}
-          <line x1="150" y1="460" x2="350" y2="460" />
-          <text x="130" y="465" fontSize="14" fill="#000" stroke="none">N</text>
-          <circle cx="250" cy="460" r="3" fill="#000" />
+          {/* N */}
+          <line x1="250" y1="440" x2="250" y2="460" />
+          <text x="235" y="475" fontSize="16" stroke="none" fill="#000">N</text>
         </g>
 
         {/* --- 2. CIRCUITO DE POTÊNCIA --- */}
         <g stroke="#000000" strokeWidth="2" fill="none">
-          <text x="50" y="520" fontSize="18" fontWeight="bold" fill="#000" stroke="none">2. DIAGRAMA DE POTÊNCIA</text>
-
-          {/* Fases L1, L2, L3 */}
+          <text x="50" y="520" fontSize="20" fontWeight="bold" stroke="none" fill="#000">2. DIAGRAMA DE POTÊNCIA</text>
+          
           {[600, 640, 680].map((x, i) => (
             <g key={i}>
-              <text x={x - 10} y="550" fontSize="14" fill="#000" stroke="none">{`L${i + 1}`}</text>
-              
-              {/* Condutor vertical */}
+              <text x={x - 5} y="550" fontSize="16" stroke="none" fill="#000">{`L${i + 1}`}</text>
               <line x1={x} y1="560" x2={x} y2="680" />
               
-              {/* Q1 - Proteção (Disjuntor) */}
+              {/* Q1 */}
               <rect x={x - 8} y="570" width="16" height="20" />
-              {i === 1 && <text x={x + 15} y="585" fontSize="12" fill="#000" stroke="none">Q1</text>}
-
-              {/* KM1 - Contatos Principais */}
-              <line x1={x - 6} y1="605" x2={x + 6} y2="605" />
-              <line x1={x - 6} y1="620" x2={x + 6} y2="620" />
-              {i === 1 && <text x={x + 15} y="618" fontSize="12" fill="#000" stroke="none">KM1</text>}
-
-              {/* FT1 - Relé Térmico */}
-              <rect x={x - 10} y="635" width="20" height="15" />
-              <path d={`M${x - 5} ${x > 670 ? 650 : 650} q5 -4 0 -8`} strokeWidth="1" />
-              {i === 1 && <text x={x + 15} y="648" fontSize="12" fill="#000" stroke="none">FT1</text>}
+              {/* KM1 */}
+              <line x1={x - 6} y1="610" x2={x + 6} y2="610" />
+              <line x1={x - 6} y1="625" x2={x + 6} y2="625" />
+              {/* FT1 */}
+              <rect x={x - 10} y="640" width="20" height="15" />
             </g>
           ))}
-
-          {/* Motor M1 */}
-          <circle cx="640" cy="670" r="25" fill="#fff" />
-          <text x="640" y="675" textAnchor="middle" fontSize="16" fontWeight="bold" fill="#000" stroke="none">M1</text>
-          <text x="640" y="688" textAnchor="middle" fontSize="10" fill="#000" stroke="none">3~</text>
           
-          {/* Conexões finais ao motor */}
-          <line x1="600" y1="650" x2="618" y2="660" />
-          <line x1="640" y1="650" x2="640" y2="645" />
-          <line x1="680" y1="650" x2="662" y2="660" />
+          {/* Motor */}
+          <circle cx="640" cy="670" r="25" fill="#fff" />
+          <text x="640" y="675" textAnchor="middle" fontSize="16" fontWeight="bold" stroke="none" fill="#000">M1</text>
         </g>
       </svg>
     </div>
