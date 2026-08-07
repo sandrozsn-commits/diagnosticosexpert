@@ -1,4 +1,151 @@
-// Execute esta instrucao no projeto: quero que você use o diagrama enviado em anexo e substitua pelo diagrama que você criou
+/*
+Execute esta instrucao no projeto: CORREÇÃO DO DIAGRAMA — NÃO REDESENHAR A LÓGICA
+
+O resultado atual NÃO está fiel à imagem de referência.
+
+A imagem anexada deve ser tratada como REFERÊNCIA VISUAL OBRIGATÓRIA.
+
+Não quero um novo estilo de diagrama.
+Não quero uma interpretação simplificada.
+Não quero símbolos elétricos genéricos.
+
+Quero reproduzir a mesma linguagem gráfica da referência.
+
+Faça apenas a substituição visual do diagrama atual por um SVG nativo.
+
+### SIMBOLOGIA — REGRA PRINCIPAL
+
+Os componentes devem ser desenhados como símbolos eletrotécnicos, usando linhas, contatos e formas geométricas, e NÃO como ícones.
+
+Reproduza visualmente os símbolos da referência para:
+
+Q2 — disjuntor monopolar:
+símbolo de contato/dispositivo de proteção inserido diretamente no condutor vertical, com a pequena lâmina inclinada característica.
+
+F2 — fusível:
+símbolo retangular estreito vertical inserido diretamente no condutor.
+
+FT1 — contato NF do relé térmico:
+dois terminais no mesmo condutor vertical e contato representado por lâmina diagonal.
+
+S0 — contato NF:
+mesma linguagem gráfica de contato NF usada para FT1, com lâmina diagonal.
+
+S1 — contato NA:
+dois terminais separados por uma abertura, sem a lâmina diagonal de fechamento do contato NF.
+
+KM1 — contato auxiliar NA:
+usar EXATAMENTE A MESMA LINGUAGEM GRÁFICA do contato S1, pois ambos são contatos normalmente abertos.
+
+KM1 — bobina:
+usar o símbolo retangular vertical da bobina mostrado na referência, conectado diretamente ao condutor vertical.
+
+Q1 — disjuntor tripolar:
+três símbolos de contato/proteção alinhados verticalmente, um para cada fase, ligados mecanicamente por uma linha tracejada horizontal, como na referência.
+
+KM1 — contator tripolar:
+três contatos principais verticais, um em cada fase, ligados mecanicamente por uma linha tracejada horizontal.
+
+FT1 — relé térmico tripolar:
+três elementos térmicos alinhados nas três fases, usando o mesmo estilo gráfico da referência.
+
+M1 — motor trifásico:
+círculo grande com a letra "M" no centro e indicação "3~" abaixo, exatamente no estilo da referência.
+
+### CIRCUITO DE COMANDO
+
+Manter a estrutura vertical da referência:
+
+L1
+↓
+Q2
+↓
+F2
+↓
+FT1 NF
+↓
+S0 NF
+↓
+S1 NA + contato auxiliar KM1 NA em selo
+↓
+bobina KM1
+↓
+N
+
+O selo deve seguir a GEOMETRIA DA IMAGEM DE REFERÊNCIA.
+
+Não representar o selo como caixa.
+Não representar o selo como fluxograma.
+Não usar esquema ASCII.
+Não colocar os contatos simplesmente lado a lado.
+
+Os condutores devem formar a mesma derivação vertical/lateral observada na referência.
+
+### CIRCUITO DE POTÊNCIA
+
+Manter três condutores verticais independentes:
+
+L1
+L2
+L3
+
+Cada fase deve passar verticalmente por:
+
+Q1 → F1 → KM1 → FT1 → M1
+
+Os três conjuntos devem permanecer perfeitamente alinhados.
+
+Os contatos principais de Q1 e KM1 devem ser visualmente ligados entre si por linhas tracejadas horizontais, como na referência.
+
+### REGRAS DE DESENHO
+
+Use SVG nativo.
+
+Não use:
+- Lucide;
+- ícones;
+- React Flow;
+- PNG;
+- imagem rasterizada;
+- símbolos Unicode;
+- formas genéricas de UI.
+
+Use somente:
+- <line>
+- <path>
+- <rect>
+- <circle>
+- <text>
+- <g>
+
+Todos os símbolos devem ser construídos manualmente em SVG.
+
+### IMPORTANTE
+
+Não basta o circuito estar eletricamente correto.
+
+O CRITÉRIO DE ACEITE É VISUAL.
+
+Compare o resultado com a imagem de referência e corrija até que:
+
+1. os contatos NA tenham a mesma aparência da referência;
+2. os contatos NF tenham a mesma aparência da referência;
+3. a bobina KM1 tenha a mesma aparência da referência;
+4. Q1/Q2 tenham a mesma linguagem gráfica da referência;
+5. os fusíveis tenham a mesma aparência da referência;
+6. o relé térmico tenha a mesma aparência da referência;
+7. o motor M1 tenha a mesma aparência da referência;
+8. os contatos principais do contator tenham a mesma aparência da referência;
+9. as linhas tracejadas de acoplamento mecânico estejam presentes onde aparecem na referência;
+10. a geometria do selo seja igual à referência;
+11. os componentes estejam inseridos nos condutores e não desenhados como ícones independentes.
+
+NÃO altere nenhuma outra parte do aplicativo.
+
+Não altere banco de dados, XP, perguntas, respostas, navegação ou funcionalidades existentes.
+
+A tarefa é SOMENTE corrigir a representação SVG do diagrama para que sua simbologia e composição visual sejam fiéis à imagem de referência.
+*/
 
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
