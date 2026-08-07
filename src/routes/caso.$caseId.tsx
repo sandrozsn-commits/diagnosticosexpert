@@ -333,7 +333,7 @@ function CasePage() {
             </ul>
           </Panel>
           <Panel title="Diagrama interativo">
-            <InteractiveCircuit />
+            <InteractiveCircuit spec={diagCase.circuitDiagramSpec} />
           </Panel>
           {circuit && (
             <Panel title="Diagrama de comando">

@@ -48,6 +48,7 @@ export type DiagCase = {
   technical: string;
   checklist: string[];
   lessons: string[];
+  circuitDiagramSpec?: any;
 };
 
 import { CIRCUITS, circuitOf } from "@/data/circuits";
@@ -61,6 +62,8 @@ import { ROTOR_BOBINADO } from "@/data/occurrences/rotor-bobinado";
 import { REVERSAO_AUTOMATICA } from "@/data/occurrences/reversao-automatica";
 import { ESTRELA_TRIANGULO_FREIO } from "@/data/occurrences/estrela-triangulo-freio";
 import { PARTIDA_SEQUENCIAL } from "@/data/occurrences/partida-sequencial";
+import { DAHLANDER_REVERSAO } from "@/data/occurrences/dahlander-reversao";
+import { ROTOR_BOBINADO_REVERSAO } from "@/data/occurrences/rotor-bobinado-reversao";
 
 /** Registro por tipo de circuito — novas ocorrências entram apenas nesta tabela. */
 const REGISTRY: Record<string, typeof PARTIDA_DIRETA> = {
@@ -79,6 +82,8 @@ const REGISTRY: Record<string, typeof PARTIDA_DIRETA> = {
   "reversao-automatica": REVERSAO_AUTOMATICA,
   "estrela-triangulo-freio": ESTRELA_TRIANGULO_FREIO,
   "partida-sequencial": PARTIDA_SEQUENCIAL,
+  "dahlander-reversao": DAHLANDER_REVERSAO,
+  "rotor-bobinado-reversao": ROTOR_BOBINADO_REVERSAO,
 };
 
 function assemble(): DiagCase[] {

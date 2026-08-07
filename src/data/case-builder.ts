@@ -140,5 +140,7 @@ export function buildCases(circuit: Circuit, specs: OccurrenceSpec[], startNumbe
     technical: spec.technical,
     checklist: spec.checklist,
     lessons: spec.lessons,
+    // Fix: Pass the current circuit's diagram spec to the case
+    circuitDiagramSpec: circuit.diagram,
   }));
 }

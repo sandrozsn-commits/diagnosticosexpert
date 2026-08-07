@@ -5,6 +5,7 @@
  */
 
 import { useEffect, useRef, useState } from "react";
+import { CircuitDiagram } from "./circuit-diagram";
 
 type Part = {
   id: string;
@@ -73,7 +74,18 @@ const PARTS: Record<string, Part> = {
 /** fases da animação: 0 parado · 1 comando pronto · 2 S1 pressionado · 3 selado/motor girando */
 type Phase = 0 | 1 | 2 | 3;
 
-export function InteractiveCircuit({ className }: { className?: string }) {
+export function InteractiveCircuit({ className, spec }: { className?: string; spec?: any }) {
+  if (spec) {
+    return (
+      <div className={className}>
+        <CircuitDiagram spec={spec} />
+        <p className="mt-3 text-xs text-muted-foreground italic">
+          Diagrama técnico do sistema atual. Clique em "Diagrama de comando" abaixo para ver mais detalhes.
+        </p>
+      </div>
+    );
+  }
+
   const [selected, setSelected] = useState<string | null>(null);
   const [phase, setPhase] = useState<Phase>(0);
   const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
