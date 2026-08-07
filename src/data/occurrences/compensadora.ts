@@ -19,6 +19,8 @@ export const COMPENSADORA: OccurrenceSpec[] = [
         wrong: [
           ["Elevar o tap de 65 % para 80 %", "Sem saber se KM2 é energizado, mudar o tap não altera o resultado."],
           ["Trocar o autotransformador T1", "Componente caro trocado sem qualquer evidência de falha."],
+          ["Verificar a botoeira S0", "Se S0 estivesse aberta, o KM1 (neutro) não teria atracado."],
+          ["Trocar o motor", "Nenhum contator de potência fechou ainda; o motor não é o culpado."],
         ],
       },
       {
@@ -28,6 +30,8 @@ export const COMPENSADORA: OccurrenceSpec[] = [
         wrong: [
           ["Substituir o temporizador KT1", "O temporizador atua na transição final, não na energização do tap."],
           ["Verificar o relé térmico", "O relé térmico está fechado — KM1 chegou a atracar."],
+          ["Inverter as fases de comando", "Inverter fases não corrige um contato auxiliar que não fecha."],
+          ["Limpar os contatos de potência de KM2", "A bobina de KM2 nem recebe tensão; limpar potência é prematuro."],
         ],
       },
     ],
@@ -36,6 +40,8 @@ export const COMPENSADORA: OccurrenceSpec[] = [
       wrong: [
         ["Autotransformador com enrolamento aberto", "O motor sequer é energizado, pois o contator de tap não fecha."],
         ["Tap incorreto selecionado", "A seleção de tap não impede a energização da bobina."],
+        ["Falta de fase", "O comando KM1 atracou, logo a fase de comando está presente."],
+        ["Bobina de KM2 queimada", "A bobina nem chegou a receber tensão."],
       ],
     },
     fault: "Contato auxiliar NA de KM1 defeituoso",
@@ -72,6 +78,8 @@ export const COMPENSADORA: OccurrenceSpec[] = [
         wrong: [
           ["Deixar a máquina operando no tap reduzido", "O autotransformador não é dimensionado para regime contínuo e pode queimar."],
           ["Trocar o motor de posição na linha", "A falha está na sequência de comando, não na alimentação do motor."],
+          ["Substituir o contator KM1", "KM1 está operando e mantendo o tap reduzido."],
+          ["Verificar a botoeira S1", "S1 iniciou a partida corretamente; o erro é na transição."],
         ],
       },
       {
@@ -81,6 +89,8 @@ export const COMPENSADORA: OccurrenceSpec[] = [
         wrong: [
           ["Substituir o temporizador KT1", "O contato temporizado fechou corretamente."],
           ["Aumentar o tempo de partida", "Prolongar o tempo agrava o aquecimento do autotransformador."],
+          ["Trocar o autotransformador", "O autotransformador funciona no tap; a falha é no acionamento da rede plena."],
+          ["Inverter as fases da bobina de KM3", "Bobinas de CA não têm polaridade."],
         ],
       },
     ],
@@ -89,6 +99,8 @@ export const COMPENSADORA: OccurrenceSpec[] = [
       wrong: [
         ["Temporizador sem comutar", "A continuidade em 15/18 foi confirmada após a contagem."],
         ["Bobina de KM3 queimada", "A bobina nem chega a receber tensão."],
+        ["Falta de fase na potência", "O motor gira no tap, provando que há potência."],
+        ["Disjuntor de comando desarmado", "O comando está ativo no tap reduzido."],
       ],
     },
     fault: "Contato de intertravamento NF de KM2 aberto",
@@ -124,6 +136,8 @@ export const COMPENSADORA: OccurrenceSpec[] = [
         wrong: [
           ["Lubrificar os mancais do transportador", "A carga mecânica não mudou desde antes da manutenção."],
           ["Substituir o contator de tap", "O contator fecha corretamente e conduz corrente."],
+          ["Trocar as fases de entrada", "Isso inverteria a rotação, mas não corrigiria a queda de conjugado."],
+          ["Ajustar o temporizador KT1", "O problema é de força na partida, não de tempo de comutação."],
         ],
       },
       {
@@ -133,6 +147,8 @@ export const COMPENSADORA: OccurrenceSpec[] = [
         wrong: [
           ["Aumentar o tempo de partida", "Prolongar a partida em tensão insuficiente apenas aquece o motor."],
           ["Reduzir o ajuste do relé térmico", "Reduzir o ajuste provocaria desarmes ainda mais rápidos."],
+          ["Substituir o autotransformador", "O componente está funcionando, apenas a conexão foi feita no tap errado."],
+          ["Trocar a bobina de KM1", "KM1 está operando normalmente."],
         ],
       },
     ],
@@ -141,6 +157,8 @@ export const COMPENSADORA: OccurrenceSpec[] = [
       wrong: [
         ["Motor com enrolamento danificado", "A tensão aplicada está abaixo do previsto: o conjugado reduzido é esperado."],
         ["Relé térmico com ajuste baixo", "O motor não chega a acelerar; o desarme é consequência da partida prolongada."],
+        ["Falta de fase no tap", "A tensão medida foi entre fases, confirmando presença das mesmas."],
+        ["Temporizador KT1 queimado", "A falha ocorre antes da transição temporizada."],
       ],
     },
     fault: "Derivação (tap) incorreta no autotransformador de partida",
