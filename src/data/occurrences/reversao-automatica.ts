@@ -20,6 +20,8 @@ export const REVERSAO_AUTOMATICA: OccurrenceSpec[] = [
         wrong: [
           ["Trocar o temporizador por um novo", "Se a causa for externa (alimentação), o novo temporizador apresentará o mesmo erro."],
           ["Reduzir o tempo de ajuste para 10 segundos", "Mudar o ajuste não resolve a falha de contagem inconsistente."],
+          ["Trocar o motor por um de maior potência", "O motor não influi na base de tempo do temporizador de comando."],
+          ["Limpar os contatos de KM1", "A falha é de temporização, não de condução de potência."],
         ],
       },
       {
@@ -29,6 +31,8 @@ export const REVERSAO_AUTOMATICA: OccurrenceSpec[] = [
         wrong: [
           ["Trocar os contatores de reversão", "Os contatores estão funcionando; o problema é o comando que não envia o sinal de troca."],
           ["Substituir os cabos do motor", "A instabilidade está na alimentação do comando, não na potência."],
+          ["Inverter as fases da rede", "Inversão de fases não estabiliza a tensão de comando."],
+          ["Substituir a botoeira de emergência", "A emergência está fechada; a falha é oscilação, não interrupção."],
         ],
       },
     ],
@@ -37,6 +41,8 @@ export const REVERSAO_AUTOMATICA: OccurrenceSpec[] = [
       wrong: [
         ["Ajuste de tempo corrompido", "Temporizadores analógicos/digitais não mudam o ajuste sozinhos por erro de hardware sem queimar."],
         ["Fim de curso travado", "O sistema é por tempo, não por sensores de fim de curso."],
+        ["Bobina de KM2 queimada", "O motor continua rodando (em um sentido), logo o comando ainda está ativo."],
+        ["Falta de fase na potência", "A falta de fase não causaria atraso na contagem do temporizador."],
       ],
     },
     fault: "Oscilação intermitente na tensão de alimentação do temporizador de ciclo",
@@ -70,6 +76,9 @@ export const REVERSAO_AUTOMATICA: OccurrenceSpec[] = [
         correct: "Medir a temperatura interna do painel",
         wrong: [
           ["Trocar o motor", "O motor não controla o tempo de reversão."],
+          ["Inverter as fases da rede", "Inversão de fases não altera a temperatura do painel."],
+          ["Substituir a botoeira S1", "S1 operou para iniciar o ciclo."],
+          ["Trocar os fusíveis de comando", "Se os fusíveis estivessem abertos, o sistema não funcionaria."],
         ],
       },
       {
@@ -78,6 +87,9 @@ export const REVERSAO_AUTOMATICA: OccurrenceSpec[] = [
         correct: "Melhorar a ventilação do painel",
         wrong: [
           ["Reduzir carga do motor", "O calor é ambiental/painel, não do motor."],
+          ["Trocar o contator KM1", "A falha é de precisão no tempo, não de atracamento."],
+          ["Aumentar a bitola dos cabos de comando", "Cabos de comando não dissipam calor suficiente para aquecer o painel."],
+          ["Substituir o disjuntor de potência", "O disjuntor não influi na temperatura interna do relé eletrônico."],
         ],
       },
     ],
@@ -85,6 +97,9 @@ export const REVERSAO_AUTOMATICA: OccurrenceSpec[] = [
       correct: "Deriva térmica no temporizador por falta de ventilação",
       wrong: [
         ["Desgaste mecânico", "Componente eletrônico."],
+        ["Falta de fase", "O motor reverte, indicando presença de fases."],
+        ["Bobina de KM2 queimada", "O atraso é na ordem de comando, não na execução mecânica."],
+        ["Erro de lógica no CLP", "Este sistema usa temporizadores discretos, não CLP."],
       ],
     },
     fault: "Superaquecimento do temporizador",
@@ -110,6 +125,8 @@ export const REVERSAO_AUTOMATICA: OccurrenceSpec[] = [
         wrong: [
           ["Trocar o temporizador", "Pode ser apenas falta de comando de partida."],
           ["Substituir os fusíveis", "A sinaleira de painel ligado está acesa."],
+          ["Testar isolamento do motor", "O problema é de lógica de partida, não de carcaça."],
+          ["Inverter as fases de potência", "Inversão não restaura a lógica de selo do comando."],
         ],
       },
       {
@@ -119,6 +136,8 @@ export const REVERSAO_AUTOMATICA: OccurrenceSpec[] = [
         wrong: [
           ["Jumpear a emergência", "Ação perigosa e desnecessária."],
           ["Inverter o sentido do motor", "O motor já está no sentido correto."],
+          ["Substituir o contator KM1", "KM1 funciona; apenas precisa do comando inicial."],
+          ["Trocar o relé térmico", "O térmico está rearmado; não é a causa."],
         ],
       },
     ],
@@ -127,6 +146,8 @@ export const REVERSAO_AUTOMATICA: OccurrenceSpec[] = [
       wrong: [
         ["Falha no temporizador", "O componente está íntegro, apenas aguardando comando."],
         ["Curto-circuito", "Não houve desarme de proteção."],
+        ["Falta de fase", "O sistema nem sequer tentou partir."],
+        ["Bobina de KM2 queimada", "O erro é antes da escolha do sentido."],
       ],
     },
     fault: "Procedimento de reinicialização não executado",
