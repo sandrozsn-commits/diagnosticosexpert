@@ -70,6 +70,7 @@ export const REVERSAO: OccurrenceSpec[] = [
         correct: "Inspecionar o contato NA 13/14 de KM2",
         wrong: [
           ["Trocar motor", "O motor funciona enquanto o botão é pressionado."],
+          ["Inverter as fases", "O motor já gira no sentido correto."],
         ],
       },
       {
@@ -78,6 +79,7 @@ export const REVERSAO: OccurrenceSpec[] = [
         correct: "Substituir bloco de contatos auxiliares de KM2",
         wrong: [
           ["Aumentar tempo de partida", "O problema é de retenção elétrica, não tempo."],
+          ["Trocar o contator KM1", "KM1 é do sentido oposto."],
         ],
       },
     ],
@@ -85,6 +87,7 @@ export const REVERSAO: OccurrenceSpec[] = [
       correct: "Contato de selo de KM2 com alta resistência",
       wrong: [
         ["Botoeira S2 com defeito", "O motor parte, logo o botão fecha o circuito."],
+        ["Falta de fase", "O motor gira normalmente enquanto pressionado."],
       ],
     },
     fault: "Mau contato no auxiliar de KM2",
