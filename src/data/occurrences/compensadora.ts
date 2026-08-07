@@ -216,6 +216,8 @@ export const COMPENSADORA: OccurrenceSpec[] = [
       wrong: [
         ["Enrolamento de T1 em curto", "O aquecimento acompanha o número de partidas, não ocorre em regime permanente."],
         ["Tap ligado de forma incorreta", "A tensão de partida medida corresponde ao tap de 65 % especificado."],
+        ["Motor com rotor bloqueado", "O motor parte e roda; o problema é apenas o calor em T1."],
+        ["Falta de fase na partida", "O motor acelera; com falta de fase o ronco seria evidente e o torque quase nulo."],
       ],
     },
     fault: "Frequência de partidas superior ao regime nominal do autotransformador",
