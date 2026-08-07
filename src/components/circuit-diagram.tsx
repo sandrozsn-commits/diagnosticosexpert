@@ -1,8 +1,7 @@
 /**
  * Renderizador de diagramas de comando em SVG.
- * Simbologia ABNT / IEC 60617 no estilo CAD SIMU:
- * barramentos horizontais no topo, ramais verticais, terminais numerados.
- * Puramente ilustrativo (sem interação).
+ * Simbologia baseada em IEC 60617 / prática ABNT-IEC.
+ * Estilo técnico limpo (CAD-like).
  */
 
 export type DiagramElement = {
@@ -367,7 +366,7 @@ export function CircuitDiagram({ spec, className }: { spec: DiagramSpec; classNa
 
       <figcaption className="mt-2 space-y-1">
         <span className="block text-[10px] uppercase tracking-wide text-muted-foreground">
-          {spec.title} — simbologia ABNT/IEC
+          {spec.title} — Simbologia baseada em IEC 60617
         </span>
         {spec.rungs
           .filter((r) => r.note)
