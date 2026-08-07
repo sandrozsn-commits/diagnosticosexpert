@@ -5,6 +5,7 @@ import { briefingOf, occurrenceCode } from "@/data/occurrence";
 import { useProgress } from "@/lib/progress";
 import { AppShell } from "@/components/app-shell";
 import { CircuitDiagram } from "@/components/circuit-diagram";
+import { DirectStartDiagram } from "@/components/DirectStartDiagram";
 import { InteractiveCircuit } from "@/components/interactive-circuit";
 import { circuitOf } from "@/data/circuits";
 import {
@@ -337,7 +338,11 @@ function CasePage() {
           </Panel>
           {circuit && (
             <Panel title="Diagrama de comando">
-              <CircuitDiagram spec={circuit.diagram} />
+              {circuit.id === "partida-direta" ? (
+                <DirectStartDiagram />
+              ) : (
+                <CircuitDiagram spec={circuit.diagram} />
+              )}
             </Panel>
           )}
 
