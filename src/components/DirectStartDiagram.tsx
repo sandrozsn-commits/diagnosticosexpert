@@ -42,103 +42,99 @@ export const DirectStartDiagram = () => {
 
           {/* Q2 - Disjuntor monopolar */}
           <BreakerSinglePole x={200} y={150} label="Q2" />
-          <Wire x1="200" y1="80" x2="200" y2="115" />
+          <Wire x1={200} y1={80} x2={200} y2={115} />
 
           {/* F2 - Fusível */}
           <Fuse x={200} y={260} label="F2" />
           <text x={230} y={285} fontSize="14" fill="#111827">1A</text>
-          <Wire x1="200" y1="185" x2="200" y2="225" />
+          <Wire x1={200} y1={185} x2={200} y2={225} />
 
           {/* FT1 - Relé térmico (NF 95-96) */}
-          {/* Note: In ElectricalSymbols, contact goes from 0 to 60 in x, so we offset x to keep it centered on x=200 line */}
           <NormallyClosedContact x={170} y={370} label="FT1" labelPosition="right" />
           <text x={160} y={350} fontSize="12" fill="#111827">95</text>
           <text x={220} y={395} fontSize="12" fill="#111827">96</text>
-          <Wire x1="200" y1="295" x2="200" y2="340" />
-          {/* The contact ends at x=230 relative to y=370? No, ElectricalSymbols says:
-              terminal superior at x1=0, y1=-30 (relative) -> (170, 340)
-              terminal inferior at x1=60, y1=30 (relative) -> (230, 400)
-          */}
+          <Wire x1={200} y1={295} x2={200} y2={340} />
           
           {/* S0 - Botão de parada (NF) */}
           <NormallyClosedContact x={200} y={480} label="S0" />
           <text x={190} y={460} fontSize="12" fill="#111827">11</text>
           <text x={250} y={505} fontSize="12" fill="#111827">12</text>
-          <Wire x1="230" y1="400" x2="230" y2="450" />
-          <Wire x1="230" y1="450" x2="200" y2="450" /> {/* Realignment if needed */}
+          <Wire x1={230} y1={400} x2={230} y2={450} />
+          <Wire x1={230} y1={450} x2={200} y2={450} />
 
           {/* DERIVAÇÃO DO SELO */}
           <Junction x={260} y={550} />
-          <Wire x1="260" y1="510" x2="260" y2="550" />
+          <Wire x1={260} y1={510} x2={260} y2={550} />
           
           {/* S1 - Botão de partida (NA) */}
           <NormallyOpenContact x={230} y={620} label="S1" />
           <text x={220} y={600} fontSize="12" fill="#111827">13</text>
           <text x={280} y={645} fontSize="12" fill="#111827">14</text>
-          <Wire x1="260" y1="550" x2="260" y2="590" />
+          <Wire x1={260} y1={550} x2={260} y2={590} />
 
           {/* KM1 - Contato auxiliar NA (Selo) */}
           <NormallyOpenContact x={370} y={620} label="KM1" />
           <text x={360} y={600} fontSize="12" fill="#111827">13</text>
           <text x={420} y={645} fontSize="12" fill="#111827">14</text>
-          <Wire x1="260" y1="550" x2="400" y2="550" />
-          <Wire x1="400" y1="550" x2="400" y2="590" />
+          <Wire x1={260} y1={550} x2={400} y2={550} />
+          <Wire x1={400} y1={550} x2={400} y2={590} />
 
           {/* Fechamento do selo */}
-          <Wire x1="290" y1="650" x2="290" y2="690" />
-          <Wire x1="430" y1="650" x2="430" y2="690" />
-          <Wire x1="430" y1="690" x2="290" y2="690" />
+          <Wire x1={290} y1={650} x2={290} y2={690} />
+          <Wire x1={430} y1={650} x2={430} y2={690} />
+          <Wire x1={430} y1={690} x2={290} y2={690} />
           <Junction x={290} y={690} />
 
           {/* Bobina KM1 */}
           <ContactorCoil x={290} y={770} label="KM1" />
-          <Wire x1="290" y1="690" x2="290" y2="730" />
-          <Wire x1="290" y1="810" x2="290" y2="850" />
+          <Wire x1={290} y1={690} x2={290} y2={730} />
+          <Wire x1={290} y1={810} x2={290} y2={850} />
         </g>
 
         {/* ========================================================
             2. CIRCUITO DE POTÊNCIA
             ======================================================== */}
-        <g stroke="#111827" strokeWidth="2">
+        <g stroke="#111827" strokeWidth={2}>
           {/* Fases L1, L2, L3 */}
-          <text x="800" y="60" fontSize="22" fontWeight="bold" fill="#111827">L1</text>
-          <text x="950" y="60" fontSize="22" fontWeight="bold" fill="#111827">L2</text>
-          <text x="1100" y="60" fontSize="22" fontWeight="bold" fill="#111827">L3</text>
+          <text x={800} y={60} fontSize="22" fontWeight="bold" fill="#111827">L1</text>
+          <text x={950} y={60} fontSize="22" fontWeight="bold" fill="#111827">L2</text>
+          <text x={1100} y={60} fontSize="22" fontWeight="bold" fill="#111827">L3</text>
 
           {/* Q1 - Disjuntor Tripolar */}
           <BreakerThreePole x={800} y={150} label="Q1" />
           {[800, 950, 1100].map(x => (
-             <Wire key={x} x1={x} y1="70" x2={x} y2="112" />
+             <Wire key={x} x1={x} y1={70} x2={x} y2={112} />
           ))}
 
           {/* F1 - Fusíveis */}
           {[800, 950, 1100].map(x => (
             <Fuse key={x} x={x} y={260} />
           ))}
-          <text x="1220" y="265" fontSize="18" fontWeight="bold" fill="#111827">F1</text>
+          <text x={1220} y={265} fontSize={18} fontWeight="bold" fill="#111827">F1</text>
           {[800, 950, 1100].map(x => (
-             <Wire key={x} x1={x} y1="188" x2={x} y2="225" />
+             <Wire key={x} x1={x} y1={188} x2={x} y2={225} />
           ))}
 
           {/* KM1 - Contator Tripolar */}
           <ThreePoleContactor x={800} y={380} label="KM1" />
           {[800, 950, 1100].map(x => (
-             <Wire key={x} x1={x} y1="295" x2={x} y2="342" />
+             <Wire key={x} x1={x} y1={295} x2={x} y2={342} />
           ))}
 
           {/* FT1 - Relé Térmico */}
           <ThermalRelay3P x={800} y={520} label="FT1" />
           {[800, 950, 1100].map(x => (
-             <Wire key={x} x1={x} y1="418" x2={x} y2="485" />
+             <Wire key={x} x1={x} y1={418} x2={x} y2={485} />
           ))}
 
           {/* Motor Trifásico M1 */}
           <Motor3Phase x={950} y={750} label="M1" />
-          <Wire x1="800" y1="555" x2="800" y2="650" />
-          <Wire x1="950" y1="555" x2="950" y2="695" />
-          <Wire x1="1100" y1="555" x2="1100" y2="650" />
-          <Wire x1="800" y1="650" x2="898" y2="710" />
-          <Wire x1="1100" y1="650" x2="1002" y2="710" />
+          <Wire x1={800} y1={555} x2={800} y2={650} />
+          <Wire x1={950} y1={555} x2={950} y2={695} />
+          <Wire x1={1100} y1={555} x2={1100} y2={650} />
+          <Wire x1={800} y1={650} x2={898} y2={710} />
+          <Wire x1={1100} y1={650} x2={1002} y2={710} />
+
 
           {/* Legendas de Bloco */}
           <g transform="translate(50, 920)">
