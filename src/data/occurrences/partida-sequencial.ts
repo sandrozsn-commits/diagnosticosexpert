@@ -122,12 +122,13 @@ export const PARTIDA_SEQUENCIAL: OccurrenceSpec[] = [
         correct: "Testar a botoeira Liga geral",
         wrong: [
           ["Trocar temporizadores", "A falha é no início da lógica."],
+          ["Substituir motor", "O motor não é alimentado sem comando."],
         ],
       },
     ],
     diagnosis: {
       correct: "Botoeira S1 com mau contato",
-      wrong: ["Motor queimado"],
+      wrong: [["Motor queimado", "A falha é no comando."]],
     },
     fault: "Botoeira de comando aberta",
     technical: "Falha no contato de entrada da lógica.",
@@ -151,12 +152,13 @@ export const PARTIDA_SEQUENCIAL: OccurrenceSpec[] = [
         correct: "Medir saída de KT1",
         wrong: [
           ["Trocar M2", "O problema é o comando do contator."],
+          ["Inverter as fases", "Não resolve o problema de acionamento."],
         ],
       },
     ],
     diagnosis: {
       correct: "KT1 com contato de saída travado",
-      wrong: ["KM2 queimado"],
+      wrong: [["KM2 queimado", "O comando não chega ao componente."]],
     },
     fault: "Defeito interno no temporizador",
     technical: "Contato de comutação não fecha.",
@@ -180,12 +182,13 @@ export const PARTIDA_SEQUENCIAL: OccurrenceSpec[] = [
         correct: "Medir corrente de M3 durante partida",
         wrong: [
           ["Aumentar ajuste FT3", "Risco de queima."],
+          ["Ignorar o desarme", "Pode causar danos permanentes."],
         ],
       },
     ],
     diagnosis: {
       correct: "Curto-circuito parcial no enrolamento de M3",
-      wrong: ["Térmico descalibrado"],
+      wrong: [["Térmico descalibrado", "O desarme é por corrente real de curto."]],
     },
     fault: "Defeito no enrolamento do motor M3",
     technical: "Curto entre espiras causa sobrecorrente severa na partida.",
