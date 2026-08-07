@@ -142,7 +142,12 @@ export const PARTIDA_SEQUENCIAL: OccurrenceSpec[] = [
     ],
     diagnosis: {
       correct: "Botoeira S1 com mau contato",
-      wrong: [["Motor queimado", "A falha é no comando."]],
+      wrong: [
+        ["Motor queimado", "A falha é no comando."],
+        ["Disjuntor de potência aberto", "O disjuntor de potência não impediria o atracamento do contator."],
+        ["Fusível de comando queimado", "Se o fusível estivesse queimado, a sinaleira de painel estaria apagada."],
+        ["Erro no temporizador KT1", "KT1 atua após M1 partir; a falha é na partida de M1."],
+      ],
     },
     fault: "Botoeira de comando aberta",
     technical: "Falha no contato de entrada da lógica.",
@@ -174,7 +179,12 @@ export const PARTIDA_SEQUENCIAL: OccurrenceSpec[] = [
     ],
     diagnosis: {
       correct: "KT1 com contato de saída travado",
-      wrong: [["KM2 queimado", "O comando não chega ao componente."]],
+      wrong: [
+        ["KM2 queimado", "O comando não chega ao componente."],
+        ["Motor M1 com sobrecarga", "M1 opera normalmente; o problema é a transição para M2."],
+        ["Falta de fase em M2", "O contator de M2 sequer atracou."],
+        ["Erro na fiação de M3", "A falha ocorre antes, no estágio de M2."],
+      ],
     },
     fault: "Defeito interno no temporizador",
     technical: "Contato de comutação não fecha.",
@@ -206,7 +216,12 @@ export const PARTIDA_SEQUENCIAL: OccurrenceSpec[] = [
     ],
     diagnosis: {
       correct: "Curto-circuito parcial no enrolamento de M3",
-      wrong: [["Térmico descalibrado", "O desarme é por corrente real de curto."]],
+      wrong: [
+        ["Térmico descalibrado", "O desarme é por corrente real de curto."],
+        ["Falta de fase em M3", "Falta de fase causaria aquecimento lento ou ronco, não desarme em 1s."],
+        ["Temporizador TR2 com defeito", "TR2 ativou M3; a falha é na carga ou potência de M3."],
+        ["Contator KM3 soldado", "Se estivesse soldado, M3 partiria junto com M2."],
+      ],
     },
     fault: "Defeito no enrolamento do motor M3",
     technical: "Curto entre espiras causa sobrecorrente severa na partida.",
