@@ -173,6 +173,8 @@ export const REVERSAO_AUTOMATICA: OccurrenceSpec[] = [
         wrong: [
           ["Trocar contator", "Vibração pode ser lógica (tempo morto)."],
           ["Lubrificar o motor", "O ruído é elétrico/magnético no contator."],
+          ["Inverter as fases de potência", "Inversão não altera o tempo morto do comando."],
+          ["Substituir os fusíveis", "O sistema está operando, logo os fusíveis estão bons."],
         ],
       },
       {
@@ -182,6 +184,8 @@ export const REVERSAO_AUTOMATICA: OccurrenceSpec[] = [
         wrong: [
           ["Trocar mola do contator", "Não resolve a sobreposição de sinais."],
           ["Aumentar a bitola dos cabos", "A queda de tensão não é a causa primária aqui."],
+          ["Substituir o motor", "O motor gira; o problema é o chaveamento dos contatores."],
+          ["Trocar a botoeira S0", "S0 é desligamento; não atua na transição automática."],
         ],
       },
     ],
@@ -190,6 +194,8 @@ export const REVERSAO_AUTOMATICA: OccurrenceSpec[] = [
       wrong: [
         ["Bobina fraca", "Vibração ocorre apenas na troca."],
         ["Falta de fase", "O motor gira normalmente após a transição."],
+        ["Curto-circuito intermitente", "Causaria o desarme das proteções, não vibração contínua."],
+        ["Motor desbalanceado", "A vibração é no contator, não mecânica no motor."],
       ],
     },
     fault: "Ajuste de tempo morto muito baixo",
@@ -216,6 +222,8 @@ export const REVERSAO_AUTOMATICA: OccurrenceSpec[] = [
         wrong: [
           ["Substituir o contador de ciclos", "Antes de trocar o contador, deve-se verificar se ele está recebendo o sinal de parada."],
           ["Desligar o disjuntor e lubrificar a mesa", "A falha é lógica de controle, não atrito mecânico."],
+          ["Trocar o motor", "O motor obedece aos contatores; o problema é a falta de sinal de stop."],
+          ["Inverter as fases da rede", "Inverter a rede mudaria o sentido inicial, mas não corrigiria a falta de parada."],
         ],
       },
       {
@@ -233,6 +241,8 @@ export const REVERSAO_AUTOMATICA: OccurrenceSpec[] = [
       wrong: [
         ["Erro na programação do contador", "O sinal físico de limite não está sendo interrompido na chave."],
         ["Bobina do contator com curto", "Se houvesse curto, a proteção atuaria ou o contator não atracaria."],
+        ["Falta de fase", "O sistema opera continuamente; há presença de fases."],
+        ["Motor com excesso de carga", "Carga pesada não impede a parada por fim de curso."],
       ],
     },
     fault: "Chave fim de curso (Stop Limit) travada mecanicamente fechada",
