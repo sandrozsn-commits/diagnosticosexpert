@@ -56,6 +56,11 @@ import { PARTIDA_DIRETA } from "@/data/occurrences/partida-direta";
 import { REVERSAO } from "@/data/occurrences/reversao";
 import { ESTRELA_TRIANGULO } from "@/data/occurrences/estrela-triangulo";
 import { COMPENSADORA } from "@/data/occurrences/compensadora";
+import { DAHLANDER } from "@/data/occurrences/dahlander";
+import { ROTOR_BOBINADO } from "@/data/occurrences/rotor-bobinado";
+import { REVERSAO_AUTOMATICA } from "@/data/occurrences/reversao-automatica";
+import { ESTRELA_TRIANGULO_FREIO } from "@/data/occurrences/estrela-triangulo-freio";
+import { PARTIDA_SEQUENCIAL } from "@/data/occurrences/partida-sequencial";
 
 /** Registro por tipo de circuito — novas ocorrências entram apenas nesta tabela. */
 const REGISTRY: Record<string, typeof PARTIDA_DIRETA> = {
@@ -69,6 +74,11 @@ const REGISTRY: Record<string, typeof PARTIDA_DIRETA> = {
   sensores: [],
   "rele-temporizador": [],
   "rele-nivel": [],
+  dahlander: DAHLANDER,
+  "rotor-bobinado": ROTOR_BOBINADO,
+  "reversao-automatica": REVERSAO_AUTOMATICA,
+  "estrela-triangulo-freio": ESTRELA_TRIANGULO_FREIO,
+  "partida-sequencial": PARTIDA_SEQUENCIAL,
 };
 
 function assemble(): DiagCase[] {
