@@ -206,8 +206,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         situation: "Situação de risco: a máquina não responde ao comando de parada.",
         correct: "Isolar a máquina pelo disjuntor Q1 e sinalizar bloqueio antes de qualquer teste",
         wrong: [
-          ["Pressionar S0 várias vezes com o motor girando", "A insistência mantém a máquina em condição insegura e não gera informação técnica."],
-          ["Trocar a botoeira S0 com o painel energizado", "Intervenção com circuito energizado em condição de falha — risco grave de acidente."],
+          ["Pressionar S0 (PARADA) várias vezes com o motor girando", "A insistência mantém a máquina em condição insegura e não gera informação técnica."],
+          ["Trocar a botoeira S0 (PARADA) com o painel energizado", "Intervenção com circuito energizado em condição de falha — risco grave de acidente."],
           ["Medir corrente do motor", "Medição irrelevante; o motor não deveria estar rodando."],
           ["Bater no contator com martelo", "Prática perigosa; pode soltar temporariamente mas danifica o componente."],
         ],
@@ -258,12 +258,12 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
     company: "Frigorífico Sul",
     sector: "Câmaras frias",
     symptom:
-      "Ao pressionar S1 o contator faz um chiado contínuo, atraca e desatraca rapidamente e o motor não estabiliza.",
+      "Ao pressionar S1 (PARTIDA) o contator faz um chiado contínuo, atraca e desatraca rapidamente e o motor não estabiliza.",
     objective: "Identificar a origem da instabilidade na alimentação da bobina de KM1.",
     steps: [
       {
-        situation: "Contator em regime de trepidação (chattering) enquanto S1 é mantido pressionado.",
-        correct: "Medir a tensão na bobina A1/A2 com S1 pressionado e depois solto",
+        situation: "Contator em regime de trepidação (chattering) enquanto S1 (PARTIDA) é mantido pressionado.",
+        correct: "Medir a tensão na bobina A1/A2 com S1 (PARTIDA) pressionado e depois solto",
         wrong: [
           ["Apertar o contator com a mão para estabilizar", "Intervenção insegura em equipamento energizado e sem valor diagnóstico."],
           ["Trocar o motor de posição no barramento", "A instabilidade está no comando, não na potência."],
