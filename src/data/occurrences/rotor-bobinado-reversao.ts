@@ -19,6 +19,9 @@ export const ROTOR_BOBINADO_REVERSAO: OccurrenceSpec[] = [
         correct: "Verificar se KM3 desatracou na manobra",
         wrong: [
           ["Inverter fases de entrada", "Isso não resolve a falta de resistência."],
+          ["Substituir o motor", "O motor funciona nos dois sentidos, embora com vibração."],
+          ["Trocar as escovas", "As escovas estão conduzindo; a falha é na manobra dos contatores."],
+          ["Verificar a botoeira S0", "S0 desligaria o sistema; o motor está vibrando, logo tem comando."],
         ],
       },
       {
@@ -27,6 +30,9 @@ export const ROTOR_BOBINADO_REVERSAO: OccurrenceSpec[] = [
         correct: "Desenergizar e testar continuidade de KM3",
         wrong: [
           ["Trocar temporizador", "A falha é mecânica/contato."],
+          ["Inverter as fases da rede", "Isso não altera o estado soldado do contator KM3."],
+          ["Apertar os bornes do motor", "Vibração é por excesso de corrente (falta de resistência), não mau contato."],
+          ["Substituir os fusíveis de potência", "Os fusíveis estão íntegros (o motor vibra com corrente alta)."],
         ],
       },
     ],
@@ -34,6 +40,9 @@ export const ROTOR_BOBINADO_REVERSAO: OccurrenceSpec[] = [
       correct: "Contator KM3 travado fechado",
       wrong: [
         ["Curto no rotor", "Faria falha em ambos os sentidos."],
+        ["Falta de fase", "Causaria ronco, mas não necessariamente tranco por falta de resistência."],
+        ["Motor com rotor travado", "O motor gira, mas com muita vibração e corrente alta."],
+        ["Bobina de KM2 queimada", "KM2 está operando o sentido anti-horário."],
       ],
     },
     fault: "Contator de curto-circuito soldado",
@@ -59,6 +68,9 @@ export const ROTOR_BOBINADO_REVERSAO: OccurrenceSpec[] = [
         correct: "Verificar tensão no fusível de reversão",
         wrong: [
           ["Inspecionar escovas", "Comando nem atracou contatores."],
+          ["Trocar o motor", "O motor funciona no sentido direto."],
+          ["Inverter a rede principal", "A rede principal está ok, o sentido direto prova isso."],
+          ["Ajustar o relé térmico", "O térmico está rearmado; não é a causa do comando morto."],
         ],
       },
     ],
@@ -66,6 +78,9 @@ export const ROTOR_BOBINADO_REVERSAO: OccurrenceSpec[] = [
       correct: "Fusível do ramal de comando de reversão aberto",
       wrong: [
         ["KM2 queimado", "Fusível aberto explica o comando morto."],
+        ["Falta de fase na potência", "O motor direto funciona; a potência está presente."],
+        ["Botoeira de emergência acionada", "A emergência pararia ambos os sentidos."],
+        ["Erro na lógica de intertravamento", "O fusível aberto é uma falha de hardware anterior à lógica."],
       ],
     },
     fault: "Fusível de proteção aberto",
@@ -91,6 +106,9 @@ export const ROTOR_BOBINADO_REVERSAO: OccurrenceSpec[] = [
         correct: "Medir queda de tensão em KM3",
         wrong: [
           ["Lubrificar pórtico", "Problema surgiu após reversão."],
+          ["Substituir o motor", "O motor funciona; a falha é na transição final."],
+          ["Inverter as fases do rotor", "A inversão de fases rotóricas mudaria o torque, mas não explicaria carbonização em KM3."],
+          ["Trocar o banco de resistores", "O motor acelera no início; os resistores estão ok."],
         ],
       },
     ],
@@ -98,6 +116,9 @@ export const ROTOR_BOBINADO_REVERSAO: OccurrenceSpec[] = [
       correct: "Contato de força de KM3 carbonizado",
       wrong: [
         ["Falta de fase no rotor", "Causaria perda de torque severa."],
+        ["Temporizador KT1 queimado", "Se KT1 estivesse ruim, KM3 nem tentaria atracar."],
+        ["Bobina de KM2 queimada", "KM2 atracou para dar o sentido de rotação."],
+        ["Queda de tensão na rede", "A rede é estável; a perda é localizada no contator KM3."],
       ],
     },
     fault: "Resistência de contato elevada em KM3",
@@ -123,6 +144,9 @@ export const ROTOR_BOBINADO_REVERSAO: OccurrenceSpec[] = [
         correct: "Conferir fiação das fases entre KM1 e KM2",
         wrong: [
           ["Trocar motor", "Motor responde ao campo girante."],
+          ["Substituir os contatores", "Eles estão fechando mecanicamente."],
+          ["Inverter as escovas", "Inverter fiação do rotor não inverte o sentido de rotação."],
+          ["Verificar a botoeira Liga", "A botoeira funciona; ela ativou o contator de reversão."],
         ],
       },
     ],
@@ -130,6 +154,9 @@ export const ROTOR_BOBINADO_REVERSAO: OccurrenceSpec[] = [
       correct: "Erro de montagem: fases não cruzadas na ponte",
       wrong: [
         ["Contator KM2 ruim", "Ele fecha eletricamente."],
+        ["Falta de fase", "O motor gira (embora no sentido errado)."],
+        ["Bobina de KM3 queimada", "KM3 atua após a partida; o erro de sentido é imediato."],
+        ["Erro no relé térmico", "O térmico não influi no sentido de rotação."],
       ],
     },
     fault: "Ponte de reversão sem cruzamento de fases",
@@ -155,6 +182,9 @@ export const ROTOR_BOBINADO_REVERSAO: OccurrenceSpec[] = [
         correct: "Medir corrente de pico na reversão pesada",
         wrong: [
           ["Trocar banco de resistores", "Resistores limitam a corrente."],
+          ["Substituir o motor", "Funciona bem sem carga; enrolamentos íntegros."],
+          ["Aumentar a bitola dos cabos", "O problema é o tempo de resposta da proteção."],
+          ["Inverter as fases da rede", "Inversão não resolve desarme por sobrecarga em carga máxima."],
         ],
       },
     ],
@@ -162,6 +192,9 @@ export const ROTOR_BOBINADO_REVERSAO: OccurrenceSpec[] = [
       correct: "Relé térmico com classe de disparo inadequada",
       wrong: [
         ["Motor em curto", "Funcionaria em vazio."],
+        ["Falta de fase no rotor", "Causaria perda de torque e desarme imediato mesmo sem carga plena."],
+        ["Bobina de KM3 queimada", "Se KM3 não fechasse, a corrente seria menor (devido à resistência)."],
+        ["Erro na botoeira de Stop", "A botoeira não causa desarme por sobrecarga."],
       ],
     },
     fault: "Parametrização incorreta da proteção térmica",
