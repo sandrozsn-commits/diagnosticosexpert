@@ -10,7 +10,12 @@ export type CircuitId =
   | "botoeiras"
   | "sensores"
   | "rele-temporizador"
-  | "rele-nivel";
+  | "rele-nivel"
+  | "dahlander"
+  | "rotor-bobinado"
+  | "reversao-automatica"
+  | "estrela-triangulo-freio"
+  | "partida-sequencial";
 
 export type Circuit = {
   id: CircuitId;
