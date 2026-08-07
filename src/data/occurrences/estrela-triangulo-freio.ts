@@ -4,7 +4,7 @@ export const ESTRELA_TRIANGULO_FREIO: OccurrenceSpec[] = [
   {
     id: "efm-01",
     title: "Motor desliga mas continua girando por inércia",
-    level: "intermediario",
+    level: "iniciante",
     minutes: 12,
     xp: 200,
     equipment: "Motor 15 cv estrela-triângulo c/ freio magnético",
@@ -55,6 +55,123 @@ export const ESTRELA_TRIANGULO_FREIO: OccurrenceSpec[] = [
   },
   {
     id: "efm-02",
+    title: "Freio não abre na partida (motor travado)",
+    level: "intermediario",
+    minutes: 10,
+    xp: 150,
+    equipment: "Motor 15 cv",
+    company: "Serralheria Matos",
+    sector: "Corte",
+    symptom: "Ao ligar, o motor ronca mas não gira. O freio parece travado.",
+    objective: "Identificar falta de alimentação na bobina de liberação do freio.",
+    steps: [
+      {
+        situation: "Motor energizado mas travado mecanicamente.",
+        correct: "Medir tensão na bobina do freio durante a partida",
+        wrong: [
+          ["Forçar giro do motor", "Pode danificar o eixo ou a lona de freio."],
+        ],
+      },
+      {
+        situation: "Medição de tensão.",
+        reading: "Tensão na bobina do freio = 0 V.",
+        correct: "Verificar o fusível de proteção do circuito do freio",
+        wrong: [
+          ["Trocar motor", "O motor está tentando girar; o freio é que não solta."],
+        ],
+      },
+    ],
+    diagnosis: {
+      correct: "Fusível do freio aberto",
+      wrong: [
+        ["Lona gasta", "Causaria falta de freio, não excesso."],
+      ],
+    },
+    fault: "Falha na alimentação de liberação do freio",
+    technical: "Sem tensão, as molas do freio fail-safe mantêm o motor bloqueado.",
+    checklist: ["Verificar fusíveis", "Medir tensão na bobina"],
+    lessons: ["Lógica de freio energizado para liberar"],
+  },
+  {
+    id: "efm-03",
+    title: "Aquecimento excessivo da bobina do freio",
+    level: "intermediario",
+    minutes: 11,
+    xp: 170,
+    equipment: "Motor 20 cv",
+    company: "Metalúrgica Aço Forte",
+    sector: "Prensa",
+    symptom: "Cheiro de queimado vindo da parte traseira do motor (região do freio).",
+    objective: "Detectar retificador com defeito enviando CA para bobina CC.",
+    steps: [
+      {
+        situation: "Bobina do freio muito quente ao toque.",
+        correct: "Medir a tensão de saída do retificador (modo CC e CA)",
+        wrong: [
+          ["Desligar motor e esperar esfriar", "Não resolve a causa da queima."],
+        ],
+      },
+      {
+        situation: "Análise da saída do retificador.",
+        reading: "Tensão CC = 100V. Tensão CA residual = 180V (ponte retificadora em curto).",
+        correct: "Substituir o módulo retificador do freio",
+        wrong: [
+          ["Trocar bobina", "A nova queimará se o retificador continuar ruim."],
+        ],
+      },
+    ],
+    diagnosis: {
+      correct: "Retificador de freio com ponte de diodos em curto",
+      wrong: [
+        ["Sobrecarga no motor", "O calor é específico na bobina do freio."],
+      ],
+    },
+    fault: "Falha no componente de retificação",
+    technical: "A presença de componente alternada em bobinas CC causa aquecimento por perdas no ferro e vibração.",
+    checklist: ["Testar diodos do retificador", "Medir Ripple"],
+    lessons: ["Diagnóstico de pontes retificadoras"],
+  },
+  {
+    id: "efm-04",
+    title: "Freio demora para atuar após desligamento",
+    level: "avancado",
+    minutes: 13,
+    xp: 190,
+    equipment: "Motor 25 cv",
+    company: "Metalúrgica Aço Forte",
+    sector: "Prensa",
+    symptom: "O motor para, mas leva quase 2 segundos para o freio 'clicar' e travar o eixo.",
+    objective: "Identificar falta de interrupção no lado CC do freio.",
+    steps: [
+      {
+        situation: "Retardo na frenagem compromete a segurança.",
+        correct: "Verificar se o contator de freio interrompe o circuito no lado CC",
+        wrong: [
+          ["Aumentar pressão das molas", "O atraso é magnético/elétrico, não mecânico."],
+        ],
+      },
+      {
+        situation: "Análise do esquema de ligação.",
+        reading: "A interrupção é feita apenas no lado CA do retificador. A energia armazenada na bobina demora a dissipar.",
+        correct: "Alterar a fiação para interromper o circuito no lado CC (bornes 3 e 4 do retificador)",
+        wrong: [
+          ["Trocar bobina", "Não resolve a constante de tempo do circuito."],
+        ],
+      },
+    ],
+    diagnosis: {
+      correct: "Frenagem lenta por interrupção no lado CA (descarga lenta da bobina)",
+      wrong: [
+        ["Molas fracas", "O freio atua com força, apenas demora a iniciar."],
+      ],
+    },
+    fault: "Erro de projeto/ligação no circuito de frenagem rápida",
+    technical: "Interromper o lado CC permite que a energia da bobina seja dissipada instantaneamente pelo arco/varistor, acelerando a frenagem.",
+    checklist: ["Verificar pontos de interrupção", "Instalar varistor se ausente"],
+    lessons: ["Diferença entre frenagem normal e rápida"],
+  },
+  {
+    id: "efm-05",
     title: "Freio atua abruptamente com o motor ainda em plena rotação",
     level: "avancado",
     minutes: 15,
