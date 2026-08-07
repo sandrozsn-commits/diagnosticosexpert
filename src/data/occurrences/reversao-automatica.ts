@@ -151,6 +151,7 @@ export const REVERSAO_AUTOMATICA: OccurrenceSpec[] = [
         correct: "Medir o tempo de intervalo entre a saída de KM1 e entrada de KM2",
         wrong: [
           ["Trocar contator", "Vibração pode ser lógica (tempo morto)."],
+          ["Lubrificar o motor", "O ruído é elétrico/magnético no contator."],
         ],
       },
       {
