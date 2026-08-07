@@ -195,6 +195,8 @@ export const COMPENSADORA: OccurrenceSpec[] = [
         wrong: [
           ["Instalar um ventilador no painel", "Trata o sintoma sem corrigir o excesso de energia dissipada em T1."],
           ["Reduzir o tap para 50 %", "Tap menor reduz o conjugado, prolonga a partida e aumenta o aquecimento."],
+          ["Trocar o motor por um de maior potência", "O motor não está sobrecarregado; o excesso é de partidas em T1."],
+          ["Substituir os contatores de potência", "Contatores não causam aquecimento em T1 por manobras excessivas."],
         ],
       },
       {
@@ -204,6 +206,8 @@ export const COMPENSADORA: OccurrenceSpec[] = [
         wrong: [
           ["Substituir o relé térmico do motor", "O motor não está em sobrecarga; o problema é térmico no autotransformador."],
           ["Trocar os cabos de potência", "As seções estão adequadas e não há aquecimento nos condutores."],
+          ["Inverter as fases da rede", "Isso não altera a dissipação térmica do autotransformador."],
+          ["Verificar a botoeira S1", "S1 opera normalmente; o problema é a frequência de uso."],
         ],
       },
     ],
@@ -247,6 +251,8 @@ export const COMPENSADORA: OccurrenceSpec[] = [
         wrong: [
           ["Aumentar a corrente de ajuste do disjuntor", "Elevar a proteção diante de um pico real expõe cabos e equipamentos."],
           ["Reduzir o tempo do tap", "Tempo menor aumenta o pico, agravando o desarme."],
+          ["Trocar o motor", "O motor funciona no tap; a falha é de sequência elétrica."],
+          ["Verificar o relé térmico", "O desarme é pelo disjuntor (magnético), não térmico."],
         ],
       },
       {
@@ -257,6 +263,8 @@ export const COMPENSADORA: OccurrenceSpec[] = [
         wrong: [
           ["Substituir o disjuntor geral", "O disjuntor atua corretamente diante de uma corrente elevada real."],
           ["Trocar o motor", "O motor não participa da falha de sequência de manobra."],
+          ["Limpar os contatos de KM3", "O problema é o KM1 que não abre; KM3 está fechando."],
+          ["Inverter as fases no autotransformador", "Isso não corrige a sobreposição de contatores."],
         ],
       },
     ],
@@ -265,6 +273,8 @@ export const COMPENSADORA: OccurrenceSpec[] = [
       wrong: [
         ["Autotransformador com espiras em curto", "O curto é criado pela própria manobra, não pelo enrolamento."],
         ["Temporizador com tempo excessivo", "O tempo de tap está adequado à aceleração da carga."],
+        ["Falta de fase", "Se houvesse falta de fase, o desarme não seria exclusivo da transição."],
+        ["Bobina de KM3 queimada", "Se KM3 não atracasse, não haveria curto-circuito."],
       ],
     },
     fault: "Erro de sequência na transição da chave compensadora",
