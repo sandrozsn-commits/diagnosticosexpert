@@ -233,6 +233,9 @@ export const REVERSAO_AUTOMATICA: OccurrenceSpec[] = [
         wrong: [
           ["Inverter os contatores KM1 e KM2", "Os contatores estão revertendo; o erro é a falta do comando de parada."],
           ["Trocar a botoeira de emergência", "A emergência funciona se pressionada; a falha é na automação do ciclo."],
+          ["Substituir o temporizador de ciclo", "O temporizador está revertendo; a falha é no limite de parada."],
+          ["Medir a isolação do motor", "O motor funciona; a falha é de interrupção de ciclo."],
+
         ],
       },
     ],
