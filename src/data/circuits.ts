@@ -15,7 +15,9 @@ export type CircuitId =
   | "rotor-bobinado"
   | "reversao-automatica"
   | "estrela-triangulo-freio"
-  | "partida-sequencial";
+  | "partida-sequencial"
+  | "dahlander-reversao"
+  | "rotor-bobinado-reversao";
 
 export type Circuit = {
   id: CircuitId;
@@ -553,36 +555,282 @@ export const CIRCUITS: Circuit[] = [
     id: "dahlander",
     name: "Motor Dahlander",
     description: "Partida de motor Dahlander de duas velocidades com intertravamento elétrico.",
-    components: ["Contator KM1 (baixa)", "Contator KM2 (alta)", "Contator KM3 (alta)", "Relé térmico FT1/FT2"],
-    diagram: { title: "Dahlander (simplificado)", leftRail: "L1", rightRail: "N", rungs: [] },
+    components: [
+      "Disjuntor Q1",
+      "Contator KM1 (baixa)",
+      "Contator KM2 (alta)",
+      "Contator KM3 (alta)",
+      "Intertravamento elétrico KM1/KM2",
+      "Relé térmico FT1",
+      "Relé térmico FT2",
+      "Motor Dahlander M1",
+    ],
+    diagram: {
+      title: "Dahlander duas velocidades",
+      leftRail: "L1",
+      rightRail: "N",
+      rungs: [
+        {
+          els: [
+            { t: "nc", label: "S0" },
+            { t: "no", label: "S1 (baixa)" },
+            { t: "nc", label: "KM2/KM3" },
+            { t: "coil", label: "KM1 (Δ)" },
+          ],
+          branch: { from: 1, to: 1, els: [{ t: "no", label: "KM1 selo" }] },
+          note: "Comando da velocidade baixa (triângulo)",
+        },
+        {
+          els: [
+            { t: "wire" },
+            { t: "no", label: "S2 (alta)" },
+            { t: "nc", label: "KM1" },
+            { t: "coil", label: "KM2+KM3 (YY)" },
+          ],
+          branch: { from: 1, to: 1, els: [{ t: "no", label: "KM2 selo" }] },
+          note: "Comando da velocidade alta (estrela dupla)",
+        },
+        {
+          els: [
+            { t: "breaker", label: "Q1" },
+            { t: "no", label: "KM1 / KM2-3" },
+            { t: "thermal", label: "FT1 / FT2" },
+            { t: "motor", label: "M1 YY/Δ" },
+          ],
+        },
+      ],
+    },
   },
   {
     id: "rotor-bobinado",
     name: "Motor de Rotor Bobinado",
     description: "Partida com resistência rotórica progressiva via contatores.",
-    components: ["Contator de estator KM1", "Contator de curto KM2", "Resistores R1/R2/R3"],
-    diagram: { title: "Rotor bobinado", leftRail: "L1", rightRail: "N", rungs: [] },
+    components: [
+      "Contator de estator KM1",
+      "Contator de curto KM2",
+      "Banco de resistores R1/R2/R3",
+      "Anéis coletores",
+      "Escovas",
+      "Relé temporizador KT1",
+    ],
+    diagram: {
+      title: "Rotor bobinado com aceleração",
+      leftRail: "L1",
+      rightRail: "N",
+      rungs: [
+        {
+          els: [
+            { t: "nc", label: "S0" },
+            { t: "no", label: "S1" },
+            { t: "coil", label: "KM1 (estator)" },
+            { t: "box", label: "KT1 (t)" },
+          ],
+          branch: { from: 1, to: 1, els: [{ t: "no", label: "KM1 selo" }] },
+        },
+        {
+          els: [
+            { t: "no", label: "KT1 (t)" },
+            { t: "coil", label: "KM2 (curto)" },
+          ],
+          note: "Retirada da resistência após o tempo de partida",
+        },
+        {
+          els: [
+            { t: "box", label: "Banco R1-3" },
+            { t: "no", label: "KM2" },
+            { t: "motor", label: "M1 (rotor)" },
+          ],
+        },
+      ],
+    },
   },
   {
     id: "reversao-automatica",
     name: "Reversão Automática",
     description: "Reversão temporizada ou por fim de curso para transportadores.",
-    components: ["Temporizador de ciclo", "Sensores de fim de curso", "Contatores de sentido"],
-    diagram: { title: "Reversão automática", leftRail: "L1", rightRail: "N", rungs: [] },
+    components: [
+      "Contator KM1 (horário)",
+      "Contator KM2 (anti-horário)",
+      "Temporizador de ciclo KT1",
+      "Sensores de fim de curso FC1/FC2",
+    ],
+    diagram: {
+      title: "Reversão automática temporizada/fim de curso",
+      leftRail: "L1",
+      rightRail: "N",
+      rungs: [
+        {
+          els: [
+            { t: "box", label: "KT1 ciclo" },
+            { t: "nc", label: "FC1" },
+            { t: "coil", label: "KM1" },
+          ],
+          note: "Ciclo horário",
+        },
+        {
+          els: [
+            { t: "wire" },
+            { t: "nc", label: "FC2" },
+            { t: "coil", label: "KM2" },
+          ],
+          note: "Ciclo anti-horário",
+        },
+      ],
+    },
   },
   {
     id: "estrela-triangulo-freio",
     name: "Y/Δ com Freio Magnético",
     description: "Partida estrela-triângulo combinada com frenagem eletromagnética de segurança.",
-    components: ["Contator de freio KM4", "Retificador", "Bobina de freio"],
-    diagram: { title: "Y/Δ com freio", leftRail: "L1", rightRail: "N", rungs: [] },
+    components: [
+      "Contator principal KM1",
+      "Contator estrela KM2",
+      "Contator triângulo KM3",
+      "Contator de freio KM4",
+      "Retificador de freio",
+      "Bobina de freio (Fail-safe)",
+    ],
+    diagram: {
+      title: "Y/Δ com Freio Magnético",
+      leftRail: "L1",
+      rightRail: "N",
+      rungs: [
+        {
+          els: [
+            { t: "box", label: "Y/Δ Logic" },
+            { t: "nc", label: "KM4" },
+            { t: "coil", label: "KM1" },
+          ],
+        },
+        {
+          els: [
+            { t: "nc", label: "KM1" },
+            { t: "coil", label: "KM4 (freio)" },
+          ],
+          note: "KM4 energizado = Freio SOLTO; Desenergizado = FREANDO",
+        },
+        {
+          els: [
+            { t: "box", label: "Bobina Freio" },
+            { t: "no", label: "KM4" },
+            { t: "wire" },
+          ],
+        },
+      ],
+    },
   },
   {
     id: "partida-sequencial",
     name: "Partida Sequencial",
     description: "Partida temporizada de motores em cascata para evitar picos na rede.",
-    components: ["Temporizadores de estágio", "Contatores KM1/KM2/KM3", "Intertravamentos"],
-    diagram: { title: "Partida sequencial", leftRail: "L1", rightRail: "N", rungs: [] },
+    components: [
+      "Contator KM1",
+      "Contator KM2",
+      "Contator KM3",
+      "Temporizador TR1",
+      "Temporizador TR2",
+      "Contato permissão KM2→KM3",
+    ],
+    diagram: {
+      title: "Partida Sequencial (3 Motores)",
+      leftRail: "L1",
+      rightRail: "N",
+      rungs: [
+        {
+          els: [
+            { t: "no", label: "S1" },
+            { t: "coil", label: "KM1" },
+            { t: "box", label: "TR1 (t)" },
+          ],
+        },
+        {
+          els: [
+            { t: "no", label: "TR1 (t)" },
+            { t: "coil", label: "KM2" },
+            { t: "box", label: "TR2 (t)" },
+          ],
+        },
+        {
+          els: [
+            { t: "no", label: "KM2 NA" },
+            { t: "no", label: "TR2 (t)" },
+            { t: "coil", label: "KM3" },
+          ],
+          note: "KM2 NA é a permissão física para M3",
+        },
+      ],
+    },
+  },
+  {
+    id: "dahlander-reversao",
+    name: "Chave de Reversão para Motor Dahlander",
+    description: "Controle de duas velocidades com reversão de sentido de rotação.",
+    components: [
+      "KM1 (Horário)",
+      "KM2 (Anti-horário)",
+      "KM3 (Baixa)",
+      "KM4/KM5 (Alta)",
+      "Intertravamento sentido/velocidade",
+    ],
+    diagram: {
+      title: "Dahlander com Reversão",
+      leftRail: "L1",
+      rightRail: "N",
+      rungs: [
+        {
+          els: [
+            { t: "no", label: "Hor/Anti" },
+            { t: "box", label: "Sentido KM1/2" },
+          ],
+        },
+        {
+          els: [
+            { t: "no", label: "Baixa/Alta" },
+            { t: "box", label: "Velocidade KM3/4/5" },
+          ],
+        },
+        {
+          els: [
+            { t: "no", label: "KM1/2 NA" },
+            { t: "wire" },
+            { t: "coil", label: "KM3-5" },
+          ],
+          note: "Permissão de sentido para velocidade",
+        },
+      ],
+    },
+  },
+  {
+    id: "rotor-bobinado-reversao",
+    name: "Chave de Reversão de Motor de Rotor Bobinado",
+    description: "Reversão de sentido com controle de torque via resistores rotóricos.",
+    components: [
+      "Contator KM1 (Horário)",
+      "Contator KM2 (Anti-horário)",
+      "Contator KM3 (Curto-circuito)",
+      "Banco de resistores R1/R2/R3",
+    ],
+    diagram: {
+      title: "Rotor Bobinado com Reversão",
+      leftRail: "L1",
+      rightRail: "N",
+      rungs: [
+        {
+          els: [
+            { t: "no", label: "Sentido" },
+            { t: "coil", label: "KM1/KM2" },
+          ],
+        },
+        {
+          els: [
+            { t: "no", label: "KM1/2 NA" },
+            { t: "box", label: "Aceleração" },
+            { t: "coil", label: "KM3" },
+          ],
+          note: "KM3 deve abrir na troca de sentido",
+        },
+      ],
+    },
   },
 ];
 
