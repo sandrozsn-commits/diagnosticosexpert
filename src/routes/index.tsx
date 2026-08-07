@@ -1,4 +1,4 @@
-// Execute esta instrucao no projeto: Sim, prosseguir com a implementação de mais casos.
+// Execute esta instrucao no projeto: Em cada etapa de diagnóstico deveria ter 4 a 5 respostas e não apenas 3.
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { CASES, CATEGORIES, type Level } from "@/data/cases";
