@@ -1,4 +1,4 @@
-// Execute esta instrucao no projeto: Faça uma auditoria completa e identifique falhas, duplicidades, erros e demais problemas
+// Execute esta instrucao no projeto: QUal é o proximo passo para melhorar esse produto?
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { CASES, CATEGORIES, type Level } from "@/data/cases";
