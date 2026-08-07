@@ -549,6 +549,41 @@ export const CIRCUITS: Circuit[] = [
       ],
     },
   },
+  {
+    id: "dahlander",
+    name: "Motor Dahlander",
+    description: "Partida de motor Dahlander de duas velocidades com intertravamento elétrico.",
+    components: ["Contator KM1 (baixa)", "Contator KM2 (alta)", "Contator KM3 (alta)", "Relé térmico FT1/FT2"],
+    diagram: { title: "Dahlander (simplificado)", leftRail: "L1", rightRail: "N", rungs: [] },
+  },
+  {
+    id: "rotor-bobinado",
+    name: "Motor de Rotor Bobinado",
+    description: "Partida com resistência rotórica progressiva via contatores.",
+    components: ["Contator de estator KM1", "Contator de curto KM2", "Resistores R1/R2/R3"],
+    diagram: { title: "Rotor bobinado", leftRail: "L1", rightRail: "N", rungs: [] },
+  },
+  {
+    id: "reversao-automatica",
+    name: "Reversão Automática",
+    description: "Reversão temporizada ou por fim de curso para transportadores.",
+    components: ["Temporizador de ciclo", "Sensores de fim de curso", "Contatores de sentido"],
+    diagram: { title: "Reversão automática", leftRail: "L1", rightRail: "N", rungs: [] },
+  },
+  {
+    id: "estrela-triangulo-freio",
+    name: "Y/Δ com Freio Magnético",
+    description: "Partida estrela-triângulo combinada com frenagem eletromagnética de segurança.",
+    components: ["Contator de freio KM4", "Retificador", "Bobina de freio"],
+    diagram: { title: "Y/Δ com freio", leftRail: "L1", rightRail: "N", rungs: [] },
+  },
+  {
+    id: "partida-sequencial",
+    name: "Partida Sequencial",
+    description: "Partida temporizada de motores em cascata para evitar picos na rede.",
+    components: ["Temporizadores de estágio", "Contatores KM1/KM2/KM3", "Intertravamentos"],
+    diagram: { title: "Partida sequencial", leftRail: "L1", rightRail: "N", rungs: [] },
+  },
 ];
 
 export const CIRCUIT_BY_ID: Record<string, Circuit> = Object.fromEntries(
