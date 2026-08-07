@@ -19,6 +19,9 @@ export const ROTOR_BOBINADO: OccurrenceSpec[] = [
         correct: "Verificar a tensão nos fusíveis de proteção do circuito de comando",
         wrong: [
           ["Inspecionar as escovas", "Se o comando nem atracou KM1, as escovas ainda não entraram em jogo."],
+          ["Substituir o motor", "Troca inútil se o comando não está enviando sinal."],
+          ["Trocar a botoeira S1", "Uma botoeira não apagaria a sinaleira de painel ligado."],
+          ["Medir a isolação do rotor", "O rotor é parte da carga; o problema é no controle."],
         ],
       },
       {
@@ -27,6 +30,9 @@ export const ROTOR_BOBINADO: OccurrenceSpec[] = [
         correct: "Substituir o fusível queimado e testar o circuito",
         wrong: [
           ["Trocar a botoeira S1", "Sinaleira apagada indica falta de energia geral no comando."],
+          ["Jumpear o fusível", "Prática perigosa: pode causar incêndio no painel."],
+          ["Inverter as fases da rede", "Isso não restaura a alimentação do comando."],
+          ["Substituir o contator KM1", "KM1 não tem tensão na bobina por falta de fusível."],
         ],
       },
     ],
@@ -34,6 +40,9 @@ export const ROTOR_BOBINADO: OccurrenceSpec[] = [
       correct: "Fusível de comando aberto",
       wrong: [
         ["Bobina de KM1 queimada", "Não apagaria a sinaleira de painel ligado."],
+        ["Falta de fase na potência", "O comando deveria funcionar independentemente da potência."],
+        ["Emergência acionada", "Emergência impediria o acionamento, mas não necessariamente apagaria a sinaleira de rede."],
+        ["Motor com rotor travado", "Não impede o atracamento dos contatores de comando."],
       ],
     },
     fault: "Fusível de proteção do comando aberto",
@@ -65,6 +74,9 @@ export const ROTOR_BOBINADO: OccurrenceSpec[] = [
         correct: "Verificar se o contator de curto-circuitamento KM2 atracou",
         wrong: [
           ["Trocar o banco de resistores", "O motor partiu, logo o banco está atuando."],
+          ["Inverter as fases de entrada", "O motor já gira; inversão não resolve torque baixo por resistência residual."],
+          ["Substituir o motor", "O motor funciona, o problema é o controle da corrente rotórica."],
+          ["Lixar os anéis coletores", "Os anéis permitem a partida; o problema é o curto-circuitamento posterior."],
         ],
       },
       {
@@ -73,6 +85,9 @@ export const ROTOR_BOBINADO: OccurrenceSpec[] = [
         correct: "Verificar a integridade mecânica e a bobina de KM2",
         wrong: [
           ["Testar os anéis coletores", "O motor partiu; o circuito rotórico está fechado pelos resistores."],
+          ["Trocar os fusíveis de potência", "O motor está girando; há potência chegando."],
+          ["Aumentar a bitola dos cabos", "A queda de tensão não é o problema; o problema é o KM2 inerte."],
+          ["Trocar o temporizador", "A bobina de KM2 já tem 220V; o temporizador já atuou."],
         ],
       },
     ],
@@ -80,6 +95,9 @@ export const ROTOR_BOBINADO: OccurrenceSpec[] = [
       correct: "Contator KM2 não atracando, mantendo a resistência rotórica total no circuito",
       wrong: [
         ["Escovas gastas", "Causariam interrupção total ou faiscamento."],
+        ["Falta de fase", "O ronco seria muito mais forte e o motor poderia nem partir."],
+        ["Tensão de comando baixa", "A medição confirmou 220V na bobina."],
+        ["Curto-circuito no rotor", "Isso faria o motor partir como se fosse de gaiola (corrente altíssima)."],
       ],
     },
     fault: "Falha no contator de curto-circuitamento rotórico KM2",
