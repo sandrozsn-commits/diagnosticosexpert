@@ -4,7 +4,7 @@ export const DAHLANDER_REVERSAO: OccurrenceSpec[] = [
   {
     id: "dhr-01",
     title: "Motor reverte mas perde a velocidade alta",
-    level: "avancado",
+    level: "iniciante",
     minutes: 15,
     xp: 225,
     equipment: "Motor Dahlander 2 velocidades c/ reversão 7,5 cv",
@@ -56,7 +56,7 @@ export const DAHLANDER_REVERSAO: OccurrenceSpec[] = [
   {
     id: "dhr-02",
     title: "Motor não reverte em nenhuma velocidade",
-    level: "iniciante",
+    level: "intermediario",
     minutes: 10,
     xp: 150,
     equipment: "Motor Dahlander 2 velocidades c/ reversão 5 cv",
@@ -212,7 +212,7 @@ export const DAHLANDER_REVERSAO: OccurrenceSpec[] = [
   {
     id: "dhr-05",
     title: "Troca de sentido demora excessivamente para ocorrer",
-    level: "intermediario",
+    level: "avancado",
     minutes: 12,
     xp: 190,
     equipment: "Motor Dahlander 2 velocidades c/ reversão 10 cv",

@@ -4,9 +4,10 @@ export const ROTOR_BOBINADO_REVERSAO: OccurrenceSpec[] = [
   {
     id: "rbr-01",
     title: "Motor reverte com vibração forte e corrente elevada",
-    level: "intermediario",
+    level: "iniciante",
     minutes: 13,
     xp: 195,
+    level: "intermediario",
     equipment: "Motor rotor bobinado c/ reversão 40 cv",
     company: "Estaleiro Baía Sul",
     sector: "Guincho de içamento",
@@ -56,7 +57,7 @@ export const ROTOR_BOBINADO_REVERSAO: OccurrenceSpec[] = [
   {
     id: "rbr-02",
     title: "Motor não reverte em nenhum sentido",
-    level: "iniciante",
+    level: "intermediario",
     minutes: 10,
     xp: 150,
     equipment: "Motor rotor bobinado c/ reversão 35 cv",
@@ -212,7 +213,7 @@ export const ROTOR_BOBINADO_REVERSAO: OccurrenceSpec[] = [
   {
     id: "rbr-05",
     title: "Motor para completamente ao tentar reverter sob carga plena",
-    level: "intermediario",
+    level: "avancado",
     minutes: 14,
     xp: 210,
     equipment: "Motor rotor bobinado c/ reversão 70 cv",
