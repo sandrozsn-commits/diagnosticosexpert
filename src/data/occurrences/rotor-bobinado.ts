@@ -129,6 +129,9 @@ export const ROTOR_BOBINADO: OccurrenceSpec[] = [
         correct: "Observar se todos os contatores de aceleração (KM2 e KM3) atracaram",
         wrong: [
           ["Trocar banco de resistores", "Houve aceleração inicial."],
+          ["Substituir o motor", "O motor acelera bem até o primeiro estágio."],
+          ["Inverter as fases", "Inversão de fases não altera a aceleração final."],
+          ["Verificar a botoeira S1", "S1 funcionou para a partida."],
         ],
       },
       {
@@ -137,6 +140,9 @@ export const ROTOR_BOBINADO: OccurrenceSpec[] = [
         correct: "Medir a tensão na bobina de KM3 e testar a saída do temporizador",
         wrong: [
           ["Substituir as escovas", "Contato escova-anel está permitindo passagem de corrente."],
+          ["Trocar os cabos de potência", "Potência chega ao motor; o problema é o rotor."],
+          ["Limpar os anéis coletores", "Os anéis estão conduzindo nos estágios anteriores."],
+          ["Substituir o relé térmico", "O térmico não impediria o acionamento de um contator de aceleração."],
         ],
       },
     ],
@@ -144,6 +150,9 @@ export const ROTOR_BOBINADO: OccurrenceSpec[] = [
       correct: "Contator KM3 não atracando, mantendo parte da resistência no rotor",
       wrong: [
         ["Banco R1 aberto", "O motor nem teria torque para a primeira aceleração."],
+        ["Falta de fase", "O motor acelerou; falta de fase causaria ronco e torque baixo desde o início."],
+        ["Bobina de KM2 queimada", "KM2 atracou, como observado na sequência."],
+        ["Temporizador KT1 queimado", "KT1 permitiu a entrada de KM2."],
       ],
     },
     fault: "Falha no contator de curto-circuitamento final KM3",
@@ -175,6 +184,9 @@ export const ROTOR_BOBINADO: OccurrenceSpec[] = [
         correct: "Verificar a fiação das escovas e a sequência no banco de resistores",
         wrong: [
           ["Trocar o motor", "Funciona em vazio, bobinas internas devem estar boas."],
+          ["Substituir os contatores", "Os contatores operam normalmente na sequência de tempo."],
+          ["Aumentar a bitola dos cabos", "O problema surgiu após manutenção; a bitola era adequada antes."],
+          ["Trocar os fusíveis", "O motor gira; os fusíveis estão íntegros."],
         ],
       },
       {
@@ -183,6 +195,9 @@ export const ROTOR_BOBINADO: OccurrenceSpec[] = [
         correct: "Corrigir a sequência de fases rotóricas reconectando as escovas",
         wrong: [
           ["Lixar os anéis novamente", "A falha é de ligação elétrica."],
+          ["Trocar as escovas", "As escovas são novas e o motor funciona em vazio."],
+          ["Trocar o banco de resistores", "O banco está bom; o erro é na fiação até ele."],
+          ["Inverter as fases da rede", "Inverter a rede mudaria o sentido, não o torque rotórico."],
         ],
       },
     ],
@@ -190,6 +205,9 @@ export const ROTOR_BOBINADO: OccurrenceSpec[] = [
       correct: "Inversão de fases no circuito rotórico (conexão das escovas)",
       wrong: [
         ["Falta de fase no rotor", "Teria dificuldade extrema mesmo em vazio."],
+        ["Curto-circuito no estator", "O disjuntor desarmaria imediatamente."],
+        ["Rolamentos travados", "O motor gira livremente sem carga."],
+        ["Bobina de KM3 queimada", "O erro de torque é na partida, antes da entrada de KM3."],
       ],
     },
     fault: "Fases rotóricas invertidas na conexão das escovas",
@@ -221,6 +239,9 @@ export const ROTOR_BOBINADO: OccurrenceSpec[] = [
         correct: "Desenergizar e inspecionar o comprimento das escovas",
         wrong: [
           ["Limpar anéis com motor girando", "Extremamente perigoso e proibido."],
+          ["Trocar o motor", "O faiscamento é externo, nos anéis/escovas."],
+          ["Substituir os contatores de potência", "O faiscamento é no rotor, não no painel."],
+          ["Aumentar a bitola dos cabos do rotor", "O problema é de contato superficial, não de bitola."],
         ],
       },
       {
@@ -229,6 +250,9 @@ export const ROTOR_BOBINADO: OccurrenceSpec[] = [
         correct: "Verificar a pressão das molas e o estado da superfície dos anéis",
         wrong: [
           ["Lixar com lixa grossa", "Danifica a pátina protetora."],
+          ["Inverter as fases do rotor", "Inversão de fases não causa faiscamento mecânico."],
+          ["Trocar o banco de resistores", "Resistores não causam faísca nos anéis."],
+          ["Medir a isolação do estator", "O estator não está envolvido no faiscamento do rotor."],
         ],
       },
     ],
@@ -236,6 +260,9 @@ export const ROTOR_BOBINADO: OccurrenceSpec[] = [
       correct: "Escovas de carvão desgastadas e molas de pressão frouxas",
       wrong: [
         ["Banco de resistores em curto", "Causaria aceleração brusca."],
+        ["Falta de fase", "Causaria ronco, mas não necessariamente faíscas nos anéis."],
+        ["Rotor em curto interno", "O faiscamento seria acompanhado de fumaça interna no motor."],
+        ["Excesso de carga", "Carga pesada aumenta corrente, mas faiscamento excessivo indica mau contato."],
       ],
     },
     fault: "Desgaste excessivo das escovas e perda de pressão das molas",
