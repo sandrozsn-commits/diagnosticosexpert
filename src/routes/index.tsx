@@ -1,4 +1,5 @@
-// Execute esta instrucao no projeto: CORREÇÃO DO DIAGRAMA — NÃO REDESENHAR A LÓGICA
+/*
+Execute esta instrucao no projeto: CORREÇÃO DO DIAGRAMA — NÃO REDESENHAR A LÓGICA
 
 O resultado atual NÃO está fiel à imagem de referência.
 
@@ -144,6 +145,7 @@ NÃO altere nenhuma outra parte do aplicativo.
 Não altere banco de dados, XP, perguntas, respostas, navegação ou funcionalidades existentes.
 
 A tarefa é SOMENTE corrigir a representação SVG do diagrama para que sua simbologia e composição visual sejam fiéis à imagem de referência.
+*/
 
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
