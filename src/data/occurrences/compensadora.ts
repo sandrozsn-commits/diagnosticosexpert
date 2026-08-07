@@ -4,7 +4,7 @@ export const COMPENSADORA: OccurrenceSpec[] = [
   {
     id: "cp-01",
     title: "Motor não parte no tap reduzido",
-    level: "intermediario",
+    level: "iniciante",
     minutes: 12,
     xp: 170,
     equipment: "Motor de bomba 50 cv",
@@ -108,6 +108,58 @@ export const COMPENSADORA: OccurrenceSpec[] = [
   },
   {
     id: "cp-03",
+    title: "Partida com conjugado insuficiente e motor 'travado'",
+    level: "intermediario",
+    minutes: 10,
+    xp: 145,
+    equipment: "Motor de transportador 40 cv",
+    company: "Cimento Rio Claro",
+    sector: "Transporte de clínquer",
+    symptom: "Após a manutenção, o motor não consegue vencer a carga na partida e permanece rosnando até o desarme.",
+    objective: "Verificar a tensão efetivamente aplicada ao motor durante a partida.",
+    steps: [
+      {
+        situation: "O motor recebe comando e tensão, mas não desenvolve conjugado suficiente.",
+        correct: "Medir a tensão entre fases nos terminais do motor durante a partida",
+        wrong: [
+          ["Lubrificar os mancais do transportador", "A carga mecânica não mudou desde antes da manutenção."],
+          ["Substituir o contator de tap", "O contator fecha corretamente e conduz corrente."],
+        ],
+      },
+      {
+        situation: "A tensão medida é comparada com a esperada para o tap especificado.",
+        reading: "Tensão medida na partida: 190 V (50 % de 380 V). Projeto especifica tap de 80 %.",
+        correct: "Conferir em qual derivação do autotransformador os cabos estão conectados",
+        wrong: [
+          ["Aumentar o tempo de partida", "Prolongar a partida em tensão insuficiente apenas aquece o motor."],
+          ["Reduzir o ajuste do relé térmico", "Reduzir o ajuste provocaria desarmes ainda mais rápidos."],
+        ],
+      },
+    ],
+    diagnosis: {
+      correct: "Cabos ligados no tap de 50 % em vez do tap de 80 % previsto em projeto",
+      wrong: [
+        ["Motor com enrolamento danificado", "A tensão aplicada está abaixo do previsto: o conjugado reduzido é esperado."],
+        ["Relé térmico com ajuste baixo", "O motor não chega a acelerar; o desarme é consequência da partida prolongada."],
+      ],
+    },
+    fault: "Derivação (tap) incorreta no autotransformador de partida",
+    technical:
+      "O conjugado de partida varia com o quadrado da tensão aplicada: no tap de 50 % o motor entrega apenas 25 % do conjugado nominal. Cargas de alta inércia exigem taps mais altos. Após qualquer manutenção no autotransformador, a derivação deve ser conferida contra o projeto.",
+    checklist: [
+      "Medição da tensão aplicada ao motor na partida",
+      "Comparação com o tap especificado em projeto",
+      "Conferência física das derivações de T1",
+      "Reconexão no tap correto e novo teste",
+    ],
+    lessons: [
+      "Relação quadrática entre tensão e conjugado",
+      "Escolha de taps em chaves compensadoras",
+      "Conferência pós-manutenção contra o projeto",
+    ],
+  },
+  {
+    id: "cp-04",
     title: "Autotransformador aquece excessivamente na partida",
     level: "avancado",
     minutes: 14,
@@ -160,7 +212,7 @@ export const COMPENSADORA: OccurrenceSpec[] = [
     ],
   },
   {
-    id: "cp-04",
+    id: "cp-05",
     title: "Disjuntor desarma no instante da transição",
     level: "avancado",
     minutes: 13,
@@ -210,58 +262,6 @@ export const COMPENSADORA: OccurrenceSpec[] = [
       "Transição aberta e transição fechada",
       "Função do contator de neutro em T1",
       "Leitura de diagramas de chave compensadora",
-    ],
-  },
-  {
-    id: "cp-05",
-    title: "Partida com conjugado insuficiente e motor 'travado'",
-    level: "iniciante",
-    minutes: 10,
-    xp: 145,
-    equipment: "Motor de transportador 40 cv",
-    company: "Cimento Rio Claro",
-    sector: "Transporte de clínquer",
-    symptom: "Após a manutenção, o motor não consegue vencer a carga na partida e permanece rosnando até o desarme.",
-    objective: "Verificar a tensão efetivamente aplicada ao motor durante a partida.",
-    steps: [
-      {
-        situation: "O motor recebe comando e tensão, mas não desenvolve conjugado suficiente.",
-        correct: "Medir a tensão entre fases nos terminais do motor durante a partida",
-        wrong: [
-          ["Lubrificar os mancais do transportador", "A carga mecânica não mudou desde antes da manutenção."],
-          ["Substituir o contator de tap", "O contator fecha corretamente e conduz corrente."],
-        ],
-      },
-      {
-        situation: "A tensão medida é comparada com a esperada para o tap especificado.",
-        reading: "Tensão medida na partida: 190 V (50 % de 380 V). Projeto especifica tap de 80 %.",
-        correct: "Conferir em qual derivação do autotransformador os cabos estão conectados",
-        wrong: [
-          ["Aumentar o tempo de partida", "Prolongar a partida em tensão insuficiente apenas aquece o motor."],
-          ["Reduzir o ajuste do relé térmico", "Reduzir o ajuste provocaria desarmes ainda mais rápidos."],
-        ],
-      },
-    ],
-    diagnosis: {
-      correct: "Cabos ligados no tap de 50 % em vez do tap de 80 % previsto em projeto",
-      wrong: [
-        ["Motor com enrolamento danificado", "A tensão aplicada está abaixo do previsto: o conjugado reduzido é esperado."],
-        ["Relé térmico com ajuste baixo", "O motor não chega a acelerar; o desarme é consequência da partida prolongada."],
-      ],
-    },
-    fault: "Derivação (tap) incorreta no autotransformador de partida",
-    technical:
-      "O conjugado de partida varia com o quadrado da tensão aplicada: no tap de 50 % o motor entrega apenas 25 % do conjugado nominal. Cargas de alta inércia exigem taps mais altos. Após qualquer manutenção no autotransformador, a derivação deve ser conferida contra o projeto.",
-    checklist: [
-      "Medição da tensão aplicada ao motor na partida",
-      "Comparação com o tap especificado em projeto",
-      "Conferência física das derivações de T1",
-      "Reconexão no tap correto e novo teste",
-    ],
-    lessons: [
-      "Relação quadrática entre tensão e conjugado",
-      "Escolha de taps em chaves compensadoras",
-      "Conferência pós-manutenção contra o projeto",
     ],
   },
 ];
