@@ -105,4 +105,160 @@ export const DAHLANDER: OccurrenceSpec[] = [
       "Riscos de curto entre enrolamentos Dahlander",
     ],
   },
+  {
+    id: "dh-03",
+    title: "Motor não parte em nenhuma das duas velocidades",
+    level: "iniciante",
+    minutes: 9,
+    xp: 135,
+    equipment: "Motor Dahlander 2 velocidades 7,5 cv",
+    company: "Confecções Ipê Verde",
+    sector: "Sala de corte automatizado",
+    priority: "Baixa",
+    symptom: "Nem S1 (baixa) nem S2 (alta) fazem qualquer efeito. Nenhum contator atraca, nenhum ruído no painel, sinaleira apagada.",
+    objective: "Identificar a falha na alimentação comum do circuito de comando.",
+    steps: [
+      {
+        situation: "Painel energizado, mas sem resposta às botoeiras S1 e S2.",
+        correct: "Medir a tensão na entrada e saída dos fusíveis de comando F1/F2",
+        wrong: [
+          ["Trocar o motor Dahlander", "Ação precipitada: se os contatores não atracam, o problema é no comando."],
+          ["Substituir as botoeiras S1 e S2", "Pouco provável que ambas as botoeiras falhem simultaneamente."],
+        ],
+      },
+      {
+        situation: "Verificação da integridade dos fusíveis de proteção do comando.",
+        reading: "Tensão na entrada de F1: 220 V. Tensão na saída de F1: 0 V.",
+        correct: "Substituir o fusível F1 e investigar a causa da abertura",
+        wrong: [
+          ["Jumpear o fusível F1", "Extremamente perigoso: elimina a proteção contra curtos no comando."],
+          ["Trocar o contator KM1", "A falta de tensão na saída do fusível indica que o defeito é anterior aos contatores."],
+        ],
+      },
+    ],
+    diagnosis: {
+      correct: "Fusível de comando F1 aberto",
+      wrong: [
+        ["Falta de fase na rede principal", "Se houvesse falta de fase, a sinaleira de painel ligado (se em outra fase) poderia estar acesa, mas aqui tudo está morto."],
+        ["Botoeira S0 travada aberta", "S0 interromperia o circuito, mas a medição no fusível já confirmou a falha antes dela."],
+      ],
+    },
+    fault: "Fusível de comando (F1 ou F2) aberto",
+    technical: "O fusível de comando protege todo o circuito de manobra. Quando ele abre, toda a lógica (baixa e alta velocidade) perde alimentação. Em um motor Dahlander, como o comando compartilha a mesma proteção, a falha silencia o painel por completo.",
+    checklist: [
+      "Teste de continuidade dos fusíveis de comando",
+      "Medição de tensão nos bornes de entrada/saída de proteção",
+      "Inspeção por curtos-circuitos na fiação de comando",
+      "Substituição por fusível de mesma capacidade",
+    ],
+    lessons: [
+      "Importância da proteção do circuito de comando",
+      "Diagnóstico de falhas em ramais comuns",
+      "Procedimentos de segurança em medição de painéis",
+    ],
+  },
+  {
+    id: "dh-04",
+    title: "Troca de velocidade com solavanco e ruído forte",
+    level: "intermediario",
+    minutes: 13,
+    xp: 195,
+    equipment: "Motor Dahlander 2 velocidades 12,5 cv",
+    company: "Indústria de Plásticos Rio Bonito",
+    sector: "Extrusora",
+    priority: "Média",
+    symptom: "A baixa velocidade funciona bem. Ao acionar S2 para trocar para alta, o motor dá um solavanco brusco, faz um estalo alto, e só depois estabiliza.",
+    objective: "Diagnosticar a falha na transição entre os enrolamentos Dahlander.",
+    steps: [
+      {
+        situation: "Transição abrupta observada entre KM1 e KM2/KM3.",
+        correct: "Verificar a existência e o ajuste do temporizador de transição (se houver) ou o estado dos intertravamentos",
+        wrong: [
+          ["Trocar os rolamentos do motor", "O ruído e solavanco ocorrem apenas na troca de velocidade, sugerindo falha elétrica."],
+          ["Reduzir a carga da extrusora", "A carga não justifica o solavanco elétrico na transição de polos."],
+        ],
+      },
+      {
+        situation: "Análise da lógica de tempo entre o desligamento de KM1 e o fechamento de KM2/KM3.",
+        reading: "KM2 e KM3 atracam quase instantaneamente após a abertura de KM1, sem o intervalo de segurança recomendado.",
+        correct: "Instalar ou ajustar o relé de tempo para garantir um 'tempo morto' de 50ms a 100ms",
+        wrong: [
+          ["Trocar o contator KM1", "KM1 está abrindo corretamente; o problema é a velocidade do fechamento dos próximos."],
+          ["Inverter as fases da velocidade alta", "Inverter fases mudaria o sentido de giro, não suavizaria a transição."],
+        ],
+      },
+    ],
+    diagnosis: {
+      correct: "Ausência de tempo morto na transição entre velocidades",
+      wrong: [
+        ["KM1 e KM2 fechando juntos (curto)", "Se fechassem juntos, o disjuntor desarmaria violentamente, não haveria estabilização."],
+        ["Falta de fase na velocidade alta", "Causaria ronco contínuo e falta de torque, não apenas um solavanco na partida."],
+      ],
+    },
+    fault: "Falta de intervalo de segurança (tempo morto) na transição Dahlander",
+    technical: "Motores Dahlander requerem uma pequena pausa (centenas de milissegundos) na troca de polos para permitir o decaimento do campo magnético residual. Sem essa pausa, a reenergização em nova configuração gera picos de corrente e estresse mecânico (solavanco).",
+    checklist: [
+      "Verificação do temporizador de transição",
+      "Ajuste da lógica de comando para incluir retardo",
+      "Inspeção de contatos auxiliares",
+      "Medição de corrente de pico na transição",
+    ],
+    lessons: [
+      "Campo magnético residual em motores CA",
+      "Necessidade de tempo morto em chaves de polos",
+      "Diferença entre transição aberta e fechada",
+    ],
+  },
+  {
+    id: "dh-05",
+    title: "Motor esquenta excessivamente em velocidade baixa, mas funciona normal em alta",
+    level: "avancado",
+    minutes: 14,
+    xp: 210,
+    equipment: "Motor Dahlander 2 velocidades 10 cv",
+    company: "Frigorífico Serra Fria",
+    sector: "Câmara de resfriamento — ventilador",
+    priority: "Média",
+    symptom: "Em velocidade alta opera normal. Em velocidade baixa, o relé térmico FT1 desarma por sobrecorrente em menos de 20 minutos.",
+    objective: "Identificar o erro de parametrização da proteção térmica em baixa velocidade.",
+    steps: [
+      {
+        situation: "Desarme do térmico FT1 apenas na condição de baixa velocidade.",
+        correct: "Medir a corrente real de linha em baixa velocidade e comparar com o ajuste de FT1",
+        wrong: [
+          ["Substituir o motor por um maior", "O motor funciona bem em alta; a potência parece adequada."],
+          ["Limpar as pás do ventilador", "Se fosse sujeira/carga, o problema persistiria ou pioraria na velocidade alta."],
+        ],
+      },
+      {
+        situation: "Conferência do ajuste de corrente no dial do relé térmico FT1.",
+        reading: "Corrente medida em baixa: 12 A. Ajuste no dial de FT1: 9 A. Placa do motor indica In (baixa) = 12,5 A.",
+        correct: "Corrigir o ajuste do relé térmico FT1 para o valor nominal de placa",
+        wrong: [
+          ["Trocar FT1 por um de mesma faixa", "O problema é o ajuste configurado, não o componente físico."],
+          ["Colocar FT1 em modo manual", "O modo de reset não altera a curva de disparo térmico."],
+        ],
+      },
+    ],
+    diagnosis: {
+      correct: "Relé térmico FT1 ajustado abaixo da corrente nominal nominal em baixa",
+      wrong: [
+        ["Motor com enrolamento de baixa queimado", "Se estivesse queimado, haveria desequilíbrio de fases e o motor nem rodaria 20 min."],
+        ["Queda de tensão na rede", "A queda afetaria ambas as velocidades, não apenas a baixa."],
+      ],
+    },
+    fault: "Erro de ajuste (setpoint) no relé térmico da velocidade baixa",
+    technical: "Em motores Dahlander, a corrente nominal em baixa velocidade (ligação triângulo) é diferente da corrente em alta (estrela dupla). Se o eletricista ajustar ambos os térmicos com base no maior valor ou errar o cálculo para a ligação de baixa, ocorrerão disparos indevidos por sobrecarga inexistente.",
+    checklist: [
+      "Conferência de dados de placa do motor (In baixa vs In alta)",
+      "Medição de corrente com alicate amperímetro",
+      "Ajuste preciso dos relés térmicos FT1 e FT2",
+      "Teste de elevação de temperatura do motor",
+    ],
+    lessons: [
+      "Parametrização de proteções em motores multi-velocidade",
+      "Diferença de correntes nominais em enrolamentos Dahlander",
+      "Importância da leitura correta da placa do motor",
+    ],
+  },
 ];

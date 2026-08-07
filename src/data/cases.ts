@@ -90,7 +90,12 @@ function assemble(): DiagCase[] {
   const out: DiagCase[] = [];
   for (const circuit of CIRCUITS) {
     const specs = REGISTRY[circuit.id] ?? [];
-    out.push(...buildCases(circuit, specs, out.length + 1));
+    const sortedSpecs = [...specs].sort((a, b) => {
+      const numA = parseInt(a.id.match(/\d+/)?.[0] || "0");
+      const numB = parseInt(b.id.match(/\d+/)?.[0] || "0");
+      return numA - numB;
+    });
+    out.push(...buildCases(circuit, sortedSpecs, out.length + 1));
   }
   return out;
 }
