@@ -15,8 +15,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
     objective: "Identificar em que ponto o circuito de comando é interrompido antes da bobina de KM1.",
     steps: [
       {
-        situation: "Painel energizado, disjuntor Q1 ligado, comando aparentemente morto.",
-        correct: "Medir tensão de comando entre a saída de F1 e o neutro",
+        situation: "Painel energizado, disjuntor Q2 ligado, comando aparentemente morto.",
+        correct: "Medir tensão de comando entre a saída de F2 e o neutro",
         wrong: [
           ["Substituir o contator KM1 imediatamente", "Contator trocado sem evidência: falha permanece idêntica e uma hora de produção é perdida."],
           ["Abrir a caixa de ligação do motor", "O motor sequer é energizado; a inspeção não gera nenhuma informação nova."],
@@ -26,10 +26,10 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
       },
       {
         situation: "Há tensão na entrada do comando, então o problema está no percurso da série.",
-        reading: "F1 → N = 220 V. Bobina A1/A2 de KM1 = 0 V.",
+        reading: "F2 → N = 220 V. Bobina A1/A2 de KM1 = 0 V.",
         correct: "Medir a continuidade ponto a ponto na série FT1 (95/96) → S0 → S1",
         wrong: [
-          ["Trocar os fusíveis F1 e F2", "Os fusíveis estão íntegros — havia tensão medida logo após eles."],
+          ["Trocar o fusível F2", "O fusível está íntegro — havia tensão medida logo após ele."],
           ["Aumentar o ajuste de corrente do relé térmico", "Alterar o ajuste não restabelece o contato auxiliar e mascara a proteção do motor."],
           ["Substituir a bobina de KM1", "A bobina não recebe tensão; a troca não corrige o problema de alimentação."],
           ["Testar isolamento do motor", "O motor ainda não foi energizado; testar isolamento é inútil neste momento."],
@@ -51,7 +51,7 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
       correct: "Relé térmico FT1 atuado, com contato 95/96 aberto e sem rearme",
       wrong: [
         ["Bobina de KM1 queimada", "A bobina nunca recebeu tensão: não é possível afirmar que esteja danificada."],
-        ["Fusível de comando aberto", "Havia 220 V medidos após F1."],
+        ["Fusível de comando aberto", "Haveria 220 V medidos após F2."],
         ["Defeito no motor", "O motor não foi testado; o comando não enviou sinal."],
         ["Falha na botoeira Liga S1", "A botoeira S1 apresentou continuidade normal no teste."],
       ],
@@ -60,7 +60,7 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
     technical:
       "O contato auxiliar 95/96 do relé térmico abre a série de comando quando ocorre sobrecarga. Enquanto o rearme não for feito, a bobina de KM1 não recebe tensão. Antes de rearmar, deve-se investigar a causa da sobrecarga (corrente do motor, carga mecânica e ajuste do relé).",
     checklist: [
-      "Confirmação de tensão de comando após F1",
+      "Confirmação de tensão de comando após F2",
       "Teste de continuidade da série FT1 → S0 → S1",
       "Identificação do contato 95/96 aberto",
       "Rearme após verificação da corrente do motor",

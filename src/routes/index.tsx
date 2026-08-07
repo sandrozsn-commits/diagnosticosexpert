@@ -1,4 +1,4 @@
-// Execute esta instrucao no projeto: QUal é o proximo passo para melhorar esse produto?
+// Execute esta instrucao no projeto: Desenvolva o diagrama da chave de partida direta, conforme imagem em anexo e altere dentro das ocorrencias da chave de partida direta
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { CASES, CATEGORIES, type Level } from "@/data/cases";
