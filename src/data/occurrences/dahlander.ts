@@ -20,6 +20,8 @@ export const DAHLANDER: OccurrenceSpec[] = [
         wrong: [
           ["Substituir o motor Dahlander", "Troca prematura: o problema parece ser na lógica de acionamento dos contatores."],
           ["Verificar a tensão nos bornes do motor", "Se os contatores não fecharam, não haverá tensão no motor por definição."],
+          ["Inverter as fases da rede", "A inversão mudaria o sentido, mas não resolveria a falha de acionamento."],
+          ["Trocar o relé térmico", "O térmico não impede o acionamento de KM2/KM3 se não estiver atuado."],
         ],
       },
       {
@@ -29,6 +31,8 @@ export const DAHLANDER: OccurrenceSpec[] = [
         wrong: [
           ["Trocar a botoeira S2", "S2 funcionou ao desenergizar KM1; o bloqueio está adiante."],
           ["Jumpear o intertravamento de KM1", "Risco grave: se KM1 estiver realmente travado fechado, o jumper causará um curto-circuito."],
+          ["Medir o isolamento do motor", "O problema é de comando elétrico, não de isolamento de carcaça."],
+          ["Verificar o nível de óleo do motor", "Este motor é a seco; a verificação é inútil."],
         ],
       },
     ],
@@ -37,6 +41,8 @@ export const DAHLANDER: OccurrenceSpec[] = [
       wrong: [
         ["Bobinas de KM2 e KM3 queimadas", "Pouco provável que duas bobinas falhem simultaneamente sem comando."],
         ["Disjuntor de comando Q1 aberto", "KM1 chegou a atracar e desatracar, logo há tensão no comando."],
+        ["Falta de fase na potência", "A falta de fase não impediria o acionamento mecânico dos contatores."],
+        ["Botoeira S1 com defeito", "S1 é para velocidade baixa, que estava funcionando."],
       ],
     },
     fault: "Contator KM1 travado mecanicamente (contatos soldados ou trava física)",
@@ -72,6 +78,8 @@ export const DAHLANDER: OccurrenceSpec[] = [
         wrong: [
           ["Trocar o motor Dahlander", "Ação precipitada: se os contatores não atracam, o problema é no comando."],
           ["Substituir as botoeiras S1 e S2", "Pouco provável que ambas as botoeiras falhem simultaneamente."],
+          ["Verificar o nível de carga do motor", "Sem acionamento dos contatores, a carga é irrelevante."],
+          ["Inverter os cabos de potência", "Inversão de potência não afeta o circuito de comando inoperante."],
         ],
       },
       {
@@ -81,6 +89,8 @@ export const DAHLANDER: OccurrenceSpec[] = [
         wrong: [
           ["Jumpear o fusível F1", "Extremamente perigoso: elimina a proteção contra curtos no comando."],
           ["Trocar o contator KM1", "A falta de tensão na saída do fusível indica que o defeito é anterior aos contatores."],
+          ["Medir continuidade da bobina do motor", "O comando está morto; o motor não é a causa do fusível de comando aberto."],
+          ["Ajustar o relé térmico", "O térmico não protege o circuito de comando, mas sim o de potência."],
         ],
       },
     ],
@@ -89,6 +99,8 @@ export const DAHLANDER: OccurrenceSpec[] = [
       wrong: [
         ["Falta de fase na rede principal", "Se houvesse falta de fase, a sinaleira de painel ligado poderia estar acesa."],
         ["Botoeira S0 travada aberta", "A medição no fusível já confirmou a falha antes dela."],
+        ["Bobinas de todos os contatores queimadas", "Abertura de fusível é sintoma de curto ou sobrecarga no comando, não bobina aberta."],
+        ["Motor em curto-circuito", "Curto no motor abriria os fusíveis de potência, não os de comando."],
       ],
     },
     fault: "Fusível de comando (F1 ou F2) aberto",
