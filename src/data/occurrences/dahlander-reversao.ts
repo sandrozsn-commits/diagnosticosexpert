@@ -19,6 +19,9 @@ export const DAHLANDER_REVERSAO: OccurrenceSpec[] = [
         correct: "Verificar a continuidade do contato auxiliar de KM2 na linha de alta",
         wrong: [
           ["Trocar os contatores KM4 e KM5", "Eles funcionam no sentido horário."],
+          ["Substituir o motor Dahlander", "O motor opera bem no sentido horário e em baixa no anti-horário."],
+          ["Inverter as fases da rede", "Isso inverteria todos os sentidos e não resolveria a falha na alta."],
+          ["Trocar a botoeira S3", "S3 é a baixa anti-horário, que está funcionando."],
         ],
       },
       {
@@ -27,6 +30,9 @@ export const DAHLANDER_REVERSAO: OccurrenceSpec[] = [
         correct: "Inspecionar mecanicamente o bloco auxiliar de KM2",
         wrong: [
           ["Trocar a botoeira S4", "O bloqueio está no contato de KM2."],
+          ["Substituir o relé térmico", "O térmico não impede apenas uma velocidade em um sentido."],
+          ["Jumpear o contato de KM2", "Prática perigosa: anula a segurança da lógica de reversão."],
+          ["Limpar os anéis do motor", "Motores Dahlander não possuem anéis coletores."],
         ],
       },
     ],
@@ -34,6 +40,9 @@ export const DAHLANDER_REVERSAO: OccurrenceSpec[] = [
       correct: "Mau contato em contato auxiliar de KM2",
       wrong: [
         ["Falta de fase", "Impediria ambas as velocidades."],
+        ["Bobina de KM4 queimada", "KM4 é usado no sentido horário, que funciona."],
+        ["Motor com enrolamento aberto em alta", "O motor funciona em alta no outro sentido."],
+        ["Erro na botoeira S0", "S0 desligaria todo o comando."],
       ],
     },
     fault: "Mau contato em auxiliar específico",
@@ -59,6 +68,9 @@ export const DAHLANDER_REVERSAO: OccurrenceSpec[] = [
         correct: "Medir a tensão no fusível do ramal de reversão",
         wrong: [
           ["Substituir o motor", "O motor funciona no sentido direto."],
+          ["Trocar os contatores de reversão", "Antes de trocar, deve-se verificar se recebem comando."],
+          ["Inverter a fiação do motor", "Isso não resolveria a falta de acionamento do comando."],
+          ["Verificar o nível de carga", "Carga não impede o atracamento de contatores de comando."],
         ],
       },
     ],
@@ -66,6 +78,9 @@ export const DAHLANDER_REVERSAO: OccurrenceSpec[] = [
       correct: "Fusível do ramal de comando de reversão aberto",
       wrong: [
         ["Bobinas queimadas", "Pouco provável falha múltipla."],
+        ["Falta de fase na potência", "O comando deveria atracar mesmo sem potência."],
+        ["Erro de inversão de fases", "Isso mudaria a rotação, não impediria o comando."],
+        ["Motor travado mecanicamente", "O motor funciona no sentido original."],
       ],
     },
     fault: "Fusível de reversão aberto",
@@ -91,6 +106,9 @@ export const DAHLANDER_REVERSAO: OccurrenceSpec[] = [
         correct: "Verificar estado do temporizador de segurança entre reversões",
         wrong: [
           ["Aumentar disjuntor", "Ação insegura."],
+          ["Trocar o motor", "O motor está bom, a falha é de tempo de manobra."],
+          ["Substituir contatores", "Os contatores estão atuando; a falha é na coordenação."],
+          ["Limpar contatos de potência", "O problema é arco elétrico por rapidez excessiva."],
         ],
       },
     ],
@@ -98,6 +116,9 @@ export const DAHLANDER_REVERSAO: OccurrenceSpec[] = [
       correct: "Falta de tempo morto entre reversões",
       wrong: [
         ["Curto no motor", "Funciona se partir devagar."],
+        ["Falta de fase", "Causaria ronco, não desarme violento na transição rápida."],
+        ["Bobina de KM3 queimada", "KM3 atua para causar o curto com o arco de KM1."],
+        ["Erro na botoeira S2", "S2 funciona; o erro é na lógica de proteção."],
       ],
     },
     fault: "Ausência de intervalo de segurança",
@@ -123,6 +144,9 @@ export const DAHLANDER_REVERSAO: OccurrenceSpec[] = [
         correct: "Comparar intertravamento de baixa com o de alta",
         wrong: [
           ["Trocar térmico", "Desarme é por curto (disjuntor)."],
+          ["Substituir o motor", "Funciona em baixa; o problema é na alta."],
+          ["Inverter as fases da rede", "A inversão não corrige falta de intertravamento."],
+          ["Trocar a botoeira S4", "A botoeira liga o circuito que entra em curto."],
         ],
       },
     ],
@@ -130,6 +154,9 @@ export const DAHLANDER_REVERSAO: OccurrenceSpec[] = [
       correct: "Falta de intertravamento cruzado entre contatores de alta",
       wrong: [
         ["Motor em curto", "Funciona em alta se partir direto."],
+        ["Falta de fase", "Causaria ronco, não curto-circuito."],
+        ["Bobina de KM2 queimada", "Se a bobina estivesse queimada, o contator não fecharia e não haveria curto."],
+        ["Erro no temporizador KT1", "KT1 atua na transição de velocidade, não de sentido."],
       ],
     },
     fault: "Erro de fiação no intertravamento de alta",
@@ -155,6 +182,9 @@ export const DAHLANDER_REVERSAO: OccurrenceSpec[] = [
         correct: "Medir ajuste do relé de tempo de reversão",
         wrong: [
           ["Substituir contatores", "Atraso é comandado."],
+          ["Trocar o motor", "O motor não tem inércia de 5 segundos para comando."],
+          ["Limpar os anéis do motor", "Motores Dahlander não têm anéis coletores."],
+          ["Substituir os fusíveis", "O sistema opera, logo a alimentação está ok."],
         ],
       },
     ],
@@ -162,6 +192,9 @@ export const DAHLANDER_REVERSAO: OccurrenceSpec[] = [
       correct: "Temporizador com ajuste de tempo excessivo",
       wrong: [
         ["Bobina fraca", "Não causa atraso lógico."],
+        ["Falta de fase", "O motor funciona normalmente após os 5 segundos."],
+        ["Rotor bloqueado", "O motor gira livremente após o atraso."],
+        ["Desgaste das escovas", "Este motor não usa escovas de carvão."],
       ],
     },
     fault: "Ajuste incorreto do temporizador",

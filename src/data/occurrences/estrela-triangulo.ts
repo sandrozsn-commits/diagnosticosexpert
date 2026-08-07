@@ -20,6 +20,8 @@ export const ESTRELA_TRIANGULO: OccurrenceSpec[] = [
         wrong: [
           ["Substituir o contator KM3", "Antes é preciso saber se o comando de comutação chega até a bobina de KM3."],
           ["Reduzir a carga da máquina", "A carga não impede a comutação temporizada do comando."],
+          ["Inverter o sentido de rotação", "A falha é de comutação Y/Δ, não de rotação."],
+          ["Trocar as fases do motor", "Trocar fases sem diagnóstico não resolve a ausência de transição."],
         ],
       },
       {
@@ -29,6 +31,8 @@ export const ESTRELA_TRIANGULO: OccurrenceSpec[] = [
         wrong: [
           ["Ajustar o tempo para o valor mínimo", "Se a saída não comuta, qualquer tempo continuará sem efeito."],
           ["Trocar a bobina de KM2", "KM2 está operando corretamente em estrela."],
+          ["Trocar o relé térmico FT1", "FT1 permite a partida; o problema é a transição."],
+          ["Verificar a botoeira S1", "S1 funcionou para iniciar a partida em estrela."],
         ],
       },
     ],
@@ -37,6 +41,8 @@ export const ESTRELA_TRIANGULO: OccurrenceSpec[] = [
       wrong: [
         ["Bobina de KM3 queimada", "A bobina não recebe comando, pois o contato temporizado não fecha."],
         ["Intertravamento KM2/KM3 aberto", "O intertravamento apenas atuaria após a saída do temporizador comutar."],
+        ["Falta de fase", "O motor parte em estrela, indicando presença de fases."],
+        ["Motor travado mecanicamente", "O motor gira, embora em baixa rotação."],
       ],
     },
     fault: "Relé temporizador KT1 com saída travada",
@@ -73,6 +79,8 @@ export const ESTRELA_TRIANGULO: OccurrenceSpec[] = [
         wrong: [
           ["Girar o ajuste de tempo para conferir resposta", "Sem alimentação, o ajuste não produz efeito algum."],
           ["Trocar o contator KM1", "KM1 atracou normalmente."],
+          ["Trocar o motor", "O problema é elétrico no comando, não mecânico."],
+          ["Verificar o relé térmico", "Se o térmico estivesse aberto, KM1 não teria atracado."],
         ],
       },
       {
@@ -82,6 +90,8 @@ export const ESTRELA_TRIANGULO: OccurrenceSpec[] = [
         wrong: [
           ["Substituir o temporizador", "O temporizador não está alimentado; a substituição não muda nada."],
           ["Testar as botoeiras", "O comando funcionou: KM1 está energizado."],
+          ["Inverter os cabos A1 e A2", "Inverter a polaridade em CA não resolve a falta de tensão."],
+          ["Aumentar bitola dos cabos", "O problema é interrupção total, não queda de tensão."],
         ],
       },
     ],
@@ -90,6 +100,8 @@ export const ESTRELA_TRIANGULO: OccurrenceSpec[] = [
       wrong: [
         ["Temporizador com defeito interno", "Há 0 V na entrada: o componente sequer foi alimentado."],
         ["Contato de selo de KM1 aberto", "KM1 permanece atracado após soltar a botoeira."],
+        ["Fusível F1 queimado", "Se F1 estivesse aberto, KM1 não atracaria."],
+        ["Motor com enrolamento aberto", "O motor não influi na alimentação do temporizador."],
       ],
     },
     fault: "Cabo de alimentação de KT1 solto no borne A1",
@@ -126,6 +138,8 @@ export const ESTRELA_TRIANGULO: OccurrenceSpec[] = [
         wrong: [
           ["Substituir o temporizador", "O temporizador comutou: KM2 foi desenergizado no tempo ajustado."],
           ["Reduzir o tempo de estrela", "O tempo não interfere na energização da bobina de KM3."],
+          ["Trocar o motor", "O motor funcionou em estrela; a falha é no triângulo."],
+          ["Verificar a botoeira S0", "Se S0 estivesse com defeito, a estrela não teria partido."],
         ],
       },
       {
@@ -135,6 +149,8 @@ export const ESTRELA_TRIANGULO: OccurrenceSpec[] = [
         wrong: [
           ["Verificar o intertravamento com KM2", "A bobina recebe a tensão nominal: o intertravamento está fechado."],
           ["Trocar os fusíveis de comando", "Há tensão plena disponível na bobina."],
+          ["Inverter as fases da bobina", "A bobina de CA não tem polaridade."],
+          ["Apertar o contator com a mão", "Risco de choque e não resolve a bobina aberta."],
         ],
       },
     ],
@@ -143,6 +159,8 @@ export const ESTRELA_TRIANGULO: OccurrenceSpec[] = [
       wrong: [
         ["Contato temporizado defeituoso", "O contato temporizado entregou 220 V na bobina."],
         ["Intertravamento KM2 aberto", "Se estivesse aberto, não haveria tensão na bobina."],
+        ["Falta de fase na potência", "A bobina do contator não depende das fases de potência."],
+        ["Temporizador desregulado", "O problema é o contator inerte, não o tempo."],
       ],
     },
     fault: "Bobina de KM3 em circuito aberto",
@@ -179,6 +197,8 @@ export const ESTRELA_TRIANGULO: OccurrenceSpec[] = [
         wrong: [
           ["Religar e observar novamente o estalo", "Repetir a falha submete a instalação a novo curto franco."],
           ["Aumentar o tempo do temporizador", "O tempo não corrige o fechamento simultâneo dos contatores."],
+          ["Trocar o motor", "O travamento é no contator, não no motor."],
+          ["Medir corrente do motor", "Impossível medir corrente em regime durante um curto-circuito."],
         ],
       },
       {
@@ -188,6 +208,8 @@ export const ESTRELA_TRIANGULO: OccurrenceSpec[] = [
         wrong: [
           ["Substituir o temporizador KT1", "O temporizador comutou corretamente no tempo previsto."],
           ["Refazer o intertravamento elétrico", "O intertravamento elétrico não impede o travamento mecânico da armadura."],
+          ["Trocar a bobina de KM2", "A bobina está desenergizada (0 V); o problema é mecânico."],
+          ["Inverter as fases da rede", "As fases não têm relação com o travamento mecânico do contator."],
         ],
       },
     ],
@@ -196,6 +218,8 @@ export const ESTRELA_TRIANGULO: OccurrenceSpec[] = [
       wrong: [
         ["Contato temporizado com atraso excessivo", "O tempo de comutação medido está correto."],
         ["Curto na fiação de comando", "A bobina de KM2 está comprovadamente desenergizada."],
+        ["Bobina de KM3 em curto", "KM3 atraca e causa o curto com o KM2 que ficou travado."],
+        ["Falta de fase", "O curto-circuito prova que as fases estão presentes."],
       ],
     },
     fault: "Travamento mecânico do contator estrela KM2",
@@ -231,6 +255,8 @@ export const ESTRELA_TRIANGULO: OccurrenceSpec[] = [
         wrong: [
           ["Aumentar a curva de disparo do disjuntor", "Mascarar o disparo sem entender a sobrecorrente é conduta inaceitável."],
           ["Substituir o contator triângulo", "O contator fecha corretamente no instante da comutação."],
+          ["Trocar o motor por um maior", "O motor atende a carga; o problema é o ajuste de partida."],
+          ["Verificar a botoeira S0", "S0 funciona normalmente durante todo o ciclo."],
         ],
       },
       {
@@ -240,6 +266,8 @@ export const ESTRELA_TRIANGULO: OccurrenceSpec[] = [
         wrong: [
           ["Trocar o motor por um de maior potência", "O motor está adequado à carga: o problema é o instante da comutação."],
           ["Reapertar os cabos de potência", "Não há evidência de mau contato nas leituras."],
+          ["Inverter as fases da rede", "A inversão de fases não altera a dinâmica de carga x tempo."],
+          ["Substituir o relé térmico", "O desarme é pelo disjuntor (magnético), não pelo térmico."],
         ],
       },
     ],
@@ -248,6 +276,8 @@ export const ESTRELA_TRIANGULO: OccurrenceSpec[] = [
       wrong: [
         ["Disjuntor subdimensionado", "A corrente medida de 6,4 × In justifica a atuação de qualquer proteção correta."],
         ["Contator estrela com contatos colados", "KM2 abre corretamente antes do fechamento de KM3."],
+        ["Falta de fase na comutação", "A corrente é alta em todas as fases no pico."],
+        ["Bobina de KM3 queimada", "Se KM3 não atracasse, não haveria carga e o disjuntor não desarmaria."],
       ],
     },
     fault: "Ajuste de tempo do temporizador incompatível com a inércia da carga",

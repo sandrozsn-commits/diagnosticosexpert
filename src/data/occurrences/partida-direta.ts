@@ -20,6 +20,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         wrong: [
           ["Substituir o contator KM1 imediatamente", "Contator trocado sem evidência: falha permanece idêntica e uma hora de produção é perdida."],
           ["Abrir a caixa de ligação do motor", "O motor sequer é energizado; a inspeção não gera nenhuma informação nova."],
+          ["Trocar a botoeira S1", "A botoeira apresenta continuidade normal e o comando não responde."],
+          ["Rearmar relé térmico sem teste", "O térmico não está atuado; rearmar não altera o estado do circuito."],
         ],
       },
       {
@@ -29,6 +31,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         wrong: [
           ["Trocar os fusíveis F1 e F2", "Os fusíveis estão íntegros — havia tensão medida logo após eles."],
           ["Aumentar o ajuste de corrente do relé térmico", "Alterar o ajuste não restabelece o contato auxiliar e mascara a proteção do motor."],
+          ["Substituir a bobina de KM1", "A bobina não recebe tensão; a troca não corrige o problema de alimentação."],
+          ["Testar isolamento do motor", "O motor ainda não foi energizado; testar isolamento é inútil neste momento."],
         ],
       },
       {
@@ -38,6 +42,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         wrong: [
           ["Fazer um jumper sobre o contato 95/96", "Prática proibida: elimina a proteção térmica do motor e cria risco de incêndio."],
           ["Substituir a botoeira S1", "A botoeira apresentou continuidade normal no teste."],
+          ["Trocar disjuntor de força Q1", "Q1 está ligado e conduzindo corrente para o circuito de potência."],
+          ["Substituir contator KM1", "O intertravamento é elétrico, não mecânico na armadura do contator."],
         ],
       },
     ],
@@ -46,6 +52,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
       wrong: [
         ["Bobina de KM1 queimada", "A bobina nunca recebeu tensão: não é possível afirmar que esteja danificada."],
         ["Fusível de comando aberto", "Havia 220 V medidos após F1."],
+        ["Defeito no motor", "O motor não foi testado; o comando não enviou sinal."],
+        ["Falha na botoeira Liga S1", "A botoeira S1 apresentou continuidade normal no teste."],
       ],
     },
     fault: "Relé térmico FT1 atuado e não rearmado",
@@ -82,6 +90,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         wrong: [
           ["Manter o motor ligado para observar o comportamento", "Motor mantido em falta de fase: aquecimento severo e risco de queima do enrolamento."],
           ["Trocar a botoeira S1", "O comando funcionou corretamente: KM1 atracou."],
+          ["Inverter as fases de entrada", "Isso não resolve a falta de uma fase; apenas inverte o sentido."],
+          ["Reapertar disjuntor de comando", "A falha está na potência, não no comando."],
         ],
       },
       {
@@ -91,6 +101,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         wrong: [
           ["Medir a resistência de isolamento do motor", "Medida válida em outro contexto, mas o desequilíbrio já aponta falta de fase na alimentação."],
           ["Reapertar apenas os bornes do motor", "O aperto não explica a ausência total de tensão em uma das fases."],
+          ["Trocar o motor", "O problema é na alimentação; o novo motor também zumbiria."],
+          ["Testar contatos auxiliares", "A falha é no circuito de potência."],
         ],
       },
     ],
@@ -99,6 +111,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
       wrong: [
         ["Rotor travado mecanicamente", "Com rotor travado haveria tensão equilibrada nas três fases."],
         ["Contator subdimensionado", "O contator fechou corretamente e conduz nas fases íntegras."],
+        ["Curto-circuito no motor", "Haveria desarme imediato por sobrecorrente/disjuntor."],
+        ["Falta de fase na rede geral", "As fases L1-L2 e L2-L3 estão normais; apenas a saída L3 falhou."],
       ],
     },
     fault: "Fusível de potência aberto (falta de fase em L3)",
@@ -135,6 +149,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         wrong: [
           ["Rearmar repetidamente até o motor permanecer ligado", "Rearmes sucessivos degradam o relé e não revelam nada sobre a corrente real."],
           ["Substituir o relé térmico por outro igual", "Sem conhecer a corrente do motor, a troca é um chute."],
+          ["Aumentar o ajuste para o máximo", "Perda total de proteção; o motor pode queimar sem aviso."],
+          ["Trocar os fusíveis de potência", "O motor parte; os fusíveis estão conduzindo."],
         ],
       },
       {
@@ -144,6 +160,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         wrong: [
           ["Verificar o alinhamento mecânico da carga", "As correntes estão equilibradas e dentro da nominal — não há sobrecarga mecânica."],
           ["Medir isolamento do enrolamento", "O motor opera com corrente normal; o isolamento não é o ponto em questão."],
+          ["Substituir o contator", "O contator está mantendo o motor rodando por 10s."],
+          ["Limpar terminais do motor", "Não há indícios de mau contato; corrente está estável."],
         ],
       },
     ],
@@ -152,6 +170,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
       wrong: [
         ["Sobrecarga mecânica na carga acionada", "As três correntes estão dentro da corrente nominal de placa."],
         ["Desequilíbrio de tensão da rede", "As correntes estão equilibradas entre as fases."],
+        ["Curto entre espiras", "A corrente seria muito mais alta e desequilibrada."],
+        ["Falha no temporizador", "Partida direta simples não usa temporizador de partida."],
       ],
     },
     fault: "Ajuste incorreto do relé térmico FT1 (9 A para um motor de 14,5 A)",
@@ -188,6 +208,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         wrong: [
           ["Pressionar S0 várias vezes com o motor girando", "A insistência mantém a máquina em condição insegura e não gera informação técnica."],
           ["Trocar a botoeira S0 com o painel energizado", "Intervenção com circuito energizado em condição de falha — risco grave de acidente."],
+          ["Medir corrente do motor", "Medição irrelevante; o motor não deveria estar rodando."],
+          ["Bater no contator com martelo", "Prática perigosa; pode soltar temporariamente mas danifica o componente."],
         ],
       },
       {
@@ -197,6 +219,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         wrong: [
           ["Substituir o relé térmico", "O relé térmico não mantém a potência fechada."],
           ["Refazer a fiação da botoeira S0", "O comando já está comprovadamente desenergizado."],
+          ["Trocar o motor", "O motor funciona até demais; a falha é na manobra."],
+          ["Limpar contatos com lixa", "Contatos soldados não devem ser lixados; o contator deve ser trocado."],
         ],
       },
     ],
@@ -205,6 +229,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
       wrong: [
         ["Botoeira S0 com contato NF em curto", "A bobina está com 0 V: o comando abriu corretamente."],
         ["Selo de KM1 permanentemente fechado", "O selo alimentaria a bobina, que estaria energizada."],
+        ["Falha no disjuntor principal", "O disjuntor interrompeu a carga; ele está operando."],
+        ["Erro na lógica de intertravamento", "Partida direta simples não possui intertravamento elétrico complexo."],
       ],
     },
     fault: "Contatos principais de KM1 soldados por sobrecorrente repetida",
@@ -241,6 +267,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         wrong: [
           ["Apertar o contator com a mão para estabilizar", "Intervenção insegura em equipamento energizado e sem valor diagnóstico."],
           ["Trocar o motor de posição no barramento", "A instabilidade está no comando, não na potência."],
+          ["Substituir disjuntor Q1", "Q1 está conduzindo; o chiado é no contator."],
+          ["Medir isolamento do motor", "O problema é claramente de acionamento magnético."],
         ],
       },
       {
@@ -250,6 +278,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         wrong: [
           ["Substituir a bobina do contator", "A bobina responde corretamente quando alimentada de forma estável por S1."],
           ["Verificar o ajuste do relé térmico", "O relé térmico não interfere na estabilidade do selo."],
+          ["Limpar o núcleo magnético", "O chiado/vibração via selo indica falha de continuidade elétrica."],
+          ["Trocar botoeira S0", "S0 é NF e está em série; mau contato nela afetaria também S1."],
         ],
       },
       {
@@ -259,6 +289,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         wrong: [
           ["Jumpear o selo para manter o motor ligado", "Improviso que elimina a função de retenção e cria acionamento sem segurança."],
           ["Substituir a botoeira S1", "S1 alimenta a bobina de forma estável."],
+          ["Trocar o relé térmico FT1", "FT1 é o elemento de proteção, não de retenção."],
+          ["Aumentar a bitola dos cabos de comando", "Tensão com S1 pressionado é estável; queda é localizada no selo."],
         ],
       },
     ],
@@ -267,6 +299,8 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
       wrong: [
         ["Bobina de KM1 com espiras em curto", "A bobina mantém o contator firme quando alimentada por S1."],
         ["Subtensão geral da rede", "A tensão medida com S1 pressionado é estável em 218 V."],
+        ["Núcleo magnético sujo", "A instabilidade é dependente da fonte de alimentação (S1 vs Selo)."],
+        ["Vibração mecânica do painel", "Causa remota; o problema elétrico no selo é evidente."],
       ],
     },
     fault: "Contato de selo KM1 13/14 com mau contato",
@@ -301,6 +335,9 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         correct: "Medir corrente de regime após a partida",
         wrong: [
           ["Substituir relé térmico", "Antes de trocar, medir corrente é obrigatório."],
+          ["Trocar motor", "Sem evidência de falha no motor, a troca é prematura."],
+          ["Aumentar a bitola dos cabos", "A queda de tensão não foi medida nem é suspeita."],
+          ["Limpar contatos do contator", "O problema é o ajuste do térmico, não mau contato."],
         ],
       },
       {
@@ -309,6 +346,9 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         correct: "Ajustar FT1 para a corrente nominal",
         wrong: [
           ["Trocar motor", "Corrente dentro da nominal."],
+          ["Substituir disjuntor de comando", "O disjuntor não interfere no ajuste do térmico."],
+          ["Inverter fases", "O motor gira normalmente; não há falta de fase."],
+          ["Trocar botoeira S0", "S0 é NF e funciona; o problema é o térmico."],
         ],
       },
     ],
@@ -316,6 +356,9 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
       correct: "FT1 ajustado abaixo da nominal",
       wrong: [
         ["Motor com defeito", "Corrente na nominal."],
+        ["Falta de fase", "Corrente equilibrada nas três fases."],
+        ["Curto-circuito", "O desarme seria instantâneo e via disjuntor."],
+        ["Falha no selo", "O motor parte e roda por 5 segundos; o selo está OK."],
       ],
     },
     fault: "Ajuste incorreto do FT1",

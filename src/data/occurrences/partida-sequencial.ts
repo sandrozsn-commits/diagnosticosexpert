@@ -20,6 +20,8 @@ export const PARTIDA_SEQUENCIAL: OccurrenceSpec[] = [
         wrong: [
           ["Reduzir o ajuste de tempo nos temporizadores", "Se eles já partem juntos, reduzir o tempo não mudará o comportamento."],
           ["Trocar os 3 contatores", "Os contatores estão fechando (até demais), o problema é o comando que os ativa."],
+          ["Inverter as fases da rede", "Isso não altera o sequenciamento temporizado do comando."],
+          ["Substituir os três motores", "Os motores estão funcionando; a falha é na coordenação da partida."],
         ],
       },
       {
@@ -29,6 +31,8 @@ export const PARTIDA_SEQUENCIAL: OccurrenceSpec[] = [
         wrong: [
           ["Substituir os motores", "Os motores estão partindo; a falha é na lógica de sequenciamento."],
           ["Instalar um CLP", "Solução desproporcional para um erro de fiação em temporizadores analógicos."],
+          ["Aumentar a bitola dos cabos de comando", "Não há queda de tensão; a fiação está em bornes errados."],
+          ["Trocar a botoeira Liga Geral", "A botoeira funciona; ela iniciou o processo corretamente."],
         ],
       },
     ],
@@ -37,6 +41,8 @@ export const PARTIDA_SEQUENCIAL: OccurrenceSpec[] = [
       wrong: [
         ["Temporizadores queimados", "Se estivessem queimados, os motores seguintes provavelmente não partiriam."],
         ["Curto-circuito na botoeira Liga", "A botoeira liga o primeiro motor corretamente; ela não ativaria os outros sem a lógica."],
+        ["Falta de fase", "Com falta de fase o ronco seria evidente e os 3 motores teriam dificuldade."],
+        ["Bobinas dos contatores em curto", "Faria o disjuntor de comando desarmar imediatamente."],
       ],
     },
     fault: "Fiação incorreta nos blocos de tempo (uso de contatos instantâneos)",
@@ -72,6 +78,8 @@ export const PARTIDA_SEQUENCIAL: OccurrenceSpec[] = [
         wrong: [
           ["Substituir o motor M3", "Ainda não se sabe se o comando chega ao contator de M3."],
           ["Trocar o temporizador TR2", "O temporizador está alimentado e concluiu a contagem (LED aceso)."],
+          ["Inverter as fases de M2", "M2 está rodando; inverter fases mudaria o sentido, não a sequência."],
+          ["Verificar fusíveis de potência de M3", "Se a bobina de KM3 não atraca, a potência é irrelevante no momento."],
         ],
       },
       {
@@ -81,6 +89,8 @@ export const PARTIDA_SEQUENCIAL: OccurrenceSpec[] = [
         wrong: [
           ["Jumpear o contato de KM2", "Prática que anula a segurança da sequência: M3 poderia partir sem M2 estar realmente rodando."],
           ["Trocar o relé térmico de M2", "M2 está rodando; o térmico está fechado."],
+          ["Substituir a bobina de KM3", "A bobina nem sequer recebeu tensão (0 V medidos)."],
+          ["Medir isolamento do motor M3", "O problema é de comando; a bobina de KM3 não é energizada."],
         ],
       },
     ],
@@ -89,6 +99,8 @@ export const PARTIDA_SEQUENCIAL: OccurrenceSpec[] = [
       wrong: [
         ["Bobina de KM3 queimada", "A bobina não recebeu tensão; não é possível concluir que esteja queimada."],
         ["Erro na lógica de intertravamento", "A lógica está correta, mas um componente físico falhou em executá-la."],
+        ["Falta de fase na alimentação de M2", "M2 está rodando, indicando presença de fases."],
+        ["Temporizador TR2 com defeito", "TR2 enviou o sinal (220 V na saída); a falha está no caminho até KM3."],
       ],
     },
     fault: "Falha mecânica no contato auxiliar de permissão de KM2",
@@ -123,12 +135,19 @@ export const PARTIDA_SEQUENCIAL: OccurrenceSpec[] = [
         wrong: [
           ["Trocar temporizadores", "A falha é no início da lógica."],
           ["Substituir motor", "O motor não é alimentado sem comando."],
+          ["Verificar o relé térmico de M3", "O térmico de M3 não impede a partida de M1."],
+          ["Inverter as fases da rede", "Inversão de fases não corrige mau contato em botoeira."],
         ],
       },
     ],
     diagnosis: {
       correct: "Botoeira S1 com mau contato",
-      wrong: [["Motor queimado", "A falha é no comando."]],
+      wrong: [
+        ["Motor queimado", "A falha é no comando."],
+        ["Disjuntor de potência aberto", "O disjuntor de potência não impediria o atracamento do contator."],
+        ["Fusível de comando queimado", "Se o fusível estivesse queimado, a sinaleira de painel estaria apagada."],
+        ["Erro no temporizador KT1", "KT1 atua após M1 partir; a falha é na partida de M1."],
+      ],
     },
     fault: "Botoeira de comando aberta",
     technical: "Falha no contato de entrada da lógica.",
@@ -153,12 +172,19 @@ export const PARTIDA_SEQUENCIAL: OccurrenceSpec[] = [
         wrong: [
           ["Trocar M2", "O problema é o comando do contator."],
           ["Inverter as fases", "Não resolve o problema de acionamento."],
+          ["Substituir KM1", "KM1 está funcionando e mantendo M1 rodando."],
+          ["Verificar a botoeira de emergência", "A emergência está ok, pois M1 continua operando."],
         ],
       },
     ],
     diagnosis: {
       correct: "KT1 com contato de saída travado",
-      wrong: [["KM2 queimado", "O comando não chega ao componente."]],
+      wrong: [
+        ["KM2 queimado", "O comando não chega ao componente."],
+        ["Motor M1 com sobrecarga", "M1 opera normalmente; o problema é a transição para M2."],
+        ["Falta de fase em M2", "O contator de M2 sequer atracou."],
+        ["Erro na fiação de M3", "A falha ocorre antes, no estágio de M2."],
+      ],
     },
     fault: "Defeito interno no temporizador",
     technical: "Contato de comutação não fecha.",
@@ -183,12 +209,19 @@ export const PARTIDA_SEQUENCIAL: OccurrenceSpec[] = [
         wrong: [
           ["Aumentar ajuste FT3", "Risco de queima."],
           ["Ignorar o desarme", "Pode causar danos permanentes."],
+          ["Trocar a botoeira S1", "S1 operou corretamente para iniciar a sequência."],
+          ["Inverter as fases de M1", "M1 e M2 operam normalmente."],
         ],
       },
     ],
     diagnosis: {
       correct: "Curto-circuito parcial no enrolamento de M3",
-      wrong: [["Térmico descalibrado", "O desarme é por corrente real de curto."]],
+      wrong: [
+        ["Térmico descalibrado", "O desarme é por corrente real de curto."],
+        ["Falta de fase em M3", "Falta de fase causaria aquecimento lento ou ronco, não desarme em 1s."],
+        ["Temporizador TR2 com defeito", "TR2 ativou M3; a falha é na carga ou potência de M3."],
+        ["Contator KM3 soldado", "Se estivesse soldado, M3 partiria junto com M2."],
+      ],
     },
     fault: "Defeito no enrolamento do motor M3",
     technical: "Curto entre espiras causa sobrecorrente severa na partida.",

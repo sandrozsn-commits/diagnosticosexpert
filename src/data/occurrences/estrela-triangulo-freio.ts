@@ -20,6 +20,8 @@ export const ESTRELA_TRIANGULO_FREIO: OccurrenceSpec[] = [
         wrong: [
           ["Ajustar a pressão da mola do freio", "Se a falha for elétrica (bobina energizada quando não devia), o ajuste mecânico não ajudará."],
           ["Trocar a lona de freio", "A lona não se desgasta de uma vez a ponto de não frear nada sem aviso prévio."],
+          ["Inverter as fases da rede", "Inverter fases não altera o comportamento da bobina do freio."],
+          ["Substituir o motor", "O motor para eletricamente; a falha é no freio mecânico/eletromagnético."],
         ],
       },
       {
@@ -29,6 +31,8 @@ export const ESTRELA_TRIANGULO_FREIO: OccurrenceSpec[] = [
         wrong: [
           ["Trocar o retificador do freio", "O retificador está entregando tensão (220 V medidos); ele não é o culpado."],
           ["Verificar o relé térmico", "O relé térmico atua no motor, não mantém o freio desenergizado."],
+          ["Substituir a botoeira S0", "S0 funcionou para desligar o motor."],
+          ["Trocar os fusíveis de potência", "A potência foi cortada; o problema é o comando do freio."],
         ],
       },
     ],
@@ -37,6 +41,8 @@ export const ESTRELA_TRIANGULO_FREIO: OccurrenceSpec[] = [
       wrong: [
         ["Mola do freio rompida", "Se a mola rompesse, não haveria tensão de 220 V mantendo o freio aberto."],
         ["Bobina do freio queimada", "Se a bobina estivesse queimada (aberta), o freio atuaria permanentemente por falta de campo."],
+        ["Falta de fase", "A falta de fase não impediria a frenagem."],
+        ["Motor com excesso de carga", "O excesso de carga ajudaria a parar mais rápido, não o contrário."],
       ],
     },
     fault: "Contator de freio KM4 com contatos soldados",
@@ -70,6 +76,9 @@ export const ESTRELA_TRIANGULO_FREIO: OccurrenceSpec[] = [
         correct: "Medir tensão na bobina do freio durante a partida",
         wrong: [
           ["Forçar giro do motor", "Pode danificar o eixo ou a lona de freio."],
+          ["Substituir o motor", "O ronco indica que o motor está tentando partir."],
+          ["Inverter as fases", "Inverter as fases mudaria o sentido, mas o motor continuaria travado pelo freio."],
+          ["Trocar a botoeira S1", "S1 operou para tentar ligar o motor."],
         ],
       },
       {
@@ -78,6 +87,9 @@ export const ESTRELA_TRIANGULO_FREIO: OccurrenceSpec[] = [
         correct: "Verificar o fusível de proteção do circuito do freio",
         wrong: [
           ["Trocar motor", "O motor está tentando girar; o freio é que não solta."],
+          ["Aumentar a bitola dos cabos", "O problema é falta total de tensão no freio, não queda."],
+          ["Substituir o contator KM1", "KM1 atracou e enviou potência ao motor."],
+          ["Limpar os contatos do freio", "Sem tensão na bobina, a limpeza dos contatos é secundária."],
         ],
       },
     ],
@@ -85,6 +97,9 @@ export const ESTRELA_TRIANGULO_FREIO: OccurrenceSpec[] = [
       correct: "Fusível do freio aberto",
       wrong: [
         ["Lona gasta", "Causaria falta de freio, não excesso."],
+        ["Falta de fase no motor", "O motor ronca em todas as fases; o problema é mecânico no freio."],
+        ["Bobina de KM4 queimada", "Se KM4 não atracasse, o freio não receberia tensão (mesmo efeito do fusível aberto)."],
+        ["Temporizador KT1 defeituoso", "KT1 atua na transição Y/Δ, não na liberação inicial do freio."],
       ],
     },
     fault: "Falha na alimentação de liberação do freio",
@@ -109,6 +124,9 @@ export const ESTRELA_TRIANGULO_FREIO: OccurrenceSpec[] = [
         correct: "Medir a tensão de saída do retificador (modo CC e CA)",
         wrong: [
           ["Desligar motor e esperar esfriar", "Não resolve a causa da queima."],
+          ["Trocar o motor", "O aquecimento é localizado no sistema de freio."],
+          ["Substituir o relé térmico", "O térmico protege o motor, não a bobina do freio."],
+          ["Inverter as fases da bobina", "Em CA ou CC retificada, inversão não altera aquecimento por ripple."],
         ],
       },
       {
@@ -117,6 +135,9 @@ export const ESTRELA_TRIANGULO_FREIO: OccurrenceSpec[] = [
         correct: "Substituir o módulo retificador do freio",
         wrong: [
           ["Trocar bobina", "A nova queimará se o retificador continuar ruim."],
+          ["Aumentar a bitola dos fios do freio", "Bitola não causa aquecimento por ripple CA."],
+          ["Limpar o disco de freio", "A falha é elétrica na bobina."],
+          ["Substituir o contator KM4", "KM4 está conduzindo, embora a tensão esteja suja."],
         ],
       },
     ],
@@ -124,6 +145,9 @@ export const ESTRELA_TRIANGULO_FREIO: OccurrenceSpec[] = [
       correct: "Retificador de freio com ponte de diodos em curto",
       wrong: [
         ["Sobrecarga no motor", "O calor é específico na bobina do freio."],
+        ["Tensão da rede muito alta", "A rede está estável; apenas a saída do retificador está com problemas."],
+        ["Curto-circuito no rotor", "Este é um motor de gaiola com freio."],
+        ["Falta de ventilação no motor", "O aquecimento é excessivo mesmo com o ventilador do motor operando."],
       ],
     },
     fault: "Falha no componente de retificação",
@@ -148,6 +172,9 @@ export const ESTRELA_TRIANGULO_FREIO: OccurrenceSpec[] = [
         correct: "Verificar se o contator de freio interrompe o circuito no lado CC",
         wrong: [
           ["Aumentar pressão das molas", "O atraso é magnético/elétrico, não mecânico."],
+          ["Trocar o retificador", "O retificador funciona; a fiação é que permite a descarga lenta."],
+          ["Substituir o motor", "O motor para eletricamente; a falha é na velocidade de atuação do freio."],
+          ["Lubrificar o disco de freio", "Lubrificação faria o freio deslizar, não demorar a atracar."],
         ],
       },
       {
@@ -156,6 +183,9 @@ export const ESTRELA_TRIANGULO_FREIO: OccurrenceSpec[] = [
         correct: "Alterar a fiação para interromper o circuito no lado CC (bornes 3 e 4 do retificador)",
         wrong: [
           ["Trocar bobina", "Não resolve a constante de tempo do circuito."],
+          ["Substituir o contator KM4", "O contator está abrindo no lado CA, como projetado (mas incorreto para frenagem rápida)."],
+          ["Inverter as fases da rede", "Isso não afeta o tempo de descarga da bobina CC."],
+          ["Limpar os contatos de KM1", "KM1 corta a potência corretamente."],
         ],
       },
     ],
@@ -163,6 +193,9 @@ export const ESTRELA_TRIANGULO_FREIO: OccurrenceSpec[] = [
       correct: "Frenagem lenta por interrupção no lado CA (descarga lenta da bobina)",
       wrong: [
         ["Molas fracas", "O freio atua com força, apenas demora a iniciar."],
+        ["Bobina com curto-circuito", "Um curto faria a bobina atracar com menos força ou nem atracar."],
+        ["Excesso de carga", "Carga pesada ajudaria o motor a parar mais rápido."],
+        ["Falta de fase", "Não interfere na dinâmica de descarga da bobina do freio."],
       ],
     },
     fault: "Erro de projeto/ligação no circuito de frenagem rápida",
@@ -189,6 +222,8 @@ export const ESTRELA_TRIANGULO_FREIO: OccurrenceSpec[] = [
         wrong: [
           ["Tentar partir o motor novamente", "Risco de quebra do eixo ou queima do motor por rotor travado contra o freio."],
           ["Aumentar o tempo de transição estrela-triângulo", "O freio atuou em regime, o tempo de partida não tem relação."],
+          ["Trocar o motor", "O motor está sendo freado mecanicamente; ele não é a causa."],
+          ["Substituir o relé térmico", "O desarme eventual do térmico seria consequência, não causa."],
         ],
       },
       {
@@ -198,6 +233,8 @@ export const ESTRELA_TRIANGULO_FREIO: OccurrenceSpec[] = [
         wrong: [
           ["Trocar o disco de freio", "O disco está funcionando bem até demais (travou o motor)."],
           ["Substituir o temporizador KT1", "O temporizador não controla a frenagem de emergência por falha de alimentação."],
+          ["Limpar os contatos de potência de KM3", "O problema é no circuito do freio."],
+          ["Inverter as fases no retificador", "A inversão de CA na entrada do retificador não altera a saída CC."],
         ],
       },
     ],
@@ -206,6 +243,8 @@ export const ESTRELA_TRIANGULO_FREIO: OccurrenceSpec[] = [
       wrong: [
         ["Bobina do freio em curto", "Um curto queimaria o fusível definitivamente, não causaria atuação intermitente."],
         ["Falha de intertravamento de KM4", "O intertravamento impediria o freio de abrir, não o faria fechar em regime."],
+        ["Falta de fase no motor", "A falta de fase não causaria a atuação do freio mecânico."],
+        ["Erro na lógica do CLP", "Este sistema usa comando convencional, não CLP."],
       ],
     },
     fault: "Mau contato (oxidação) no fusível de proteção do circuito do freio",
