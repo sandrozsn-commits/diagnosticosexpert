@@ -109,6 +109,7 @@ export const REVERSAO_AUTOMATICA: OccurrenceSpec[] = [
         correct: "Verificar tensão na entrada de 'start' do temporizador de ciclo",
         wrong: [
           ["Trocar o temporizador", "Pode ser apenas falta de comando de partida."],
+          ["Substituir os fusíveis", "A sinaleira de painel ligado está acesa."],
         ],
       },
       {
@@ -117,6 +118,7 @@ export const REVERSAO_AUTOMATICA: OccurrenceSpec[] = [
         correct: "Pressionar botão 'Reset/Liga' para reiniciar a lógica",
         wrong: [
           ["Jumpear a emergência", "Ação perigosa e desnecessária."],
+          ["Inverter o sentido do motor", "O motor já está no sentido correto."],
         ],
       },
     ],
@@ -124,6 +126,7 @@ export const REVERSAO_AUTOMATICA: OccurrenceSpec[] = [
       correct: "Lógica aguardando pulso de inicialização após queda de energia/emergência",
       wrong: [
         ["Falha no temporizador", "O componente está íntegro, apenas aguardando comando."],
+        ["Curto-circuito", "Não houve desarme de proteção."],
       ],
     },
     fault: "Procedimento de reinicialização não executado",
@@ -156,6 +159,7 @@ export const REVERSAO_AUTOMATICA: OccurrenceSpec[] = [
         correct: "Aumentar o tempo morto no temporizador de transição",
         wrong: [
           ["Trocar mola do contator", "Não resolve a sobreposição de sinais."],
+          ["Aumentar a bitola dos cabos", "A queda de tensão não é a causa primária aqui."],
         ],
       },
     ],
@@ -163,6 +167,7 @@ export const REVERSAO_AUTOMATICA: OccurrenceSpec[] = [
       correct: "Tempo morto insuficiente causando arco elétrico residual",
       wrong: [
         ["Bobina fraca", "Vibração ocorre apenas na troca."],
+        ["Falta de fase", "O motor gira normalmente após a transição."],
       ],
     },
     fault: "Ajuste de tempo morto muito baixo",
