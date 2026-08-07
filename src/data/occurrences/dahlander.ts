@@ -134,6 +134,8 @@ export const DAHLANDER: OccurrenceSpec[] = [
         wrong: [
           ["Trocar os rolamentos do motor", "O ruído e solavanco ocorrem apenas na troca de velocidade."],
           ["Reduzir a carga", "A carga não justifica o solavanco elétrico na transição."],
+          ["Inverter as fases da alta velocidade", "Inversão mudaria o sentido, mas o solavanco é por falta de transição suave."],
+          ["Verificar a botoeira S0", "S0 é desligamento geral; não atua na transição entre velocidades."],
         ],
       },
       {
@@ -142,6 +144,9 @@ export const DAHLANDER: OccurrenceSpec[] = [
         correct: "Instalar ou ajustar o relé de tempo para garantir um 'tempo morto'",
         wrong: [
           ["Trocar o contator KM1", "KM1 está abrindo corretamente."],
+          ["Substituir o motor", "O motor opera nas duas velocidades; a falha é na manobra."],
+          ["Trocar os cabos de comando", "Cabos não geram solavanco mecânico por si só."],
+          ["Aumentar a bitola dos fios do motor", "Queda de tensão não causa solavanco na transição."],
         ],
       },
     ],
@@ -150,6 +155,8 @@ export const DAHLANDER: OccurrenceSpec[] = [
       wrong: [
         ["KM1 e KM2 fechando juntos", "O disjuntor desarmaria violentamente."],
         ["Falta de fase", "Causaria ronco contínuo, não apenas um solavanco."],
+        ["Motor com enrolamento em curto", "O motor funciona bem nas duas velocidades separadamente."],
+        ["Falha no selo de KM2", "A falha de selo impediria a retenção, não causaria solavanco."],
       ],
     },
     fault: "Falta de intervalo de segurança (tempo morto) na transição",
@@ -181,6 +188,9 @@ export const DAHLANDER: OccurrenceSpec[] = [
         correct: "Medir a corrente real de linha em baixa velocidade e comparar com o ajuste",
         wrong: [
           ["Substituir o motor", "O motor funciona bem em alta."],
+          ["Trocar o relé térmico FT1", "Antes de trocar, o ajuste deve ser conferido."],
+          ["Inverter as fases", "O motor gira no sentido correto."],
+          ["Lubrificar o motor", "O aquecimento é elétrico por sobrecorrente/ajuste."],
         ],
       },
       {
@@ -189,6 +199,9 @@ export const DAHLANDER: OccurrenceSpec[] = [
         correct: "Corrigir o ajuste do relé térmico FT1 para o valor nominal de placa",
         wrong: [
           ["Trocar FT1", "O problema é o ajuste configurado."],
+          ["Colocar FT1 em modo manual", "Isso não resolve o desarme por sobrecorrente real."],
+          ["Instalar ventiladores externos", "Solução paliativa que não corrige o erro de parametrização."],
+          ["Medir a isolação do motor", "O motor está íntegro em alta velocidade."],
         ],
       },
     ],
@@ -196,6 +209,9 @@ export const DAHLANDER: OccurrenceSpec[] = [
       correct: "Relé térmico FT1 ajustado abaixo da corrente nominal em baixa",
       wrong: [
         ["Motor queimado", "Haveria desequilíbrio de fases imediato."],
+        ["Falta de fase apenas em baixa", "A medição de corrente mostrou presença em todas as fases."],
+        ["Rotor bloqueado", "O motor gira durante 20 minutos antes do desarme."],
+        ["Ventilação do motor obstruída", "O desarme é por corrente acima do ajuste, não calor externo."],
       ],
     },
     fault: "Erro de ajuste (setpoint) no relé térmico da velocidade baixa",
@@ -228,6 +244,8 @@ export const DAHLANDER: OccurrenceSpec[] = [
         wrong: [
           ["Religar o disjuntor", "Conduta perigosa: novo curto-circuito."],
           ["Trocar o relé térmico FT1", "O desarme foi pelo disjuntor (curto)."],
+          ["Substituir o motor", "O motor funciona isoladamente; a falha é na sequência."],
+          ["Verificar a botoeira S2", "O curto ocorreu ao acionar S1 (velocidade baixa)."],
         ],
       },
       {
@@ -236,6 +254,9 @@ export const DAHLANDER: OccurrenceSpec[] = [
         correct: "Inspecionar o bloco de contatos auxiliares de KM1",
         wrong: [
           ["Inverter as fases", "Não corrige falha de intertravamento."],
+          ["Limpar os contatos de potência", "O problema é no comando que causa o fechamento simultâneo."],
+          ["Trocar o disjuntor", "O disjuntor atuou corretamente para proteger contra o curto."],
+          ["Aumentar o tempo de partida", "O curto é imediato devido à lógica de intertravamento falha."],
         ],
       },
     ],
@@ -243,6 +264,9 @@ export const DAHLANDER: OccurrenceSpec[] = [
       correct: "Falha no intertravamento elétrico (contato NF de KM1 soldado fechado)",
       wrong: [
         ["Motor em curto", "O curto ocorreu apenas quando o segundo estágio tentou entrar."],
+        ["Falta de fase", "O desarme violento é sinal de excesso de corrente, não falta."],
+        ["Bobina de KM2 queimada", "Se a bobina estivesse queimada, o contator não fecharia e não haveria curto."],
+        ["Botoeira S1 com contato colado", "S1 é o botão de partida; seu contato deve fechar."],
       ],
     },
     fault: "Contato auxiliar NF de KM1 soldado fechado",
