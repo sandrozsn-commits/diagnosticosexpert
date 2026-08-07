@@ -7,7 +7,6 @@ export const ROTOR_BOBINADO_REVERSAO: OccurrenceSpec[] = [
     level: "iniciante",
     minutes: 13,
     xp: 195,
-    level: "intermediario",
     equipment: "Motor rotor bobinado c/ reversão 40 cv",
     company: "Estaleiro Baía Sul",
     sector: "Guincho de içamento",
