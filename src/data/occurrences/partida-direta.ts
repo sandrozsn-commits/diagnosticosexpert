@@ -11,12 +11,12 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
     company: "Metalúrgica Alfa",
     sector: "Linha de produção",
     symptom:
-      "Operador pressiona S1 e nada acontece. Não há ruído no painel e a sinaleira de defeito está apagada.",
+      "Operador pressiona S1 (PARTIDA) e nada acontece. Não há ruído no painel e a sinaleira de defeito está apagada.",
     objective: "Identificar em que ponto o circuito de comando é interrompido antes da bobina de KM1.",
     steps: [
       {
-        situation: "Painel energizado, disjuntor Q2 ligado, comando aparentemente morto.",
-        correct: "Medir tensão de comando entre a saída de F2 e o neutro",
+        situation: "Painel energizado, disjuntor Q1 ligado, comando aparentemente morto.",
+        correct: "Medir tensão de comando entre a saída de F1 e o neutro",
         wrong: [
           ["Substituir o contator KM1 imediatamente", "Contator trocado sem evidência: falha permanece idêntica e uma hora de produção é perdida."],
           ["Abrir a caixa de ligação do motor", "O motor sequer é energizado; a inspeção não gera nenhuma informação nova."],
@@ -26,10 +26,10 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
       },
       {
         situation: "Há tensão na entrada do comando, então o problema está no percurso da série.",
-        reading: "F2 → N = 220 V. Bobina A1/A2 de KM1 = 0 V.",
+        reading: "F1 → N = 220 V. Bobina A1/A2 de KM1 = 0 V.",
         correct: "Medir a continuidade ponto a ponto na série FT1 (95/96) → S0 → S1",
         wrong: [
-          ["Trocar o fusível F2", "O fusível está íntegro — havia tensão medida logo após ele."],
+          ["Trocar o fusível F1", "O fusível está íntegro — havia tensão medida logo após ele."],
           ["Aumentar o ajuste de corrente do relé térmico", "Alterar o ajuste não restabelece o contato auxiliar e mascara a proteção do motor."],
           ["Substituir a bobina de KM1", "A bobina não recebe tensão; a troca não corrige o problema de alimentação."],
           ["Testar isolamento do motor", "O motor ainda não foi energizado; testar isolamento é inútil neste momento."],
@@ -50,17 +50,17 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
     diagnosis: {
       correct: "Relé térmico FT1 atuado, com contato 95/96 aberto e sem rearme",
       wrong: [
-        ["Bobina de KM1 queimada", "A bobina nunca recebeu tensão: não é possível afirmar que esteja danificada."],
-        ["Fusível de comando aberto", "Haveria 220 V medidos após F2."],
+      ["Bobina de KM1 queimada", "A bobina nunca recebeu tensão: não é possível afirmar que esteja danificada."],
+        ["Fusível de comando aberto", "Haveria 220 V medidos após F1."],
         ["Defeito no motor", "O motor não foi testado; o comando não enviou sinal."],
-        ["Falha na botoeira Liga S1", "A botoeira S1 apresentou continuidade normal no teste."],
+        ["Falha na botoeira PARTIDA S1", "A botoeira S1 apresentou continuidade normal no teste."],
       ],
     },
     fault: "Relé térmico FT1 atuado e não rearmado",
     technical:
       "O contato auxiliar 95/96 do relé térmico abre a série de comando quando ocorre sobrecarga. Enquanto o rearme não for feito, a bobina de KM1 não recebe tensão. Antes de rearmar, deve-se investigar a causa da sobrecarga (corrente do motor, carga mecânica e ajuste do relé).",
     checklist: [
-      "Confirmação de tensão de comando após F2",
+      "Confirmação de tensão de comando após F1",
       "Teste de continuidade da série FT1 → S0 → S1",
       "Identificação do contato 95/96 aberto",
       "Rearme após verificação da corrente do motor",
@@ -81,7 +81,7 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
     company: "Metalúrgica Alfa",
     sector: "Usinagem",
     symptom:
-      "Ao acionar S1, KM1 atraca normalmente, porém o motor apenas emite um zumbido forte e não desenvolve rotação.",
+      "Ao acionar S1 (PARTIDA), KM1 atraca normalmente, porém o motor apenas emite um zumbido forte e não desenvolve rotação.",
     objective: "Determinar por que o motor recebe comando mas não desenvolve conjugado.",
     steps: [
       {
@@ -89,7 +89,7 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         correct: "Desligar imediatamente e medir tensão entre fases na saída do contator",
         wrong: [
           ["Manter o motor ligado para observar o comportamento", "Motor mantido em falta de fase: aquecimento severo e risco de queima do enrolamento."],
-          ["Trocar a botoeira S1", "O comando funcionou corretamente: KM1 atracou."],
+          ["Trocar a botoeira S1 (PARTIDA)", "O comando funcionou corretamente: KM1 atracou."],
           ["Inverter as fases de entrada", "Isso não resolve a falta de uma fase; apenas inverte o sentido."],
           ["Reapertar disjuntor de comando", "A falha está na potência, não no comando."],
         ],
@@ -150,7 +150,7 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
           ["Rearmar repetidamente até o motor permanecer ligado", "Rearmes sucessivos degradam o relé e não revelam nada sobre a corrente real."],
           ["Substituir o relé térmico por outro igual", "Sem conhecer a corrente do motor, a troca é um chute."],
           ["Aumentar o ajuste para o máximo", "Perda total de proteção; o motor pode queimar sem aviso."],
-          ["Trocar os fusíveis de potência", "O motor parte; os fusíveis estão conduzindo."],
+          ["Trocar os fusíveis de potência Q1", "O motor parte; os fusíveis estão conduzindo."],
         ],
       },
       {
@@ -199,15 +199,15 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
     company: "Cerâmica Monte Verde",
     sector: "Moagem",
     symptom:
-      "Pressionando S0 o comando desenergiza, mas o motor continua girando. Somente o disjuntor geral interrompe o funcionamento.",
+      "Pressionando S0 (PARADA) o comando desenergiza, mas o motor continua girando. Somente o disjuntor geral interrompe o funcionamento.",
     objective: "Descobrir por que a interrupção do comando não interrompe o circuito de potência.",
     steps: [
       {
         situation: "Situação de risco: a máquina não responde ao comando de parada.",
         correct: "Isolar a máquina pelo disjuntor Q1 e sinalizar bloqueio antes de qualquer teste",
         wrong: [
-          ["Pressionar S0 várias vezes com o motor girando", "A insistência mantém a máquina em condição insegura e não gera informação técnica."],
-          ["Trocar a botoeira S0 com o painel energizado", "Intervenção com circuito energizado em condição de falha — risco grave de acidente."],
+          ["Pressionar S0 (PARADA) várias vezes com o motor girando", "A insistência mantém a máquina em condição insegura e não gera informação técnica."],
+          ["Trocar a botoeira S0 (PARADA) com o painel energizado", "Intervenção com circuito energizado em condição de falha — risco grave de acidente."],
           ["Medir corrente do motor", "Medição irrelevante; o motor não deveria estar rodando."],
           ["Bater no contator com martelo", "Prática perigosa; pode soltar temporariamente mas danifica o componente."],
         ],
@@ -218,7 +218,7 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         correct: "Verificar mecanicamente se a armadura do contator retorna ao repouso",
         wrong: [
           ["Substituir o relé térmico", "O relé térmico não mantém a potência fechada."],
-          ["Refazer a fiação da botoeira S0", "O comando já está comprovadamente desenergizado."],
+          ["Refazer a fiação da botoeira S0 (PARADA)", "O comando já está comprovadamente desenergizado."],
           ["Trocar o motor", "O motor funciona até demais; a falha é na manobra."],
           ["Limpar contatos com lixa", "Contatos soldados não devem ser lixados; o contator deve ser trocado."],
         ],
@@ -227,7 +227,7 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
     diagnosis: {
       correct: "Contatos principais de KM1 soldados (colados), mantendo a potência fechada",
       wrong: [
-        ["Botoeira S0 com contato NF em curto", "A bobina está com 0 V: o comando abriu corretamente."],
+        ["Botoeira S0 (PARADA) com contato NF em curto", "A bobina está com 0 V: o comando abriu corretamente."],
         ["Selo de KM1 permanentemente fechado", "O selo alimentaria a bobina, que estaria energizada."],
         ["Falha no disjuntor principal", "O disjuntor interrompeu a carga; ele está operando."],
         ["Erro na lógica de intertravamento", "Partida direta simples não possui intertravamento elétrico complexo."],
@@ -258,12 +258,12 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
     company: "Frigorífico Sul",
     sector: "Câmaras frias",
     symptom:
-      "Ao pressionar S1 o contator faz um chiado contínuo, atraca e desatraca rapidamente e o motor não estabiliza.",
+      "Ao pressionar S1 (PARTIDA) o contator faz um chiado contínuo, atraca e desatraca rapidamente e o motor não estabiliza.",
     objective: "Identificar a origem da instabilidade na alimentação da bobina de KM1.",
     steps: [
       {
-        situation: "Contator em regime de trepidação (chattering) enquanto S1 é mantido pressionado.",
-        correct: "Medir a tensão na bobina A1/A2 com S1 pressionado e depois solto",
+        situation: "Contator em regime de trepidação (chattering) enquanto S1 (PARTIDA) é mantido pressionado.",
+        correct: "Medir a tensão na bobina A1/A2 com S1 (PARTIDA) pressionado e depois solto",
         wrong: [
           ["Apertar o contator com a mão para estabilizar", "Intervenção insegura em equipamento energizado e sem valor diagnóstico."],
           ["Trocar o motor de posição no barramento", "A instabilidade está no comando, não na potência."],
@@ -273,13 +273,13 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
       },
       {
         situation: "As medições mostram comportamento distinto conforme a origem da alimentação da bobina.",
-        reading: "Com S1 pressionado: 218 V estáveis na bobina. Com S1 solto (via selo): tensão oscilando entre 90 V e 210 V.",
+        reading: "Com S1 (PARTIDA) pressionado: 218 V estáveis na bobina. Com S1 (PARTIDA) solto (via selo): tensão oscilando entre 90 V e 210 V.",
         correct: "Inspecionar o contato de selo KM1 13/14 e seus terminais",
         wrong: [
-          ["Substituir a bobina do contator", "A bobina responde corretamente quando alimentada de forma estável por S1."],
+          ["Substituir a bobina do contator", "A bobina responde corretamente quando alimentada de forma estável por S1 (PARTIDA)."],
           ["Verificar o ajuste do relé térmico", "O relé térmico não interfere na estabilidade do selo."],
           ["Limpar o núcleo magnético", "O chiado/vibração via selo indica falha de continuidade elétrica."],
-          ["Trocar botoeira S0", "S0 é NF e está em série; mau contato nela afetaria também S1."],
+          ["Trocar botoeira S0 (PARADA)", "S0 é NF e está em série; mau contato nela afetaria também S1 (PARTIDA)."],
         ],
       },
       {
@@ -288,17 +288,17 @@ export const PARTIDA_DIRETA: OccurrenceSpec[] = [
         correct: "Confirmar a queda de tensão sobre o contato de selo com o circuito energizado",
         wrong: [
           ["Jumpear o selo para manter o motor ligado", "Improviso que elimina a função de retenção e cria acionamento sem segurança."],
-          ["Substituir a botoeira S1", "S1 alimenta a bobina de forma estável."],
+          ["Substituir a botoeira S1 (PARTIDA)", "S1 (PARTIDA) alimenta a bobina de forma estável."],
           ["Trocar o relé térmico FT1", "FT1 é o elemento de proteção, não de retenção."],
-          ["Aumentar a bitola dos cabos de comando", "Tensão com S1 pressionado é estável; queda é localizada no selo."],
+          ["Aumentar a bitola dos cabos de comando", "Tensão com S1 (PARTIDA) pressionado é estável; queda é localizada no selo."],
         ],
       },
     ],
     diagnosis: {
       correct: "Mau contato no auxiliar de selo KM1 13/14 provocando realimentação intermitente",
       wrong: [
-        ["Bobina de KM1 com espiras em curto", "A bobina mantém o contator firme quando alimentada por S1."],
-        ["Subtensão geral da rede", "A tensão medida com S1 pressionado é estável em 218 V."],
+        ["Bobina de KM1 com espiras em curto", "A bobina mantém o contator firme quando alimentada por S1 (PARTIDA)."],
+        ["Subtensão geral da rede", "A tensão medida com S1 (PARTIDA) pressionado é estável em 218 V."],
         ["Núcleo magnético sujo", "A instabilidade é dependente da fonte de alimentação (S1 vs Selo)."],
         ["Vibração mecânica do painel", "Causa remota; o problema elétrico no selo é evidente."],
       ],
