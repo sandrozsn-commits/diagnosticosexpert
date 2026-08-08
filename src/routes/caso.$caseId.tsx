@@ -5,7 +5,7 @@ import { briefingOf, occurrenceCode } from "@/data/occurrence";
 import { useProgress } from "@/lib/progress";
 import { AppShell } from "@/components/app-shell";
 import { CircuitDiagram } from "@/components/circuit-diagram";
-import { DirectStartDiagram } from "@/components/DirectStartDiagram";
+import { DirectStartDiagram } from "@/components/electrical/DirectStartDiagram";
 import { InteractiveCircuit } from "@/components/interactive-circuit";
 import { circuitOf } from "@/data/circuits";
 import {
