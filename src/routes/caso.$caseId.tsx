@@ -4,10 +4,6 @@ import { getCase, type CaseNode, type Level } from "@/data/cases";
 import { briefingOf, occurrenceCode } from "@/data/occurrence";
 import { useProgress } from "@/lib/progress";
 import { AppShell } from "@/components/app-shell";
-import { CircuitDiagram } from "@/components/circuit-diagram";
-import { DirectStartDiagram } from "@/components/electrical/DirectStartDiagram";
-import { InteractiveCircuit } from "@/components/interactive-circuit";
-import { circuitOf } from "@/data/circuits";
 import {
   ResultShare,
   formatDuration,
@@ -63,7 +59,6 @@ function CasePage() {
   const { caseId } = Route.useParams();
   const diagCase = getCase(caseId)!;
   const briefing = briefingOf(diagCase);
-  const circuit = diagCase.circuitId ? circuitOf(diagCase.circuitId) : undefined;
   const { recordResult } = useProgress();
 
   const [started, setStarted] = useState(false);
@@ -333,18 +328,7 @@ function CasePage() {
               ))}
             </ul>
           </Panel>
-          <Panel title="Diagrama interativo">
-            <InteractiveCircuit spec={diagCase.circuitDiagramSpec} />
-          </Panel>
-          {circuit && (
-            <Panel title="Diagrama de comando">
-              {circuit.id === "partida-direta" ? (
-                <DirectStartDiagram />
-              ) : (
-                <CircuitDiagram spec={circuit.diagram} />
-              )}
-            </Panel>
-          )}
+
 
         </aside>
       </div>
