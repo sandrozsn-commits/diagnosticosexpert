@@ -46,19 +46,19 @@ export const DirectStartDiagram = () => {
 
           {/* F2 - Fusível */}
           <Fuse x={200} y={260} label="F2" />
-          <text x={230} y={285} fontSize="14" fill="#111827">1A</text>
+          <text x={230} y={285} fontSize={14} fill="#111827">1A</text>
           <Wire x1={200} y1={185} x2={200} y2={225} />
 
           {/* FT1 - Relé térmico (NF 95-96) */}
           <NormallyClosedContact x={170} y={370} label="FT1" labelPosition="right" />
-          <text x={160} y={350} fontSize="12" fill="#111827">95</text>
-          <text x={220} y={395} fontSize="12" fill="#111827">96</text>
+          <text x={160} y={350} fontSize={12} fill="#111827">95</text>
+          <text x={220} y={395} fontSize={12} fill="#111827">96</text>
           <Wire x1={200} y1={295} x2={200} y2={340} />
           
           {/* S0 - Botão de parada (NF) */}
           <NormallyClosedContact x={200} y={480} label="S0" />
-          <text x={190} y={460} fontSize="12" fill="#111827">11</text>
-          <text x={250} y={505} fontSize="12" fill="#111827">12</text>
+          <text x={190} y={460} fontSize={12} fill="#111827">11</text>
+          <text x={250} y={505} fontSize={12} fill="#111827">12</text>
           <Wire x1={230} y1={400} x2={230} y2={450} />
           <Wire x1={230} y1={450} x2={200} y2={450} />
 
@@ -68,14 +68,14 @@ export const DirectStartDiagram = () => {
           
           {/* S1 - Botão de partida (NA) */}
           <NormallyOpenContact x={230} y={620} label="S1" />
-          <text x={220} y={600} fontSize="12" fill="#111827">13</text>
-          <text x={280} y={645} fontSize="12" fill="#111827">14</text>
+          <text x={220} y={600} fontSize={12} fill="#111827">13</text>
+          <text x={280} y={645} fontSize={12} fill="#111827">14</text>
           <Wire x1={260} y1={550} x2={260} y2={590} />
 
           {/* KM1 - Contato auxiliar NA (Selo) */}
           <NormallyOpenContact x={370} y={620} label="KM1" />
-          <text x={360} y={600} fontSize="12" fill="#111827">13</text>
-          <text x={420} y={645} fontSize="12" fill="#111827">14</text>
+          <text x={360} y={600} fontSize={12} fill="#111827">13</text>
+          <text x={420} y={645} fontSize={12} fill="#111827">14</text>
           <Wire x1={260} y1={550} x2={400} y2={550} />
           <Wire x1={400} y1={550} x2={400} y2={590} />
 
