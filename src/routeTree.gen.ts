@@ -10,6 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
+import { Route as LoginRouteImport } from './routes/login'
+import { Route as CadastroRouteImport } from './routes/cadastro'
+import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedProgressoRouteImport } from './routes/_authenticated/progresso'
 import { Route as AuthenticatedCasoCaseIdRouteImport } from './routes/_authenticated/caso.$caseId'
@@ -19,29 +23,54 @@ const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
-  id: '/_authenticated/',
-  path: '/',
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
+} as any)
+const LoginRoute = LoginRouteImport.update({
+  id: '/login',
+  path: '/login',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CadastroRoute = CadastroRouteImport.update({
+  id: '/cadastro',
+  path: '/cadastro',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedRouteRoute = AuthenticatedRouteRouteImport.update({
+  id: '/_authenticated',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedProgressoRoute = AuthenticatedProgressoRouteImport.update({
-  id: '/_authenticated/progresso',
+  id: '/progresso',
   path: '/progresso',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 const AuthenticatedCasoCaseIdRoute = AuthenticatedCasoCaseIdRouteImport.update({
-  id: '/_authenticated/caso/$caseId',
+  id: '/caso/$caseId',
   path: '/caso/$caseId',
-  getParentRoute: () => rootRouteImport,
+  getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
 
 export interface FileRoutesByFullPath {
+  '/': typeof AuthenticatedIndexRoute
+  '/cadastro': typeof CadastroRoute
+  '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/progresso': typeof AuthenticatedProgressoRoute
-  '/': typeof AuthenticatedIndexRoute
   '/caso/$caseId': typeof AuthenticatedCasoCaseIdRoute
 }
 export interface FileRoutesByTo {
+  '/cadastro': typeof CadastroRoute
+  '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/progresso': typeof AuthenticatedProgressoRoute
   '/': typeof AuthenticatedIndexRoute
@@ -49,6 +78,10 @@ export interface FileRoutesByTo {
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
+  '/_authenticated': typeof AuthenticatedRouteRouteWithChildren
+  '/cadastro': typeof CadastroRoute
+  '/login': typeof LoginRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/progresso': typeof AuthenticatedProgressoRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
@@ -56,11 +89,29 @@ export interface FileRoutesById {
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/sitemap.xml' | '/progresso' | '/' | '/caso/$caseId'
+  fullPaths:
+    | '/'
+    | '/cadastro'
+    | '/login'
+    | '/reset-password'
+    | '/sitemap.xml'
+    | '/progresso'
+    | '/caso/$caseId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/sitemap.xml' | '/progresso' | '/' | '/caso/$caseId'
+  to:
+    | '/cadastro'
+    | '/login'
+    | '/reset-password'
+    | '/sitemap.xml'
+    | '/progresso'
+    | '/'
+    | '/caso/$caseId'
   id:
     | '__root__'
+    | '/_authenticated'
+    | '/cadastro'
+    | '/login'
+    | '/reset-password'
     | '/sitemap.xml'
     | '/_authenticated/progresso'
     | '/_authenticated/'
@@ -68,10 +119,11 @@ export interface FileRouteTypes {
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
+  AuthenticatedRouteRoute: typeof AuthenticatedRouteRouteWithChildren
+  CadastroRoute: typeof CadastroRoute
+  LoginRoute: typeof LoginRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  AuthenticatedProgressoRoute: typeof AuthenticatedProgressoRoute
-  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
-  AuthenticatedCasoCaseIdRoute: typeof AuthenticatedCasoCaseIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -83,35 +135,79 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/login': {
+      id: '/login'
+      path: '/login'
+      fullPath: '/login'
+      preLoaderRoute: typeof LoginRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cadastro': {
+      id: '/cadastro'
+      path: '/cadastro'
+      fullPath: '/cadastro'
+      preLoaderRoute: typeof CadastroRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated': {
+      id: '/_authenticated'
+      path: ''
+      fullPath: '/'
+      preLoaderRoute: typeof AuthenticatedRouteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/_authenticated/': {
       id: '/_authenticated/'
       path: '/'
       fullPath: '/'
       preLoaderRoute: typeof AuthenticatedIndexRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/progresso': {
       id: '/_authenticated/progresso'
       path: '/progresso'
       fullPath: '/progresso'
       preLoaderRoute: typeof AuthenticatedProgressoRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
     '/_authenticated/caso/$caseId': {
       id: '/_authenticated/caso/$caseId'
       path: '/caso/$caseId'
       fullPath: '/caso/$caseId'
       preLoaderRoute: typeof AuthenticatedCasoCaseIdRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
     }
   }
 }
 
-const rootRouteChildren: RootRouteChildren = {
-  SitemapDotxmlRoute: SitemapDotxmlRoute,
+interface AuthenticatedRouteRouteChildren {
+  AuthenticatedProgressoRoute: typeof AuthenticatedProgressoRoute
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedCasoCaseIdRoute: typeof AuthenticatedCasoCaseIdRoute
+}
+
+const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedProgressoRoute: AuthenticatedProgressoRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedCasoCaseIdRoute: AuthenticatedCasoCaseIdRoute,
+}
+
+const AuthenticatedRouteRouteWithChildren =
+  AuthenticatedRouteRoute._addFileChildren(AuthenticatedRouteRouteChildren)
+
+const rootRouteChildren: RootRouteChildren = {
+  AuthenticatedRouteRoute: AuthenticatedRouteRouteWithChildren,
+  CadastroRoute: CadastroRoute,
+  LoginRoute: LoginRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
+  SitemapDotxmlRoute: SitemapDotxmlRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

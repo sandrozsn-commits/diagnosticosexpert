@@ -1,6 +1,8 @@
-import { Link } from "@tanstack/react-router";
+import { Link, useMatch, useNavigate } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import { Zap } from "lucide-react";
+import { UserRound, Zap } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { STATUS_LABEL, type AccountInfo } from "@/lib/access";
 
 export function AppShell({ children }: { children: ReactNode }) {
   return (
@@ -38,5 +40,35 @@ function NavLink({ to, children }: { to: string; children: ReactNode }) {
     >
       {children}
     </Link>
+  );
+}
+
+function AccountMenu() {
+  const match = useMatch({ from: "/_authenticated", shouldThrow: false });
+  const navigate = useNavigate();
+  const account = (match?.context as { account?: AccountInfo } | undefined)?.account;
+  if (!account) return null;
+  const signOut = async () => {
+    await supabase.auth.signOut();
+    navigate({ to: "/login", replace: true });
+  };
+  return (
+    <details className="relative text-sm">
+      <summary className="flex cursor-pointer list-none items-center gap-1.5 rounded-md px-2 py-1.5 text-muted-foreground hover:bg-secondary hover:text-foreground">
+        <UserRound className="size-4" />
+        <span className="hidden max-w-[10rem] truncate sm:inline">{account.fullName || account.email}</span>
+      </summary>
+      <div className="absolute right-0 mt-2 w-64 rounded-lg border border-border bg-card p-4 shadow-sm">
+        <p className="truncate font-medium">{account.fullName || "—"}</p>
+        <p className="truncate text-xs text-muted-foreground">{account.email}</p>
+        <dl className="mt-3 space-y-1 text-xs">
+          <div className="flex justify-between"><dt className="text-muted-foreground">Status</dt><dd>{STATUS_LABEL[account.effective]}</dd></div>
+          {account.expiresAt && (
+            <div className="flex justify-between"><dt className="text-muted-foreground">Vencimento</dt><dd>{new Date(account.expiresAt).toLocaleDateString("pt-BR")}</dd></div>
+          )}
+        </dl>
+        <button onClick={signOut} className="mt-4 w-full rounded-md border border-border px-3 py-1.5 text-xs hover:bg-secondary">Sair</button>
+      </div>
+    </details>
   );
 }
