@@ -4,7 +4,7 @@ import { useProgress, statsOf, levelOf, achievementsOf } from "@/lib/progress";
 import { AppShell } from "@/components/app-shell";
 import { Award, Flame, Lock } from "lucide-react";
 
-export const Route = createFileRoute("/progresso")({
+export const Route = createFileRoute("/_authenticated/progresso")({
   head: () => ({
     meta: [
       { title: "Seu desempenho — Central de Ocorrências" },
