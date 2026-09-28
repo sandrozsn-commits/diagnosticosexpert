@@ -10,63 +10,68 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as SitemapDotxmlRouteImport } from './routes/sitemap[.]xml'
-import { Route as ProgressoRouteImport } from './routes/progresso'
-import { Route as IndexRouteImport } from './routes/index'
-import { Route as CasoCaseIdRouteImport } from './routes/caso.$caseId'
+import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
+import { Route as AuthenticatedProgressoRouteImport } from './routes/_authenticated/progresso'
+import { Route as AuthenticatedCasoCaseIdRouteImport } from './routes/_authenticated/caso.$caseId'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
   id: '/sitemap.xml',
   path: '/sitemap.xml',
   getParentRoute: () => rootRouteImport,
 } as any)
-const ProgressoRoute = ProgressoRouteImport.update({
-  id: '/progresso',
-  path: '/progresso',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const IndexRoute = IndexRouteImport.update({
-  id: '/',
+const AuthenticatedIndexRoute = AuthenticatedIndexRouteImport.update({
+  id: '/_authenticated/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const CasoCaseIdRoute = CasoCaseIdRouteImport.update({
-  id: '/caso/$caseId',
+const AuthenticatedProgressoRoute = AuthenticatedProgressoRouteImport.update({
+  id: '/_authenticated/progresso',
+  path: '/progresso',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthenticatedCasoCaseIdRoute = AuthenticatedCasoCaseIdRouteImport.update({
+  id: '/_authenticated/caso/$caseId',
   path: '/caso/$caseId',
   getParentRoute: () => rootRouteImport,
 } as any)
 
 export interface FileRoutesByFullPath {
-  '/': typeof IndexRoute
-  '/progresso': typeof ProgressoRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/caso/$caseId': typeof CasoCaseIdRoute
+  '/progresso': typeof AuthenticatedProgressoRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/caso/$caseId': typeof AuthenticatedCasoCaseIdRoute
 }
 export interface FileRoutesByTo {
-  '/': typeof IndexRoute
-  '/progresso': typeof ProgressoRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/caso/$caseId': typeof CasoCaseIdRoute
+  '/progresso': typeof AuthenticatedProgressoRoute
+  '/': typeof AuthenticatedIndexRoute
+  '/caso/$caseId': typeof AuthenticatedCasoCaseIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
-  '/': typeof IndexRoute
-  '/progresso': typeof ProgressoRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
-  '/caso/$caseId': typeof CasoCaseIdRoute
+  '/_authenticated/progresso': typeof AuthenticatedProgressoRoute
+  '/_authenticated/': typeof AuthenticatedIndexRoute
+  '/_authenticated/caso/$caseId': typeof AuthenticatedCasoCaseIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/progresso' | '/sitemap.xml' | '/caso/$caseId'
+  fullPaths: '/sitemap.xml' | '/progresso' | '/' | '/caso/$caseId'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/progresso' | '/sitemap.xml' | '/caso/$caseId'
-  id: '__root__' | '/' | '/progresso' | '/sitemap.xml' | '/caso/$caseId'
+  to: '/sitemap.xml' | '/progresso' | '/' | '/caso/$caseId'
+  id:
+    | '__root__'
+    | '/sitemap.xml'
+    | '/_authenticated/progresso'
+    | '/_authenticated/'
+    | '/_authenticated/caso/$caseId'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
-  IndexRoute: typeof IndexRoute
-  ProgressoRoute: typeof ProgressoRoute
   SitemapDotxmlRoute: typeof SitemapDotxmlRoute
-  CasoCaseIdRoute: typeof CasoCaseIdRoute
+  AuthenticatedProgressoRoute: typeof AuthenticatedProgressoRoute
+  AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
+  AuthenticatedCasoCaseIdRoute: typeof AuthenticatedCasoCaseIdRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -78,35 +83,35 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SitemapDotxmlRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/progresso': {
-      id: '/progresso'
-      path: '/progresso'
-      fullPath: '/progresso'
-      preLoaderRoute: typeof ProgressoRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/': {
-      id: '/'
+    '/_authenticated/': {
+      id: '/_authenticated/'
       path: '/'
       fullPath: '/'
-      preLoaderRoute: typeof IndexRouteImport
+      preLoaderRoute: typeof AuthenticatedIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/caso/$caseId': {
-      id: '/caso/$caseId'
+    '/_authenticated/progresso': {
+      id: '/_authenticated/progresso'
+      path: '/progresso'
+      fullPath: '/progresso'
+      preLoaderRoute: typeof AuthenticatedProgressoRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/_authenticated/caso/$caseId': {
+      id: '/_authenticated/caso/$caseId'
       path: '/caso/$caseId'
       fullPath: '/caso/$caseId'
-      preLoaderRoute: typeof CasoCaseIdRouteImport
+      preLoaderRoute: typeof AuthenticatedCasoCaseIdRouteImport
       parentRoute: typeof rootRouteImport
     }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
-  IndexRoute: IndexRoute,
-  ProgressoRoute: ProgressoRoute,
   SitemapDotxmlRoute: SitemapDotxmlRoute,
-  CasoCaseIdRoute: CasoCaseIdRoute,
+  AuthenticatedProgressoRoute: AuthenticatedProgressoRoute,
+  AuthenticatedIndexRoute: AuthenticatedIndexRoute,
+  AuthenticatedCasoCaseIdRoute: AuthenticatedCasoCaseIdRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)

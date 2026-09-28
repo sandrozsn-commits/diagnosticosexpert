@@ -17,6 +17,7 @@ export function AppShell({ children }: { children: ReactNode }) {
             <NavLink to="/">Ocorrências</NavLink>
             <NavLink to="/progresso">Progresso</NavLink>
           </nav>
+          <AccountMenu />
         </div>
       </header>
       <main className="mx-auto max-w-6xl px-5 py-10">{children}</main>
