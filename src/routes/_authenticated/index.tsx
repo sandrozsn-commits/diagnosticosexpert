@@ -12,7 +12,7 @@ import { useProgress, statsOf, levelOf } from "@/lib/progress";
 import { AppShell } from "@/components/app-shell";
 import { CheckCircle2, Clock, Cpu, Flame, Radio, Target, Wrench } from "lucide-react";
 
-export const Route = createFileRoute("/")({
+export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
     meta: [
       { title: "Central de Ocorrências — Diagnóstico em Comandos Elétricos" },

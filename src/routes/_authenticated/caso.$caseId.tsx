@@ -12,7 +12,7 @@ import {
 } from "@/components/result-share";
 import { ArrowLeft, CheckCircle2, ClipboardList, RotateCcw, TriangleAlert } from "lucide-react";
 
-export const Route = createFileRoute("/caso/$caseId")({
+export const Route = createFileRoute("/_authenticated/caso/$caseId")({
   loader: ({ params }) => {
     const c = getCase(params.caseId);
     if (!c) throw notFound();
