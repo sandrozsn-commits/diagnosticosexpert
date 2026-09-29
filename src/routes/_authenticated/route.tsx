@@ -1,4 +1,6 @@
-import { createFileRoute, Outlet, redirect, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Outlet, redirect, useNavigate, useRouter } from "@tanstack/react-router";
+import { useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { loadAccount } from "@/lib/access";
 
@@ -28,9 +30,38 @@ const MESSAGES = {
 function Gate() {
   const { account } = Route.useRouteContext();
   const navigate = useNavigate();
+  const router = useRouter();
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    const revalidate = () => {
+      void router.invalidate();
+    };
+    const timer = window.setInterval(revalidate, 60_000);
+    const onVisibilityChange = () => {
+      if (document.visibilityState === "visible") revalidate();
+    };
+
+    window.addEventListener("focus", revalidate);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+
+    return () => {
+      window.clearInterval(timer);
+      window.removeEventListener("focus", revalidate);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+    };
+  }, [router]);
+
+  useEffect(() => {
+    if (account.effective !== "active") {
+      queryClient.removeQueries({ queryKey: ["cases"] });
+    }
+  }, [account.effective, queryClient]);
+
   if (account.effective === "active") return <Outlet />;
   const m = MESSAGES[account.effective];
   const signOut = async () => {
+    queryClient.removeQueries({ queryKey: ["cases"] });
     await supabase.auth.signOut();
     navigate({ to: "/login", replace: true });
   };
