@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from "react";
-import { CASES } from "@/data/cases";
+type CaseRef = { id: string; category: string };
 
 export type CaseResult = {
   caseId: string;
@@ -63,7 +63,7 @@ export function levelOf(xp: number) {
 
 export type Achievement = { id: string; name: string; description: string; earned: boolean };
 
-export function achievementsOf(p: Progress): Achievement[] {
+export function achievementsOf(p: Progress, total = 0): Achievement[] {
   const solved = p.results.filter((r) => r.solved);
   const perfect = solved.filter((r) => r.mistakes === 0);
   const fast = solved.filter((r) => r.seconds < 120);
@@ -73,11 +73,11 @@ export function achievementsOf(p: Progress): Achievement[] {
     { id: "fast", name: "Plantão Rápido", description: "Resolva um caso em menos de 2 minutos", earned: fast.length >= 1 },
     { id: "three", name: "Rotina de Manutenção", description: "Resolva 3 casos", earned: solved.length >= 3 },
     { id: "streak3", name: "Sequência de 3 dias", description: "Pratique 3 dias seguidos", earned: p.streak >= 3 },
-    { id: "all", name: "Laboratório Concluído", description: "Resolva todos os casos disponíveis", earned: solved.length >= CASES.length },
+    { id: "all", name: "Laboratório Concluído", description: "Resolva todos os casos disponíveis", earned: total > 0 && solved.length >= total },
   ];
 }
 
-export function statsOf(p: Progress) {
+export function statsOf(p: Progress, cases: CaseRef[] = []) {
   const solved = p.results.filter((r) => r.solved);
   const totalDecisions = p.results.reduce((s, r) => s + r.steps, 0);
   const mistakes = p.results.reduce((s, r) => s + r.mistakes, 0);
@@ -85,7 +85,7 @@ export function statsOf(p: Progress) {
   const avg = solved.length ? Math.round(solved.reduce((s, r) => s + r.seconds, 0) / solved.length) : 0;
   const byCategory: Record<string, { attempts: number; mistakes: number }> = {};
   for (const r of p.results) {
-    const c = CASES.find((x) => x.id === r.caseId);
+    const c = cases.find((x) => x.id === r.caseId);
     if (!c) continue;
     byCategory[c.category] ??= { attempts: 0, mistakes: 0 };
     byCategory[c.category].attempts += 1;
@@ -94,7 +94,7 @@ export function statsOf(p: Progress) {
   return {
     solvedIds: new Set(solved.map((r) => r.caseId)),
     solvedCount: solved.length,
-    pending: CASES.length - solved.length,
+    pending: cases.length - solved.length,
     precision,
     avgSeconds: avg,
     mistakes,
