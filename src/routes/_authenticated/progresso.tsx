@@ -8,6 +8,7 @@ import { Award, Flame, Lock } from "lucide-react";
 export const Route = createFileRoute("/_authenticated/progresso")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "Seu desempenho — Central de Ocorrências" },
       {
         name: "description",

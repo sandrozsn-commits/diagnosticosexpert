@@ -15,6 +15,7 @@ import { CheckCircle2, Clock, Cpu, Flame, Radio, Target, Wrench } from "lucide-r
 export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "Central de Ocorrências — Diagnóstico em Comandos Elétricos" },
       {
         name: "description",
