@@ -79,6 +79,7 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
   const [started, setStarted] = useState(false);
   const [history, setHistory] = useState<Entry[]>([{ node: diagCase.nodes[diagCase.root] }]);
   const [mistakes, setMistakes] = useState(0);
+  const [decisions, setDecisions] = useState(0);
   const [seconds, setSeconds] = useState(0);
   const [finished, setFinished] = useState(false);
   const startedRef = useRef(Date.now());
@@ -110,20 +111,22 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
   const status = finished ? "Encerrada" : started ? "Em Investigação" : "Aguardando atendimento";
   const percentile = performancePercentile(seconds, diagCase.minutes, mistakes);
   const statusLine = statusPhrase(seconds, percentile);
-  const accuracy = Math.max(0, Math.round((steps / Math.max(steps + mistakes, 1)) * 100));
+  const accuracy = Math.max(0, Math.round(((decisions - mistakes) / Math.max(decisions, 1)) * 100));
   const caseUrl = typeof window !== "undefined" ? window.location.href : `/caso/${diagCase.id}`;
 
-  function choose(label: string, nextId: string) {
+  function choose(label: string, nextId: string, useful?: boolean) {
     const next = diagCase.nodes[nextId];
+    const isMistake = useful !== true;
     setHistory((h) => [...h.slice(0, -1), { ...h[h.length - 1], chosen: label }, { node: next }]);
-    if (next.outcome === "wrong") setMistakes((m) => m + 1);
+    setDecisions((d) => d + 1);
+    if (isMistake) setMistakes((m) => m + 1);
     if (next.outcome === "solved") {
       setFinished(true);
       recordResult({
         caseId: diagCase.id,
         solved: true,
-        steps: steps + 1,
-        mistakes,
+        steps: decisions + 1,
+        mistakes: mistakes + (isMistake ? 1 : 0),
         seconds: secondsRef.current,
         xp: earnedXp,
         at: new Date().toISOString(),
@@ -143,6 +146,7 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
   function restart() {
     setHistory([{ node: diagCase.nodes[diagCase.root] }]);
     setMistakes(0);
+    setDecisions(0);
     setFinished(false);
     startedRef.current = Date.now();
     setSeconds(0);
@@ -251,7 +255,7 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
                   <div className="mt-4 rounded-lg border border-primary/40 bg-primary/10 p-4">
                     <p className="text-sm font-medium leading-relaxed">{statusLine}</p>
                     <p className="mt-1 text-xs text-muted-foreground">
-                      Precisão de {accuracy}% nesta ocorrência • {steps} ações técnicas registradas
+                      Precisão de {accuracy}% nesta ocorrência • {decisions} ações técnicas registradas
                     </p>
                   </div>
 
@@ -327,12 +331,12 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
               <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-secondary">
                 <div
                   className="h-full rounded-full bg-primary transition-all"
-                  style={{ width: finished ? "100%" : `${Math.min(steps * 20, 90)}%` }}
+                  style={{ width: finished ? "100%" : `${Math.min(decisions * 20, 90)}%` }}
                 />
               </div>
               <p className="mt-2 text-xs text-muted-foreground">
-                {steps} ação{steps === 1 ? "" : "ões"} técnica{steps === 1 ? "" : "s"} • {mistakes} diagnóstico
-                {mistakes === 1 ? "" : "s"} incorreto{mistakes === 1 ? "" : "s"}
+                {decisions} decisão{decisions === 1 ? "" : "ões"} técnica{decisions === 1 ? "" : "s"} • {mistakes} erro
+                {mistakes === 1 ? "" : "s"} registrado{mistakes === 1 ? "" : "s"}
               </p>
             </div>
           </Panel>
@@ -361,26 +365,49 @@ function NodeCard({
   entry: Entry;
   index: number;
   isCurrent: boolean;
-  onChoose: (label: string, next: string) => void;
+  onChoose: (label: string, next: string, useful?: boolean) => void;
   onBack: () => void;
 }) {
   const { node, chosen } = entry;
   const wrong = node.outcome === "wrong";
+  const detour = node.kind === "detour";
+  const unsafe = node.kind === "unsafe";
+  const feedback = wrong || detour || unsafe;
 
   return (
     <article
       className={`rounded-xl border p-5 ${
-        wrong ? "border-destructive/40 bg-destructive/5" : "border-border bg-card"
+        wrong || unsafe
+          ? "border-destructive/40 bg-destructive/5"
+          : detour
+            ? "border-primary/30 bg-primary/5"
+            : "border-border bg-card"
       } ${isCurrent ? "" : "opacity-80"}`}
     >
       <div className="mb-3 flex items-center gap-2 font-mono text-[10px] uppercase tracking-widest text-muted-foreground">
         <ClipboardList className="size-3.5" />
-        {wrong ? "Análise da ação escolhida" : `Etapa de Diagnóstico ${String(index + 1).padStart(2, "0")}`}
+        {wrong
+          ? "Análise da ação escolhida"
+          : unsafe
+            ? "Ação bloqueada por segurança"
+            : detour
+              ? "Resultado da decisão"
+              : `Etapa de Diagnóstico ${String(index + 1).padStart(2, "0")}`}
       </div>
 
       {wrong && (
         <div className="mb-2 flex items-center gap-2 text-sm font-medium text-destructive">
-          <TriangleAlert className="size-4" /> Diagnóstico Incorreto
+          <TriangleAlert className="size-4" /> Decisão incorreta
+        </div>
+      )}
+      {unsafe && (
+        <div className="mb-2 flex items-center gap-2 text-sm font-medium text-destructive">
+          <TriangleAlert className="size-4" /> Procedimento inseguro
+        </div>
+      )}
+      {detour && (
+        <div className="mb-2 flex items-center gap-2 text-sm font-medium text-primary">
+          <TriangleAlert className="size-4" /> Caminho pouco eficiente
         </div>
       )}
       {node.outcome === "solved" && (
@@ -399,7 +426,7 @@ function NodeCard({
         </div>
       )}
 
-      {wrong && (node.reason || node.consequence) && (
+      {feedback && (node.reason || node.consequence) && (
         <div className="mt-4 space-y-3">
           {node.reason && (
             <div className="rounded-lg border border-destructive/30 bg-background/60 p-3">
@@ -418,7 +445,9 @@ function NodeCard({
             </div>
           )}
           <p className="text-xs text-muted-foreground">
-            O erro fica registrado no relatório, mas a ocorrência continua aberta — o cronômetro está pausado.
+            {wrong
+              ? "O erro fica registrado no relatório, mas a ocorrência continua aberta — o cronômetro está pausado."
+              : "A decisão fica registrada e a investigação continua com a nova evidência obtida."}
           </p>
         </div>
       )}
@@ -438,7 +467,7 @@ function NodeCard({
                 <button
                   key={o.label}
                   disabled={!isCurrent}
-                  onClick={() => onChoose(o.label, o.next)}
+                  onClick={() => onChoose(o.label, o.next, o.useful)}
                   className={`w-full rounded-lg border px-4 py-3 text-left text-sm transition-colors ${
                     picked
                       ? "border-primary bg-accent text-accent-foreground"
