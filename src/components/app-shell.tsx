@@ -1,3 +1,4 @@
+import { useQueryClient } from "@tanstack/react-query";
 import { Link, useMatch, useNavigate } from "@tanstack/react-router";
 import type { ReactNode } from "react";
 import { UserRound, Zap } from "lucide-react";
@@ -46,9 +47,11 @@ function NavLink({ to, children }: { to: string; children: ReactNode }) {
 function AccountMenu() {
   const match = useMatch({ from: "/_authenticated", shouldThrow: false });
   const navigate = useNavigate();
+  const queryClient = useQueryClient();
   const account = (match?.context as { account?: AccountInfo } | undefined)?.account;
   if (!account) return null;
   const signOut = async () => {
+    queryClient.removeQueries({ queryKey: ["cases"] });
     await supabase.auth.signOut();
     navigate({ to: "/login", replace: true });
   };
