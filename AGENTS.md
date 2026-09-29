@@ -8,3 +8,5 @@
 > Commits you push to the connected branch sync back to Lovable and show up in
 > the editor, so keep the branch in a working state.
 <!-- LOVABLE:END -->
+
+- Occurrence content lives only in the diagnostic_cases table (RLS: active, non-expired user_access); never embed case data in frontend files — keeps answers out of the public bundle.
