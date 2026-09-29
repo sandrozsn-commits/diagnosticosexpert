@@ -1,7 +1,7 @@
-import { createFileRoute, Link, notFound } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { getCase, type CaseNode, type Level } from "@/data/cases";
-import { briefingOf, occurrenceCode } from "@/data/occurrence";
+import { caseQuery, occurrenceCode, type CaseNode, type DiagCase, type Level } from "@/lib/cases";
 import { useProgress } from "@/lib/progress";
 import { AppShell } from "@/components/app-shell";
 import {
@@ -13,28 +13,18 @@ import {
 import { ArrowLeft, CheckCircle2, ClipboardList, RotateCcw, TriangleAlert } from "lucide-react";
 
 export const Route = createFileRoute("/_authenticated/caso/$caseId")({
-  loader: ({ params }) => {
-    const c = getCase(params.caseId);
-    if (!c) throw notFound();
-    return { title: c.title, symptom: c.symptom, number: c.number };
-  },
-  head: ({ loaderData }) => {
-    if (!loaderData) {
-      return { meta: [{ title: "Ocorrência indisponível" }, { name: "robots", content: "noindex" }] };
-    }
-    const title = `Ocorrência ${occurrenceCode(loaderData.number)}: ${loaderData.title} — Central de Ocorrências`;
-    return {
-      meta: [
-        { title },
-        { name: "description", content: loaderData.symptom.slice(0, 155) },
-        { property: "og:title", content: title },
-        { property: "og:description", content: loaderData.symptom.slice(0, 155) },
-        { property: "og:type", content: "article" },
-        { name: "twitter:card", content: "summary_large_image" },
-      ],
-    };
-  },
-  component: CasePage,
+  head: () => ({
+    meta: [
+      { title: "Ocorrência — Central de Ocorrências" },
+      { name: "description", content: "Atendimento de ocorrência técnica de manutenção elétrica industrial." },
+      { property: "og:title", content: "Ocorrência — Central de Ocorrências" },
+      { property: "og:description", content: "Atendimento de ocorrência técnica de manutenção elétrica industrial." },
+      { property: "og:type", content: "article" },
+      { name: "twitter:card", content: "summary" },
+      { name: "robots", content: "noindex, nofollow" },
+    ],
+  }),
+  component: CaseLoader,
   errorComponent: () => (
     <AppShell>
       <p className="text-sm text-muted-foreground">Não foi possível carregar esta ocorrência.</p>
@@ -55,10 +45,35 @@ const LEVEL_LABEL: Record<Level, string> = {
 
 type Entry = { node: CaseNode; chosen?: string; wrong?: boolean };
 
-function CasePage() {
+function CaseLoader() {
   const { caseId } = Route.useParams();
-  const diagCase = getCase(caseId)!;
-  const briefing = briefingOf(diagCase);
+  const { data, isLoading, isError, refetch } = useQuery(caseQuery(caseId));
+  if (isLoading)
+    return (
+      <AppShell>
+        <p className="text-sm text-muted-foreground">Carregando ocorrência…</p>
+      </AppShell>
+    );
+  if (isError)
+    return (
+      <AppShell>
+        <p className="text-sm text-muted-foreground">
+          Não foi possível carregar esta ocorrência.{" "}
+          <button onClick={() => refetch()} className="text-primary hover:underline">Tentar novamente</button>
+        </p>
+      </AppShell>
+    );
+  if (!data)
+    return (
+      <AppShell>
+        <p className="text-sm text-muted-foreground">Ocorrência não encontrada.</p>
+      </AppShell>
+    );
+  return <CasePage key={data.id} diagCase={data} />;
+}
+
+function CasePage({ diagCase }: { diagCase: DiagCase }) {
+  const briefing = diagCase.briefing;
   const { recordResult } = useProgress();
 
   const [started, setStarted] = useState(false);

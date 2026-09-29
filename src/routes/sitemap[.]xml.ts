@@ -1,6 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
 import type {} from "@tanstack/react-start";
-import { CASES } from "@/data/cases";
 
 // TODO: replace with your project URL once a project name or custom domain is set.
 const BASE_URL = "";
@@ -16,13 +15,8 @@ export const Route = createFileRoute("/sitemap.xml")({
     handlers: {
       GET: async () => {
         const entries: SitemapEntry[] = [
-          { path: "/", changefreq: "weekly", priority: "1.0" },
-          { path: "/progresso", changefreq: "monthly", priority: "0.5" },
-          ...CASES.map((c) => ({
-            path: `/caso/${c.id}`,
-            changefreq: "monthly" as const,
-            priority: "0.8",
-          })),
+          { path: "/login", changefreq: "monthly", priority: "0.5" },
+          { path: "/cadastro", changefreq: "monthly", priority: "0.5" },
         ];
 
         const urls = entries.map((e) =>

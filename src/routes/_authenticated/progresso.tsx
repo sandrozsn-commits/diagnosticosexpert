@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { CASES } from "@/data/cases";
+import { useQuery } from "@tanstack/react-query";
+import { caseListQuery } from "@/lib/cases";
 import { useProgress, statsOf, levelOf, achievementsOf } from "@/lib/progress";
 import { AppShell } from "@/components/app-shell";
 import { Award, Flame, Lock } from "lucide-react";
@@ -7,6 +8,7 @@ import { Award, Flame, Lock } from "lucide-react";
 export const Route = createFileRoute("/_authenticated/progresso")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "Seu desempenho — Central de Ocorrências" },
       {
         name: "description",
@@ -21,9 +23,10 @@ export const Route = createFileRoute("/_authenticated/progresso")({
 
 function ProgressPage() {
   const { progress, reset } = useProgress();
-  const stats = statsOf(progress);
+  const { data: cases = [] } = useQuery(caseListQuery);
+  const stats = statsOf(progress, cases);
   const lvl = levelOf(progress.xp);
-  const achievements = achievementsOf(progress);
+  const achievements = achievementsOf(progress, cases.length);
   const weakest = Object.entries(stats.byCategory).sort((a, b) => b[1].mistakes - a[1].mistakes);
 
   return (
@@ -101,7 +104,7 @@ function ProgressPage() {
       <section className="mt-10">
         <h2 className="text-lg font-semibold">Ocorrências em aberto</h2>
         <ul className="mt-4 space-y-2">
-          {CASES.filter((c) => !stats.solvedIds.has(c.id)).map((c) => (
+          {cases.filter((c) => !stats.solvedIds.has(c.id)).map((c) => (
             <li key={c.id}>
               <Link to="/caso/$caseId" params={{ caseId: c.id }} className="text-sm text-primary hover:underline">
                 #{String(c.number).padStart(2, "0")} {c.title}

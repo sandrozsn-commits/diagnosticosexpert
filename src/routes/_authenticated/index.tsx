@@ -6,8 +6,8 @@
 
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { CASES, CATEGORIES, type Level } from "@/data/cases";
-import { briefingOf, occurrenceCode } from "@/data/occurrence";
+import { useQuery } from "@tanstack/react-query";
+import { caseListQuery, occurrenceCode, type Level } from "@/lib/cases";
 import { useProgress, statsOf, levelOf } from "@/lib/progress";
 import { AppShell } from "@/components/app-shell";
 import { CheckCircle2, Clock, Cpu, Flame, Radio, Target, Wrench } from "lucide-react";
@@ -15,6 +15,7 @@ import { CheckCircle2, Clock, Cpu, Flame, Radio, Target, Wrench } from "lucide-r
 export const Route = createFileRoute("/_authenticated/")({
   head: () => ({
     meta: [
+      { name: "robots", content: "noindex, nofollow" },
       { title: "Central de Ocorrências — Diagnóstico em Comandos Elétricos" },
       {
         name: "description",
@@ -42,7 +43,8 @@ const LEVEL_LABEL: Record<Level, string> = {
 
 function Index() {
   const { progress } = useProgress();
-  const stats = statsOf(progress);
+  const { data: CASES = [], isLoading, isError, refetch } = useQuery(caseListQuery);
+  const stats = statsOf(progress, CASES);
   const lvl = levelOf(progress.xp);
   const [category, setCategory] = useState<string>("Todos");
   const [level, setLevel] = useState<string>("Todos");
@@ -54,10 +56,10 @@ function Index() {
           (category === "Todos" || c.category === category) &&
           (level === "Todos" || LEVEL_LABEL[c.level] === level),
       ),
-    [category, level],
+    [CASES, category, level],
   );
 
-  const usedCategories = ["Todos", ...CATEGORIES.filter((c) => CASES.some((x) => x.category === c))];
+  const usedCategories = ["Todos", ...Array.from(new Set(CASES.map((x) => x.category)))];
 
   return (
     <AppShell>
@@ -107,10 +109,17 @@ function Index() {
           ))}
         </div>
 
+        {isLoading && <p className="mt-6 text-sm text-muted-foreground">Carregando ocorrências…</p>}
+        {isError && (
+          <p className="mt-6 text-sm text-muted-foreground">
+            Não foi possível carregar as ocorrências.{" "}
+            <button onClick={() => refetch()} className="text-primary hover:underline">Tentar novamente</button>
+          </p>
+        )}
         <div className="mt-6 grid gap-4 lg:grid-cols-2">
           {filtered.map((c) => {
             const solved = stats.solvedIds.has(c.id);
-            const b = briefingOf(c);
+            const b = c.briefing;
             return (
               <article
                 key={c.id}
