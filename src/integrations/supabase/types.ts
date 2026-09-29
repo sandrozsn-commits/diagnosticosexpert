@@ -14,6 +14,42 @@ export type Database = {
   }
   public: {
     Tables: {
+      diagnostic_cases: {
+        Row: {
+          category: string
+          content: Json
+          created_at: string
+          difficulty: string
+          id: string
+          number: number
+          summary: Json
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          category: string
+          content: Json
+          created_at?: string
+          difficulty: string
+          id: string
+          number: number
+          summary: Json
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          category?: string
+          content?: Json
+          created_at?: string
+          difficulty?: string
+          id?: string
+          number?: number
+          summary?: Json
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           created_at: string
@@ -71,6 +107,7 @@ export type Database = {
         Args: { _months?: number; _user_id: string }
         Returns: undefined
       }
+      has_active_access: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
