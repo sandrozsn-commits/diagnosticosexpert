@@ -107,7 +107,6 @@ export type Database = {
         Args: { _months?: number; _user_id: string }
         Returns: undefined
       }
-      has_active_access: { Args: { _user_id: string }; Returns: boolean }
     }
     Enums: {
       [_ in never]: never
