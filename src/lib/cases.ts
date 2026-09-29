@@ -5,8 +5,11 @@ export type Level = "iniciante" | "intermediario" | "avancado";
 
 export type Option = { label: string; next: string; useful?: boolean };
 
+export type CaseNodeKind = "investigation" | "detour" | "unsafe";
+
 export type CaseNode = {
   id: string;
+  kind?: CaseNodeKind;
   situation: string;
   reading?: string;
   question?: string;
