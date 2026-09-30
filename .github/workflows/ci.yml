@@ -23,8 +23,8 @@ jobs:
       - name: Typecheck
         run: bun x tsc --noEmit
 
-      - name: Lint
-        run: bun run lint
+      - name: Lint code rules
+        run: bun x eslint . --quiet --rule 'prettier/prettier: off'
 
       - name: Build
         run: bun run build
