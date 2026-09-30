@@ -74,7 +74,8 @@ function CaseLoader() {
 
 function CasePage({ diagCase }: { diagCase: DiagCase }) {
   const briefing = diagCase.briefing;
-  const { recordResult } = useProgress();
+  const { user } = Route.useRouteContext();
+  const { recordResult } = useProgress(user.id);
 
   const [started, setStarted] = useState(false);
   const [history, setHistory] = useState<Entry[]>([{ node: diagCase.nodes[diagCase.root] }]);
