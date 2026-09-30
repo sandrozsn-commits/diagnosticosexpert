@@ -125,11 +125,48 @@ function RootShell({ children }: { children: ReactNode }) {
   );
 }
 
+function LovableBadgeGuard() {
+  useEffect(() => {
+    const removeLovableBadge = () => {
+      const candidates = document.querySelectorAll<HTMLElement>(
+        '#lovable-badge, [data-lovable-badge], [class*="lovable-badge"], a[href*="lovable.dev"], a[href*="lovable.app"]',
+      );
+
+      candidates.forEach((element) => {
+        const text = (element.textContent || "").toLowerCase();
+        const aria = (element.getAttribute("aria-label") || "").toLowerCase();
+        const id = (element.id || "").toLowerCase();
+        const className = (element.getAttribute("class") || "").toLowerCase();
+
+        const isLovableBadge =
+          id.includes("lovable-badge") ||
+          className.includes("lovable-badge") ||
+          text.includes("made with lovable") ||
+          text.includes("feito com lovable") ||
+          aria.includes("made with lovable") ||
+          aria.includes("feito com lovable");
+
+        if (isLovableBadge) element.remove();
+      });
+    };
+
+    removeLovableBadge();
+
+    const observer = new MutationObserver(removeLovableBadge);
+    observer.observe(document.documentElement, { childList: true, subtree: true });
+
+    return () => observer.disconnect();
+  }, []);
+
+  return null;
+}
+
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   return (
     <QueryClientProvider client={queryClient}>
+      <LovableBadgeGuard />
       {/* Required: nested routes render here. Removing <Outlet /> breaks all child routes. */}
       <Outlet />
     </QueryClientProvider>
