@@ -4,8 +4,12 @@ import { Copy, Check, Download, Share2 } from "lucide-react";
 export type ResultData = {
   occurrenceCode: string;
   title: string;
+  category: string;
+  difficulty: string;
+  equipment: string;
   system: string;
   seconds: number;
+  actions: number;
   mistakes: number;
   xp: number;
   accuracy: number;
@@ -32,10 +36,11 @@ export function statusPhrase(seconds: number, score: number) {
   return `Diagnóstico concluído em ${formatDuration(seconds)} • índice de desempenho técnico ${score}/100`;
 }
 
-const CARD = 1080;
-const BG = "#0b1220";
+const CARD_W = 1080;
+const CARD_H = 1350;
 const PANEL = "#111c31";
-const PRIMARY = "#3b82f6";
+const PRIMARY = "#0877bd";
+const ORANGE = "#ec7c00";
 const TEXT = "#f8fafc";
 const MUTED = "#94a3b8";
 
@@ -53,111 +58,174 @@ function wrap(ctx: CanvasRenderingContext2D, text: string, maxWidth: number, max
   const words = text.split(" ");
   const lines: string[] = [];
   let line = "";
-  for (const w of words) {
-    const test = line ? `${line} ${w}` : w;
+  for (const word of words) {
+    const test = line ? `${line} ${word}` : word;
     if (ctx.measureText(test).width > maxWidth && line) {
       lines.push(line);
-      line = w;
-    } else line = test;
+      line = word;
+    } else {
+      line = test;
+    }
   }
   if (line) lines.push(line);
   return lines.slice(0, maxLines);
 }
 
-function drawCard(canvas: HTMLCanvasElement, data: ResultData) {
+function loadImage(src: string) {
+  return new Promise<HTMLImageElement>((resolve, reject) => {
+    const img = new Image();
+    img.onload = () => resolve(img);
+    img.onerror = reject;
+    img.src = src;
+  });
+}
+
+async function drawCard(canvas: HTMLCanvasElement, data: ResultData) {
   const ctx = canvas.getContext("2d")!;
-  canvas.width = CARD;
-  canvas.height = CARD;
+  canvas.width = CARD_W;
+  canvas.height = CARD_H;
 
-  const grad = ctx.createLinearGradient(0, 0, CARD, CARD);
-  grad.addColorStop(0, "#0b1220");
-  grad.addColorStop(0.55, "#0e1a2f");
-  grad.addColorStop(1, "#132446");
+  const grad = ctx.createLinearGradient(0, 0, CARD_W, CARD_H);
+  grad.addColorStop(0, "#07111f");
+  grad.addColorStop(0.58, "#0b1729");
+  grad.addColorStop(1, "#10233d");
   ctx.fillStyle = grad;
-  ctx.fillRect(0, 0, CARD, CARD);
+  ctx.fillRect(0, 0, CARD_W, CARD_H);
 
-  // grade técnica de fundo
-  ctx.strokeStyle = "rgba(148,163,184,0.07)";
+  ctx.strokeStyle = "rgba(148,163,184,0.06)";
   ctx.lineWidth = 1;
-  for (let i = 60; i < CARD; i += 60) {
+  for (let i = 60; i < CARD_W; i += 60) {
     ctx.beginPath();
     ctx.moveTo(i, 0);
-    ctx.lineTo(i, CARD);
+    ctx.lineTo(i, CARD_H);
+    ctx.stroke();
+  }
+  for (let i = 60; i < CARD_H; i += 60) {
+    ctx.beginPath();
     ctx.moveTo(0, i);
-    ctx.lineTo(CARD, i);
+    ctx.lineTo(CARD_W, i);
     ctx.stroke();
   }
 
-  // marca
-  ctx.fillStyle = PRIMARY;
-  roundRect(ctx, 80, 80, 72, 72, 18);
-  ctx.fill();
+  // Cabeçalho da marca
   ctx.fillStyle = "#ffffff";
-  ctx.beginPath();
-  ctx.moveTo(126, 96);
-  ctx.lineTo(100, 122);
-  ctx.lineTo(114, 122);
-  ctx.lineTo(106, 138);
-  ctx.lineTo(132, 110);
-  ctx.lineTo(118, 110);
-  ctx.closePath();
+  roundRect(ctx, 64, 56, CARD_W - 128, 150, 26);
   ctx.fill();
 
-  ctx.fillStyle = TEXT;
-  ctx.font = "600 34px Inter, system-ui, sans-serif";
-  ctx.fillText("Laboratório de Diagnóstico", 172, 116);
-  ctx.fillStyle = MUTED;
-  ctx.font = "400 24px Inter, system-ui, sans-serif";
-  ctx.fillText("Comandos Elétricos Industriais", 172, 150);
+  try {
+    const logo = await loadImage("/academia-eletricista-logo.svg");
+    const ratio = logo.width / logo.height || 1.9;
+    const h = 92;
+    const w = h * ratio;
+    ctx.drawImage(logo, 88, 84, w, h);
+  } catch {
+    ctx.fillStyle = ORANGE;
+    ctx.font = "800 42px Inter, system-ui, sans-serif";
+    ctx.fillText("AE", 92, 145);
+  }
 
-  // ocorrência
+  ctx.fillStyle = "#0f172a";
+  ctx.font = "700 34px Inter, system-ui, sans-serif";
+  ctx.fillText("TiraDefeito Expert", 310, 116);
+  ctx.fillStyle = "#475569";
+  ctx.font = "500 21px Inter, system-ui, sans-serif";
+  ctx.fillText("By Academia do Eletricista", 310, 151);
   ctx.fillStyle = PRIMARY;
-  ctx.font = "600 24px 'JetBrains Mono', ui-monospace, monospace";
-  ctx.fillText(`OCORRÊNCIA ${data.occurrenceCode} • ENCERRADA`, 80, 262);
+  ctx.font = "600 18px Inter, system-ui, sans-serif";
+  ctx.fillText("Diagnóstico em Comandos Elétricos", 310, 180);
+
+  // Identificação
+  ctx.fillStyle = ORANGE;
+  ctx.font = "700 23px 'JetBrains Mono', ui-monospace, monospace";
+  ctx.fillText(`OCORRÊNCIA ${data.occurrenceCode} • CONCLUÍDA`, 72, 286);
 
   ctx.fillStyle = TEXT;
-  ctx.font = "700 54px Inter, system-ui, sans-serif";
-  wrap(ctx, data.title, CARD - 160, 3).forEach((l, i) => ctx.fillText(l, 80, 336 + i * 64));
+  ctx.font = "700 50px Inter, system-ui, sans-serif";
+  const titleLines = wrap(ctx, data.title, CARD_W - 144, 3);
+  titleLines.forEach((line, index) => ctx.fillText(line, 72, 354 + index * 58));
 
+  const detailsY = 354 + titleLines.length * 58 + 18;
   ctx.fillStyle = MUTED;
-  ctx.font = "400 26px Inter, system-ui, sans-serif";
-  ctx.fillText(data.system, 80, 540);
+  ctx.font = "500 22px Inter, system-ui, sans-serif";
+  ctx.fillText(`${data.category} • ${data.difficulty}`, 72, detailsY);
+  ctx.fillText(data.system, 72, detailsY + 36);
+  ctx.fillText(data.equipment, 72, detailsY + 72);
 
-  // métricas
+  // Métricas principais
+  const metricsY = detailsY + 124;
   const metrics = [
-    ["Tempo total", formatDuration(data.seconds)],
+    ["Tempo", formatDuration(data.seconds)],
+    ["Precisão", `${data.accuracy}%`],
+    ["Ações", String(data.actions)],
     ["Erros", String(data.mistakes)],
-    ["XP ganho", `+${data.xp}`],
   ];
-  const bw = (CARD - 160 - 40) / 3;
-  metrics.forEach(([label, value], i) => {
-    const x = 80 + i * (bw + 20);
+  const gap = 18;
+  const bw = (CARD_W - 144 - gap * 3) / 4;
+  metrics.forEach(([label, value], index) => {
+    const x = 72 + index * (bw + gap);
     ctx.fillStyle = PANEL;
-    roundRect(ctx, x, 580, bw, 160, 24);
+    roundRect(ctx, x, metricsY, bw, 142, 22);
     ctx.fill();
     ctx.strokeStyle = "rgba(148,163,184,0.18)";
     ctx.stroke();
+
     ctx.fillStyle = MUTED;
-    ctx.font = "500 22px Inter, system-ui, sans-serif";
-    ctx.fillText(label, x + 26, 626);
-    ctx.fillStyle = i === 2 ? PRIMARY : TEXT;
-    ctx.font = "700 52px Inter, system-ui, sans-serif";
-    ctx.fillText(value, x + 26, 700);
+    ctx.font = "500 18px Inter, system-ui, sans-serif";
+    ctx.fillText(label, x + 20, metricsY + 42);
+
+    ctx.fillStyle = TEXT;
+    ctx.font = "700 38px Inter, system-ui, sans-serif";
+    ctx.fillText(value, x + 20, metricsY + 98);
   });
 
-  // frase de status
-  ctx.fillStyle = "rgba(59,130,246,0.12)";
-  roundRect(ctx, 80, 780, CARD - 160, 160, 24);
+  // Desempenho
+  const scoreY = metricsY + 180;
+  ctx.fillStyle = "rgba(8,119,189,0.15)";
+  roundRect(ctx, 72, scoreY, CARD_W - 144, 170, 24);
   ctx.fill();
-  ctx.strokeStyle = "rgba(59,130,246,0.4)";
+  ctx.strokeStyle = "rgba(8,119,189,0.55)";
   ctx.stroke();
+
+  ctx.fillStyle = PRIMARY;
+  ctx.font = "700 22px Inter, system-ui, sans-serif";
+  ctx.fillText("DESEMPENHO TÉCNICO", 104, scoreY + 43);
+
   ctx.fillStyle = TEXT;
-  ctx.font = "600 34px Inter, system-ui, sans-serif";
-  wrap(ctx, data.statusLine, CARD - 220, 3).forEach((l, i) => ctx.fillText(l, 116, 836 + i * 46));
+  ctx.font = "700 58px Inter, system-ui, sans-serif";
+  ctx.fillText(`${data.percentile}/100`, 104, scoreY + 112);
 
   ctx.fillStyle = MUTED;
-  ctx.font = "400 24px Inter, system-ui, sans-serif";
-  ctx.fillText(`Precisão ${data.accuracy}% • diagnóstico em comandos elétricos`, 80, 1000);
+  ctx.font = "500 22px Inter, system-ui, sans-serif";
+  ctx.fillText(`XP ganho: +${data.xp}`, 380, scoreY + 92);
+  ctx.fillText("Resultado baseado nesta tentativa", 380, scoreY + 126);
+
+  // Mensagem de aprendizado
+  const learningY = scoreY + 210;
+  ctx.fillStyle = "rgba(236,124,0,0.10)";
+  roundRect(ctx, 72, learningY, CARD_W - 144, 180, 24);
+  ctx.fill();
+  ctx.strokeStyle = "rgba(236,124,0,0.45)";
+  ctx.stroke();
+
+  ctx.fillStyle = ORANGE;
+  ctx.font = "700 21px Inter, system-ui, sans-serif";
+  ctx.fillText("TREINAMENTO CONCLUÍDO", 104, learningY + 44);
+
+  ctx.fillStyle = TEXT;
+  ctx.font = "600 29px Inter, system-ui, sans-serif";
+  wrap(
+    ctx,
+    "Ocorrência revisada com relatório de aprendizagem, evidências e raciocínio técnico.",
+    CARD_W - 208,
+    3,
+  ).forEach((line, index) => ctx.fillText(line, 104, learningY + 92 + index * 38));
+
+  ctx.fillStyle = MUTED;
+  ctx.font = "500 20px Inter, system-ui, sans-serif";
+  ctx.fillText("TiraDefeito Expert • Academia do Eletricista", 72, CARD_H - 76);
+  ctx.textAlign = "right";
+  ctx.fillText("Treinamento prático em comandos elétricos", CARD_W - 72, CARD_H - 76);
+  ctx.textAlign = "left";
 }
 
 export function ResultShare({ data, caseUrl }: { data: ResultData; caseUrl: string }) {
@@ -168,7 +236,7 @@ export function ResultShare({ data, caseUrl }: { data: ResultData; caseUrl: stri
 
   async function buildBlob() {
     const canvas = canvasRef.current!;
-    drawCard(canvas, data);
+    await drawCard(canvas, data);
     setPreview(canvas.toDataURL("image/png"));
     return new Promise<Blob | null>((resolve) => canvas.toBlob(resolve, "image/png"));
   }
@@ -178,16 +246,20 @@ export function ResultShare({ data, caseUrl }: { data: ResultData; caseUrl: stri
     try {
       const blob = await buildBlob();
       if (!blob) return;
-      const file = new File([blob], `ocorrencia-${data.occurrenceCode}.png`, { type: "image/png" });
-      const nav = navigator as Navigator & { canShare?: (d: ShareData) => boolean };
+      const file = new File([blob], `tiradefeito-${data.occurrenceCode}.png`, { type: "image/png" });
+      const nav = navigator as Navigator & { canShare?: (shareData: ShareData) => boolean };
       if (nav.canShare?.({ files: [file] })) {
-        await nav.share({ files: [file], title: "Laboratório de Diagnóstico", text: data.statusLine });
+        await nav.share({
+          files: [file],
+          title: "TiraDefeito Expert",
+          text: `${data.occurrenceCode} concluída • ${data.accuracy}% de precisão`,
+        });
       } else {
         const url = URL.createObjectURL(blob);
-        const a = document.createElement("a");
-        a.href = url;
-        a.download = file.name;
-        a.click();
+        const anchor = document.createElement("a");
+        anchor.href = url;
+        anchor.download = file.name;
+        anchor.click();
         URL.revokeObjectURL(url);
       }
     } catch {
@@ -215,7 +287,7 @@ export function ResultShare({ data, caseUrl }: { data: ResultData; caseUrl: stri
           disabled={busy}
           className="inline-flex items-center gap-2 rounded-md bg-primary px-4 py-2 text-sm font-medium text-primary-foreground transition-opacity hover:opacity-90 disabled:opacity-60"
         >
-          <Share2 className="size-4" /> Compartilhar resultado
+          <Share2 className="size-4" /> {busy ? "Gerando card…" : "Compartilhar resultado"}
         </button>
         <button
           onClick={copyLink}
@@ -231,7 +303,7 @@ export function ResultShare({ data, caseUrl }: { data: ResultData; caseUrl: stri
       {preview && (
         <div className="mt-4">
           <p className="text-xs text-muted-foreground">
-            Card quadrado (1080×1080) pronto para Instagram e Status do WhatsApp.
+            Card vertical (1080×1350) com identidade do TiraDefeito Expert.
           </p>
           <img
             src={preview}
@@ -240,7 +312,7 @@ export function ResultShare({ data, caseUrl }: { data: ResultData; caseUrl: stri
           />
           <a
             href={preview}
-            download={`ocorrencia-${data.occurrenceCode}.png`}
+            download={`tiradefeito-${data.occurrenceCode}.png`}
             className="mt-2 inline-flex items-center gap-2 text-sm text-primary hover:underline"
           >
             <Download className="size-4" /> Baixar imagem
