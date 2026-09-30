@@ -9,8 +9,9 @@ import {
   type DiagCase,
   type Level,
 } from "@/lib/cases";
-import { useProgress } from "@/lib/progress";
+import { useProgress, type LearningReport } from "@/lib/progress";
 import { AppShell } from "@/components/app-shell";
+import { LearningReportView } from "@/components/learning-report";
 import {
   ResultShare,
   formatDuration,
@@ -226,6 +227,69 @@ function seededShuffle<T>(items: readonly T[], seed: number, salt: string) {
   return result;
 }
 
+function buildLearningReport(
+  diagCase: DiagCase,
+  history: Entry[],
+  seconds: number,
+  mistakes: number,
+  decisions: number,
+): LearningReport {
+  const decisionRows = history.flatMap((entry) => {
+    if (!entry.chosen) return [];
+
+    const option = entry.node.options?.find((item) => item.label === entry.chosen);
+    const target = option ? diagCase.nodes[option.next] : undefined;
+    const classification =
+      option?.useful === true
+        ? "correta"
+        : target?.kind === "unsafe"
+          ? "insegura"
+          : target?.kind === "detour"
+            ? "desvio"
+            : "incorreta";
+
+    const feedback = [target?.reason, target?.consequence].filter(Boolean).join(" ");
+
+    return [
+      {
+        step: 0,
+        action: entry.chosen,
+        correct: option?.useful === true,
+        classification,
+        evidence: target?.reading,
+        feedback: feedback || target?.explanation || undefined,
+      } satisfies LearningReport["decisions"][number],
+    ];
+  }).map((item, index) => ({ ...item, step: index + 1 }));
+
+  const evidence = [
+    diagCase.symptom,
+    ...history.map((entry) => entry.node.reading).filter((item): item is string => Boolean(item)),
+  ];
+
+  return {
+    occurrenceCode: occurrenceCode(diagCase.number),
+    title: diagCase.title,
+    category: diagCase.category,
+    difficulty: LEVEL_LABEL[diagCase.level],
+    equipment: diagCase.briefing.equipment,
+    system: diagCase.briefing.system,
+    symptom: diagCase.symptom,
+    diagnosis: diagCase.fault,
+    technical: diagCase.technical,
+    checklist: diagCase.checklist,
+    lessons: diagCase.lessons,
+    evidence: Array.from(new Set(evidence)),
+    decisions: decisionRows,
+    metrics: {
+      seconds,
+      mistakes,
+      actions: decisions,
+      accuracy: Math.max(0, Math.round(((decisions - mistakes) / Math.max(decisions, 1)) * 100)),
+    },
+  };
+}
+
 function CaseLoader() {
   const { caseId } = Route.useParams();
   const { data, isLoading, isError, refetch } = useQuery(caseQuery(caseId));
@@ -265,6 +329,8 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
   const [seconds, setSeconds] = useState(0);
   const [finished, setFinished] = useState(false);
   const [awardedXp, setAwardedXp] = useState(0);
+  const [resultId, setResultId] = useState<string | null>(null);
+  const [learningReport, setLearningReport] = useState<LearningReport | null>(null);
   const [shuffleSeed, setShuffleSeed] = useState(newShuffleSeed);
   const startedRef = useRef(Date.now());
   const bottomRef = useRef<HTMLDivElement>(null);
@@ -353,21 +419,41 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
   function choose(label: string, nextId: string, useful?: boolean) {
     const next = diagCase.nodes[nextId];
     const isMistake = useful !== true;
-    setHistory((h) => [...h.slice(0, -1), { ...h[h.length - 1], chosen: label }, { node: next }]);
-    setDecisions((d) => d + 1);
-    if (isMistake) setMistakes((m) => m + 1);
+    const finalHistory = [
+      ...history.slice(0, -1),
+      { ...history[history.length - 1], chosen: label },
+      { node: next },
+    ];
+    const finalDecisions = decisions + 1;
+    const finalMistakes = mistakes + (isMistake ? 1 : 0);
+
+    setHistory(finalHistory);
+    setDecisions(finalDecisions);
+    if (isMistake) setMistakes(finalMistakes);
+
     if (next.outcome === "solved") {
+      const report = buildLearningReport(
+        diagCase,
+        finalHistory,
+        secondsRef.current,
+        finalMistakes,
+        finalDecisions,
+      );
+      setLearningReport(report);
       setFinished(true);
+
       const result = recordResult({
         caseId: diagCase.id,
         solved: true,
-        steps: decisions + 1,
-        mistakes: mistakes + (isMistake ? 1 : 0),
+        steps: finalDecisions,
+        mistakes: finalMistakes,
         seconds: secondsRef.current,
         xp: earnedXp,
         at: new Date().toISOString(),
+        report,
       });
       setAwardedXp(result.awardedXp);
+      setResultId(result.resultId);
     }
   }
 
@@ -386,6 +472,8 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
     setDecisions(0);
     setFinished(false);
     setAwardedXp(0);
+    setResultId(null);
+    setLearningReport(null);
     setShuffleSeed(newShuffleSeed());
     startedRef.current = Date.now();
     setSeconds(0);
@@ -504,8 +592,12 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
                     data={{
                       occurrenceCode: occurrenceCode(diagCase.number),
                       title: diagCase.title,
+                      category: diagCase.category,
+                      difficulty: LEVEL_LABEL[diagCase.level],
+                      equipment: briefing.equipment,
                       system: briefing.system,
                       seconds,
+                      actions: decisions,
                       mistakes,
                       xp: awardedXp,
                       accuracy,
@@ -515,27 +607,17 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
                     caseUrl={caseUrl}
                   />
 
-                  <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                    <Brief label="Diagnóstico encontrado" value={diagCase.fault} />
-                    <Brief label="Tempo estimado" value={`${diagCase.minutes} min`} />
-                  </div>
+                  {learningReport && <LearningReportView report={learningReport} compact />}
 
-                  <h3 className="mt-6 text-sm font-semibold">Resumo técnico</h3>
-                  <p className="mt-2 text-sm leading-relaxed text-muted-foreground">{diagCase.technical}</p>
-
-                  <h3 className="mt-6 text-sm font-semibold">Procedimento executado</h3>
-                  <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
-                    {diagCase.checklist.map((c) => (
-                      <li key={c}>• {c}</li>
-                    ))}
-                  </ul>
-
-                  <h3 className="mt-6 text-sm font-semibold">Próximos estudos recomendados</h3>
-                  <ul className="mt-2 space-y-1 text-sm text-muted-foreground">
-                    {diagCase.lessons.map((c) => (
-                      <li key={c}>• {c}</li>
-                    ))}
-                  </ul>
+                  {resultId && (
+                    <Link
+                      to="/relatorio/$resultId"
+                      params={{ resultId }}
+                      className="mt-4 inline-flex text-sm font-medium text-primary hover:underline"
+                    >
+                      Abrir relatório de aprendizagem completo
+                    </Link>
+                  )}
 
                   <div className="mt-6 flex flex-wrap items-center gap-3">
                     <button
