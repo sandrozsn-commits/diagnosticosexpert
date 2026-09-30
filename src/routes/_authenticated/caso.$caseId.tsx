@@ -179,10 +179,13 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
   }, [history, finished, current, diagCase.nodes]);
 
   function componentState(component: string) {
-    if (!started) return "Não verificado";
+    if (!started || decisions === 0) return "Não verificado";
 
     let state: "Não verificado" | "Em análise" | "Normal" | "Falha confirmada" = "Não verificado";
-    for (const entry of history) {
+
+    // The first history entry is the opening state of the occurrence.
+    // Component statuses only change after the student makes a technical decision.
+    for (const entry of history.slice(1)) {
       const explicitState = entry.node.componentStates?.[component];
       if (explicitState) state = explicitState;
     }
