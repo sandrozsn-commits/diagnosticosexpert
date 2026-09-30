@@ -6,11 +6,12 @@ export function AuthCard({ title, children }: { title: string; children: ReactNo
     <div className="flex min-h-screen flex-col bg-background">
       <main className="flex flex-1 items-center justify-center px-5 py-10">
         <div className="w-full max-w-sm">
-          <div className="mb-6 flex items-center justify-center gap-2 text-sm font-semibold">
-            <span className="flex size-7 items-center justify-center overflow-hidden rounded-md">
-              <BrandLogo className="h-7 w-7 object-contain" />
-            </span>
-            Central de Diagnóstico
+          <div className="mb-6 flex items-center justify-center gap-3">
+            <BrandLogo className="h-10 w-10 shrink-0 object-contain" />
+            <div className="leading-tight">
+              <p className="text-sm font-semibold text-foreground">Central de Diagnóstico</p>
+              <p className="text-[11px] font-medium text-muted-foreground">By Academia do Eletricista</p>
+            </div>
           </div>
           <div className="rounded-xl border border-border bg-card p-6">
             <h1 className="text-xl font-semibold">{title}</h1>
