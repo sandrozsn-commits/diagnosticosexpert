@@ -1,20 +1,18 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, useMatch, useNavigate } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import { UserRound, Zap } from "lucide-react";
+import { UserRound } from "lucide-react";
+import { BrandLogo, InstitutionalFooter } from "@/components/brand";
 import { supabase } from "@/integrations/supabase/client";
 import { STATUS_LABEL, type AccountInfo } from "@/lib/access";
 
 export function AppShell({ children }: { children: ReactNode }) {
   return (
-    <div className="min-h-screen bg-background">
+    <div className="flex min-h-screen flex-col bg-background">
       <header className="sticky top-0 z-20 border-b border-border bg-background/85 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-6xl items-center gap-6 px-5">
-          <Link to="/" className="flex items-center gap-2 text-sm font-semibold">
-            <span className="flex size-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
-              <Zap className="size-4" />
-            </span>
-            Central de Diagnóstico
+          <Link to="/" className="flex items-center" aria-label="Academia do Eletricista — Central de Diagnóstico">
+            <BrandLogo className="h-9 w-auto" />
           </Link>
           <nav className="ml-auto flex items-center gap-1 text-sm">
             <NavLink to="/">Ocorrências</NavLink>
@@ -23,10 +21,8 @@ export function AppShell({ children }: { children: ReactNode }) {
           <AccountMenu />
         </div>
       </header>
-      <main className="mx-auto max-w-6xl px-5 py-10">{children}</main>
-      <footer className="border-t border-border py-8 text-center text-xs text-muted-foreground">
-        Comandos elétricos industriais — atendimento técnico simulado.
-      </footer>
+      <main className="mx-auto w-full max-w-6xl flex-1 px-5 py-10">{children}</main>
+      <InstitutionalFooter />
     </div>
   );
 }
