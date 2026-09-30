@@ -89,7 +89,7 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
 
   const current = history[history.length - 1].node;
   const steps = history.length - 1;
-  const paused = current.outcome === "wrong";
+  const paused = current.outcome === "wrong" || current.kind === "detour" || current.kind === "unsafe";
   const secondsRef = useRef(0);
   secondsRef.current = seconds;
 
@@ -115,6 +115,88 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
   const statusLine = statusPhrase(seconds, percentile);
   const accuracy = Math.max(0, Math.round(((decisions - mistakes) / Math.max(decisions, 1)) * 100));
   const caseUrl = typeof window !== "undefined" ? window.location.href : `/caso/${diagCase.id}`;
+
+  const evidence = useMemo(() => {
+    const items = history
+      .filter((entry) => entry.node.reading)
+      .map((entry) => entry.node.reading as string);
+    return [diagCase.symptom, ...Array.from(new Set(items))];
+  }, [history, diagCase.symptom]);
+
+  const diagnosticStage = useMemo(() => {
+    if (finished) return "Diagnóstico confirmado";
+    const maxMainStep = history.reduce((max, entry) => {
+      const match = entry.node.id.match(/^s(\d+)$/);
+      return match ? Math.max(max, Number(match[1])) : max;
+    }, 0);
+    if (maxMainStep <= 0) return "Investigação inicial";
+    if (maxMainStep <= 2) return "Coleta de evidências";
+    if (maxMainStep <= 3) return "Teste de hipótese";
+    return "Confirmação";
+  }, [history, finished]);
+
+  const normalizedHistoryText = useMemo(
+    () =>
+      history
+        .map((entry) =>
+          [
+            entry.node.situation,
+            entry.node.reading,
+            entry.node.reason,
+            entry.node.consequence,
+            entry.node.explanation,
+            entry.chosen,
+          ]
+            .filter(Boolean)
+            .join(" "),
+        )
+        .join(" ")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase(),
+    [history],
+  );
+
+  function componentTokens(component: string) {
+    const codes =
+      component.match(/\b(?:KM\d+|KT\w*|TR\d+|FT\d+|Q\d+|F\d+|S\d+|M\d+|FC\d+|RV\d+|KSTOP|X\d+|R\d+)\b/gi) ?? [];
+    if (codes.length) return codes.map((code) => code.toLowerCase());
+    const fallback = component
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase()
+      .split(/[^a-z0-9]+/)
+      .filter((token) => token.length >= 5)
+      .slice(0, 2);
+    return fallback;
+  }
+
+  function componentState(component: string) {
+    const tokens = componentTokens(component);
+    const faultText = diagCase.fault
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toLowerCase();
+
+    const mentioned = tokens.some((token) => normalizedHistoryText.includes(token));
+    const confirmed = finished && tokens.some((token) => faultText.includes(token));
+
+    const normalEvidence = history.some((entry) => {
+      if (!entry.node.reading) return false;
+      const reading = entry.node.reading
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .toLowerCase();
+      const mentionsToken = tokens.some((token) => reading.includes(token));
+      const saysNormal = /normal|estavel|integro|compativel|equilibrad|corret|sem sobreposicao/.test(reading);
+      return mentionsToken && saysNormal;
+    });
+
+    if (confirmed) return "Falha confirmada";
+    if (normalEvidence) return "Normal";
+    if (mentioned) return "Suspeito";
+    return "Não verificado";
+  }
 
   function choose(label: string, nextId: string, useful?: boolean) {
     const next = diagCase.nodes[nextId];
@@ -240,6 +322,7 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
                   isCurrent={i === history.length - 1}
                   onChoose={choose}
                   onBack={backOneStep}
+                  previousEvidence={[...history.slice(0, i)].reverse().find((item) => item.node.reading)?.node.reading}
                 />
               ))}
 
@@ -251,7 +334,7 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
                   </div>
 
                   <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                    <Metric label="Tempo total" value={formatDuration(seconds)} />
+                    <Metric label="Tempo de diagnóstico" value={formatDuration(seconds)} />
                     <Metric label="Erros" value={String(mistakes)} />
                     <Metric label="XP ganho" value={`+${awardedXp}`} highlight />
                   </div>
@@ -327,32 +410,95 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
               <Row label="Dificuldade" value={LEVEL_LABEL[diagCase.level]} />
               <Row label="Prioridade" value={briefing.priority} />
             </dl>
-            <div className="mt-4">
-              <div className="flex items-center justify-between text-xs text-muted-foreground">
-                <span>Progresso da ocorrência</span>
-                <span className="font-mono">{finished ? "100%" : `${steps} etapa${steps === 1 ? "" : "s"}`}</span>
-              </div>
-              <div className="mt-2 h-1.5 overflow-hidden rounded-full bg-secondary">
-                <div
-                  className="h-full rounded-full bg-primary transition-all"
-                  style={{ width: finished ? "100%" : `${Math.min(decisions * 20, 90)}%` }}
-                />
-              </div>
+            <div className="mt-4 rounded-lg bg-secondary/50 p-3">
+              <span className="block text-[10px] uppercase tracking-wide text-muted-foreground">
+                Etapa atual
+              </span>
+              <p className="mt-1 text-sm font-medium">{diagnosticStage}</p>
               <p className="mt-2 text-xs text-muted-foreground">
                 {decisions} decisão{decisions === 1 ? "" : "ões"} técnica{decisions === 1 ? "" : "s"} • {mistakes} erro
                 {mistakes === 1 ? "" : "s"} registrado{mistakes === 1 ? "" : "s"}
               </p>
+              {started && !finished && (
+                <p className="mt-2 text-[11px] text-muted-foreground">
+                  O cronômetro mede apenas o tempo de diagnóstico e pausa durante feedbacks técnicos.
+                </p>
+              )}
             </div>
           </Panel>
           <Panel title="Componentes envolvidos">
-            <ul className="space-y-1 text-sm text-muted-foreground">
-              {diagCase.components.map((c) => (
-                <li key={c}>• {c}</li>
-              ))}
+            <ul className="space-y-2">
+              {diagCase.components.map((component) => {
+                const state = componentState(component);
+                return (
+                  <li key={component} className="flex items-start justify-between gap-3 text-xs">
+                    <span className="text-muted-foreground">{component}</span>
+                    <span
+                      className={`shrink-0 rounded-full border px-2 py-0.5 text-[10px] ${
+                        state === "Falha confirmada"
+                          ? "border-destructive/40 bg-destructive/10 text-destructive"
+                          : state === "Normal"
+                            ? "border-success/40 bg-success/10 text-success"
+                            : state === "Suspeito"
+                              ? "border-primary/40 bg-primary/10 text-primary"
+                              : "border-border text-muted-foreground"
+                      }`}
+                    >
+                      {state}
+                    </span>
+                  </li>
+                );
+              })}
             </ul>
           </Panel>
 
+          {started && (
+            <Panel title="Evidências coletadas">
+              <ol className="space-y-2">
+                {evidence.map((item, index) => (
+                  <li key={`${index}-${item}`} className="rounded-lg bg-secondary/50 p-2 text-xs leading-relaxed">
+                    <span className="mr-2 font-mono text-[10px] text-primary">E{index + 1}</span>
+                    <span className="text-muted-foreground">{item}</span>
+                  </li>
+                ))}
+              </ol>
+            </Panel>
+          )}
 
+          {started && (
+            <Panel title="Caminho da investigação">
+              <ol className="space-y-2">
+                {history.map((entry, index) => (
+                  <li key={`${index}-${entry.node.id}`} className="relative pl-4 text-xs">
+                    {index < history.length - 1 && (
+                      <span className="absolute left-[3px] top-3 h-full w-px bg-border" aria-hidden />
+                    )}
+                    <span
+                      className={`absolute left-0 top-1.5 size-2 rounded-full ${
+                        entry.node.outcome === "solved"
+                          ? "bg-success"
+                          : entry.node.outcome === "wrong" || entry.node.kind === "unsafe"
+                            ? "bg-destructive"
+                            : entry.node.kind === "detour"
+                              ? "bg-primary/60"
+                              : "bg-primary"
+                      }`}
+                    />
+                    <p className="font-medium">
+                      {entry.node.outcome === "solved"
+                        ? "Diagnóstico confirmado"
+                        : entry.node.kind === "unsafe"
+                          ? "Ação insegura bloqueada"
+                          : entry.node.kind === "detour"
+                            ? "Desvio investigado"
+                            : `Etapa ${index + 1}`}
+                    </p>
+                    {entry.chosen && <p className="mt-0.5 text-muted-foreground">{entry.chosen}</p>}
+                  </li>
+                ))}
+              </ol>
+            </Panel>
+          )}
         </aside>
       </div>
     </AppShell>
@@ -365,12 +511,14 @@ function NodeCard({
   isCurrent,
   onChoose,
   onBack,
+  previousEvidence,
 }: {
   entry: Entry;
   index: number;
   isCurrent: boolean;
   onChoose: (label: string, next: string, useful?: boolean) => void;
   onBack: () => void;
+  previousEvidence?: string;
 }) {
   const { node, chosen } = entry;
   const wrong = node.outcome === "wrong";
@@ -448,10 +596,18 @@ function NodeCard({
               <p className="mt-1 text-sm leading-relaxed">{node.consequence}</p>
             </div>
           )}
+          {previousEvidence && (
+            <div className="rounded-lg border border-primary/30 bg-primary/5 p-3">
+              <span className="block text-[10px] uppercase tracking-wide text-muted-foreground">
+                Qual evidência deveria pesar na decisão?
+              </span>
+              <p className="mt-1 text-sm leading-relaxed">{previousEvidence}</p>
+            </div>
+          )}
           <p className="text-xs text-muted-foreground">
             {wrong
-              ? "O erro fica registrado no relatório, mas a ocorrência continua aberta — o cronômetro está pausado."
-              : "A decisão fica registrada e a investigação continua com a nova evidência obtida."}
+              ? "O erro fica registrado no relatório, mas a ocorrência continua aberta — o tempo de estudo deste feedback não entra no tempo de diagnóstico."
+              : "A decisão fica registrada e este feedback não entra no tempo de diagnóstico."}
           </p>
         </div>
       )}
