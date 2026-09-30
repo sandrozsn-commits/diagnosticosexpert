@@ -22,7 +22,8 @@ export const Route = createFileRoute("/_authenticated/progresso")({
 });
 
 function ProgressPage() {
-  const { progress, reset } = useProgress();
+  const { user } = Route.useRouteContext();
+  const { progress, reset } = useProgress(user.id);
   const { data: cases = [] } = useQuery(caseListQuery);
   const stats = statsOf(progress, cases);
   const lvl = levelOf(progress.xp);
