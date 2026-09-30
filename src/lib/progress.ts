@@ -22,11 +22,23 @@ const KEY = "ldce.progress.v1";
 
 const EMPTY: Progress = { xp: 0, results: [], streak: 0, lastDay: null };
 
+function xpFromBestResults(results: CaseResult[]) {
+  const bestByCase = new Map<string, number>();
+  for (const result of results) {
+    if (!result.solved) continue;
+    bestByCase.set(result.caseId, Math.max(bestByCase.get(result.caseId) ?? 0, result.xp));
+  }
+  return Array.from(bestByCase.values()).reduce((sum, xp) => sum + xp, 0);
+}
+
 function read(): Progress {
   if (typeof window === "undefined") return EMPTY;
   try {
     const raw = window.localStorage.getItem(KEY);
-    return raw ? { ...EMPTY, ...(JSON.parse(raw) as Progress) } : EMPTY;
+    if (!raw) return EMPTY;
+    const parsed = { ...EMPTY, ...(JSON.parse(raw) as Progress) };
+    const results = Array.isArray(parsed.results) ? parsed.results : [];
+    return { ...parsed, results, xp: xpFromBestResults(results) };
   } catch {
     return EMPTY;
   }
@@ -65,20 +77,22 @@ export type Achievement = { id: string; name: string; description: string; earne
 
 export function achievementsOf(p: Progress, total = 0): Achievement[] {
   const solved = p.results.filter((r) => r.solved);
+  const solvedIds = new Set(solved.map((r) => r.caseId));
   const perfect = solved.filter((r) => r.mistakes === 0);
   const fast = solved.filter((r) => r.seconds < 120);
   return [
-    { id: "first", name: "Primeiro Diagnóstico", description: "Resolva seu primeiro caso", earned: solved.length >= 1 },
+    { id: "first", name: "Primeiro Diagnóstico", description: "Resolva seu primeiro caso", earned: solvedIds.size >= 1 },
     { id: "perfect", name: "Bisturi", description: "Resolva um caso sem nenhum erro", earned: perfect.length >= 1 },
     { id: "fast", name: "Plantão Rápido", description: "Resolva um caso em menos de 2 minutos", earned: fast.length >= 1 },
-    { id: "three", name: "Rotina de Manutenção", description: "Resolva 3 casos", earned: solved.length >= 3 },
+    { id: "three", name: "Rotina de Manutenção", description: "Resolva 3 casos", earned: solvedIds.size >= 3 },
     { id: "streak3", name: "Sequência de 3 dias", description: "Pratique 3 dias seguidos", earned: p.streak >= 3 },
-    { id: "all", name: "Laboratório Concluído", description: "Resolva todos os casos disponíveis", earned: total > 0 && solved.length >= total },
+    { id: "all", name: "Laboratório Concluído", description: "Resolva todos os casos disponíveis", earned: total > 0 && solvedIds.size >= total },
   ];
 }
 
 export function statsOf(p: Progress, cases: CaseRef[] = []) {
   const solved = p.results.filter((r) => r.solved);
+  const solvedIds = new Set(solved.map((r) => r.caseId));
   const totalDecisions = p.results.reduce((s, r) => s + r.steps, 0);
   const mistakes = p.results.reduce((s, r) => s + r.mistakes, 0);
   const precision = totalDecisions ? Math.round(((totalDecisions - mistakes) / totalDecisions) * 100) : 0;
@@ -92,9 +106,9 @@ export function statsOf(p: Progress, cases: CaseRef[] = []) {
     byCategory[c.category].mistakes += r.mistakes;
   }
   return {
-    solvedIds: new Set(solved.map((r) => r.caseId)),
-    solvedCount: solved.length,
-    pending: cases.length - solved.length,
+    solvedIds,
+    solvedCount: solvedIds.size,
+    pending: Math.max(0, cases.length - solvedIds.size),
     precision,
     avgSeconds: avg,
     mistakes,
@@ -123,9 +137,10 @@ export function useProgress() {
       const p = read();
       const day = today();
       const streak = p.lastDay === day ? p.streak : p.lastDay === yesterday() ? p.streak + 1 : 1;
+      const results = [...p.results, result];
       const next: Progress = {
-        xp: p.xp + result.xp,
-        results: [...p.results, result],
+        xp: xpFromBestResults(results),
+        results,
         streak,
         lastDay: day,
       };
