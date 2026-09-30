@@ -42,7 +42,8 @@ const LEVEL_LABEL: Record<Level, string> = {
 };
 
 function Index() {
-  const { progress } = useProgress();
+  const { user } = Route.useRouteContext();
+  const { progress } = useProgress(user.id);
   const { data: CASES = [], isLoading, isError, refetch } = useQuery(caseListQuery);
   const stats = statsOf(progress, CASES);
   const lvl = levelOf(progress.xp);
