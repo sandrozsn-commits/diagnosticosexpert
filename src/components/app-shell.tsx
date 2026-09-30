@@ -11,8 +11,15 @@ export function AppShell({ children }: { children: ReactNode }) {
     <div className="flex min-h-screen flex-col bg-background">
       <header className="sticky top-0 z-20 border-b border-border bg-background/85 backdrop-blur">
         <div className="mx-auto flex h-14 max-w-6xl items-center gap-6 px-5">
-          <Link to="/" className="flex items-center" aria-label="Academia do Eletricista — Central de Diagnóstico">
-            <BrandLogo className="h-9 w-auto" />
+          <Link
+            to="/"
+            className="flex items-center gap-2 text-sm font-semibold"
+            aria-label="Central de Diagnóstico"
+          >
+            <span className="flex size-7 items-center justify-center overflow-hidden rounded-md">
+              <BrandLogo className="h-7 w-7 object-contain" />
+            </span>
+            Central de Diagnóstico
           </Link>
           <nav className="ml-auto flex items-center gap-1 text-sm">
             <NavLink to="/">Ocorrências</NavLink>
