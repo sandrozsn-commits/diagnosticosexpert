@@ -72,7 +72,58 @@ function normalizeComponentText(value: string) {
 }
 
 function referenceTokens(value: string) {
-  return normalizeComponentText(value).match(/\b[a-z]{1,8}\d+[a-z0-9/-]*\b/g) ?? [];
+  const normalized = normalizeComponentText(value);
+  const electricalRefs = normalized.match(/\b[a-z]{1,8}\d+\b/g) ?? [];
+  const terminalRefs = normalized
+    .split(" ")
+    .filter((token) => /^\d{2,3}$/.test(token) && Number(token) >= 10 && Number(token) <= 999);
+  return Array.from(new Set([...electricalRefs, ...terminalRefs]));
+}
+
+const COMPONENT_MATCH_STOPWORDS = new Set([
+  "contator",
+  "motor",
+  "rele",
+  "termico",
+  "disjuntor",
+  "botoeira",
+  "trifasico",
+  "trifasica",
+  "potencia",
+  "comando",
+  "circuito",
+  "dispositivo",
+]);
+
+function componentMatchScore(label: string, component: string) {
+  const normalizedLabel = normalizeComponentText(label);
+  const labelTokens = new Set(referenceTokens(label));
+  const componentTokens = referenceTokens(component);
+  const referenceOverlap = componentTokens.filter((token) => labelTokens.has(token)).length;
+
+  const labelWords = new Set(normalizedLabel.split(" "));
+  const descriptorOverlap = normalizeComponentText(component)
+    .split(" ")
+    .filter(
+      (word) =>
+        word.length >= 4 &&
+        !COMPONENT_MATCH_STOPWORDS.has(word) &&
+        labelWords.has(word),
+    ).length;
+
+  let score = referenceOverlap * 10 + descriptorOverlap * 2;
+
+  const isReplacement = /\b(trocar|substituir)\b/.test(normalizedLabel);
+  const normalizedComponent = normalizeComponentText(component);
+  if (
+    isReplacement &&
+    normalizedComponent.includes("intertravamento") &&
+    !normalizedLabel.includes("intertravamento")
+  ) {
+    score -= 20;
+  }
+
+  return score;
 }
 
 function inferredComponentsFromAction(label: string, components: string[]) {
@@ -89,7 +140,20 @@ function inferredComponentsFromAction(label: string, components: string[]) {
     const byReference = components.filter((component) =>
       referenceTokens(component).some((token) => labelRefs.has(token)),
     );
-    if (byReference.length > 0) return byReference;
+
+    if (byReference.length === 1) return byReference;
+    if (byReference.length > 1) {
+      const scored = byReference.map((component) => ({
+        component,
+        score: componentMatchScore(label, component),
+      }));
+      const bestScore = Math.max(...scored.map((item) => item.score));
+      if (bestScore > 0) {
+        return scored
+          .filter((item) => item.score === bestScore)
+          .map((item) => item.component);
+      }
+    }
   }
 
   const semanticTerms = [
@@ -108,6 +172,10 @@ function inferredComponentsFromAction(label: string, components: string[]) {
     "temporizador",
     "transformador",
     "autotransformador",
+    "intertravamento",
+    "bobina",
+    "contato auxiliar",
+    "contatos principais",
   ];
 
   const candidates = components.filter((component) => {
