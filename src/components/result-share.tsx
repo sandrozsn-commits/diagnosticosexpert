@@ -19,7 +19,7 @@ export function formatDuration(seconds: number) {
   return m > 0 ? `${m}min${String(s).padStart(2, "0")}s` : `${s}s`;
 }
 
-/** percentil determinístico: compara o desempenho com o tempo estimado e os erros cometidos */
+/** Índice interno determinístico de desempenho; não representa percentil populacional real. */
 export function performancePercentile(seconds: number, estimatedMinutes: number, mistakes: number) {
   const target = Math.max(estimatedMinutes, 1) * 60;
   const ratio = seconds / target;
@@ -28,8 +28,8 @@ export function performancePercentile(seconds: number, estimatedMinutes: number,
   return Math.max(12, Math.min(97, Math.round(p)));
 }
 
-export function statusPhrase(seconds: number, percentile: number) {
-  return `Você diagnosticou em ${formatDuration(seconds)} — mais rápido que ${percentile}% dos eletricistas`;
+export function statusPhrase(seconds: number, score: number) {
+  return `Diagnóstico concluído em ${formatDuration(seconds)} • índice de desempenho técnico ${score}/100`;
 }
 
 const CARD = 1080;
