@@ -9,7 +9,7 @@ export function AuthCard({ title, children }: { title: string; children: ReactNo
           <div className="mb-6 flex items-center justify-center gap-3">
             <BrandLogo className="h-10 w-10 shrink-0 object-contain" />
             <div className="leading-tight">
-              <p className="text-sm font-semibold text-foreground">Central de Diagnóstico</p>
+              <p className="text-sm font-semibold text-foreground">TiraDefeito Expert</p>
               <p className="text-[11px] font-medium text-muted-foreground">By Academia do Eletricista</p>
             </div>
           </div>
