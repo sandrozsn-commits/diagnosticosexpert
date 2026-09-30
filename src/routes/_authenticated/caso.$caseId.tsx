@@ -45,6 +45,37 @@ const LEVEL_LABEL: Record<Level, string> = {
 
 type Entry = { node: CaseNode; chosen?: string; wrong?: boolean };
 
+function newShuffleSeed() {
+  return Math.floor(Math.random() * 0x7fffffff);
+}
+
+function hashText(value: string) {
+  let hash = 2166136261;
+  for (let i = 0; i < value.length; i += 1) {
+    hash ^= value.charCodeAt(i);
+    hash = Math.imul(hash, 16777619);
+  }
+  return hash >>> 0;
+}
+
+function seededShuffle<T>(items: readonly T[], seed: number, salt: string) {
+  const result = [...items];
+  let state = (seed ^ hashText(salt)) >>> 0;
+
+  function nextRandom() {
+    state = Math.imul(state, 1664525) + 1013904223;
+    state >>>= 0;
+    return state / 0x100000000;
+  }
+
+  for (let i = result.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(nextRandom() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+
+  return result;
+}
+
 function CaseLoader() {
   const { caseId } = Route.useParams();
   const { data, isLoading, isError, refetch } = useQuery(caseQuery(caseId));
@@ -84,6 +115,7 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
   const [seconds, setSeconds] = useState(0);
   const [finished, setFinished] = useState(false);
   const [awardedXp, setAwardedXp] = useState(0);
+  const [shuffleSeed, setShuffleSeed] = useState(newShuffleSeed);
   const startedRef = useRef(Date.now());
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -193,6 +225,7 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
     setDecisions(0);
     setFinished(false);
     setAwardedXp(0);
+    setShuffleSeed(newShuffleSeed());
     startedRef.current = Date.now();
     setSeconds(0);
   }
@@ -282,6 +315,7 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
                   onChoose={choose}
                   onBack={backOneStep}
                   previousEvidence={[...history.slice(0, i)].reverse().find((item) => item.node.reading)?.node.reading}
+                  shuffleSeed={shuffleSeed}
                 />
               ))}
 
@@ -471,6 +505,7 @@ function NodeCard({
   onChoose,
   onBack,
   previousEvidence,
+  shuffleSeed,
 }: {
   entry: Entry;
   index: number;
@@ -478,12 +513,17 @@ function NodeCard({
   onChoose: (label: string, next: string, useful?: boolean) => void;
   onBack: () => void;
   previousEvidence?: string;
+  shuffleSeed: number;
 }) {
   const { node, chosen } = entry;
   const wrong = node.outcome === "wrong";
   const detour = node.kind === "detour";
   const unsafe = node.kind === "unsafe";
   const feedback = wrong || detour || unsafe;
+  const shuffledOptions = useMemo(
+    () => (node.options ? seededShuffle(node.options, shuffleSeed, node.id) : []),
+    [node.options, node.id, shuffleSeed],
+  );
 
   return (
     <article
@@ -580,7 +620,7 @@ function NodeCard({
             {node.question ?? "Qual seria sua próxima ação técnica?"}
           </p>
           <div className="mt-3 space-y-2">
-            {node.options.map((o) => {
+            {shuffledOptions.map((o) => {
               const picked = chosen === o.label;
               return (
                 <button
