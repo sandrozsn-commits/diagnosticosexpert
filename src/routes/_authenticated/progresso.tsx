@@ -29,6 +29,11 @@ function ProgressPage() {
   const lvl = levelOf(progress.xp);
   const achievements = achievementsOf(progress, cases.length);
   const weakest = Object.entries(stats.byCategory).sort((a, b) => b[1].mistakes - a[1].mistakes);
+  const reports = progress.results
+    .filter((result) => result.report)
+    .slice()
+    .sort((a, b) => b.at.localeCompare(a.at))
+    .slice(0, 12);
 
   return (
     <AppShell>
@@ -99,6 +104,40 @@ function ProgressPage() {
               </li>
             ))}
           </ul>
+        )}
+      </section>
+
+      <section className="mt-10">
+        <h2 className="text-lg font-semibold">Relatórios de aprendizagem</h2>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Reveja suas decisões, evidências, erros e o raciocínio técnico de cada ocorrência concluída.
+        </p>
+        {reports.length === 0 ? (
+          <p className="mt-4 text-sm text-muted-foreground">
+            Os novos relatórios aparecerão aqui após você concluir uma ocorrência.
+          </p>
+        ) : (
+          <div className="mt-4 grid gap-3 sm:grid-cols-2">
+            {reports.map((result) => (
+              <Link
+                key={result.id}
+                to="/relatorio/$resultId"
+                params={{ resultId: result.id }}
+                className="rounded-xl border border-border p-4 transition-colors hover:border-primary/40 hover:bg-secondary/30"
+              >
+                <span className="font-mono text-[10px] uppercase tracking-wide text-primary">
+                  {result.report?.occurrenceCode}
+                </span>
+                <h3 className="mt-1 text-sm font-semibold">{result.report?.title}</h3>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  {new Date(result.at).toLocaleDateString("pt-BR")} • {result.report?.metrics.accuracy}% de precisão • {result.mistakes} erro{result.mistakes === 1 ? "" : "s"}
+                </p>
+                <span className="mt-3 inline-block text-xs font-medium text-primary">
+                  Rever relatório
+                </span>
+              </Link>
+            ))}
+          </div>
         )}
       </section>
 
