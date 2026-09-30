@@ -135,60 +135,15 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
     return "Confirmação";
   }, [history, finished]);
 
-  const normalizedEvidenceText = useMemo(
-    () =>
-      history
-        .map((entry) => [entry.node.reading, entry.chosen].filter(Boolean).join(" "))
-        .join(" ")
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase(),
-    [history],
-  );
-
-  function componentTokens(component: string) {
-    const codes =
-      component.match(/\b(?:KM\d+|KT\w*|TR\d+|FT\d+|Q\d+|F\d+|S\d+|M\d+|FC\d+|RV\d+|KSTOP|X\d+|R\d+)\b/gi) ?? [];
-    if (codes.length) return codes.map((code) => code.toLowerCase());
-    const fallback = component
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase()
-      .split(/[^a-z0-9]+/)
-      .filter((token) => token.length >= 5)
-      .slice(0, 2);
-    return fallback;
-  }
-
   function componentState(component: string) {
     if (!started) return "Não verificado";
 
-    const tokens = componentTokens(component);
-    const faultText = diagCase.fault
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "")
-      .toLowerCase();
-
-    const investigated = tokens.some((token) => normalizedEvidenceText.includes(token));
-    const confirmed = finished && tokens.some((token) => faultText.includes(token));
-
-    const normalEvidence = history.some((entry) => {
-      if (!entry.node.reading) return false;
-      const reading = entry.node.reading
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .toLowerCase();
-      const mentionsToken = tokens.some((token) => reading.includes(token));
-      const saysNormal = /normal|estavel|integro|compativel|equilibrad|corret|sem sobreposicao|sem falha|dentro da faixa/.test(
-        reading,
-      );
-      return mentionsToken && saysNormal;
-    });
-
-    if (confirmed) return "Falha confirmada";
-    if (normalEvidence) return "Normal";
-    if (investigated) return "Em análise";
-    return "Não verificado";
+    let state: "Não verificado" | "Em análise" | "Normal" | "Falha confirmada" = "Não verificado";
+    for (const entry of history) {
+      const explicitState = entry.node.componentStates?.[component];
+      if (explicitState) state = explicitState;
+    }
+    return state;
   }
 
   function choose(label: string, nextId: string, useful?: boolean) {
