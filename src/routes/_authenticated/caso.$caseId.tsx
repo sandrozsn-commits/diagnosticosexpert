@@ -135,21 +135,10 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
     return "Confirmação";
   }, [history, finished]);
 
-  const normalizedHistoryText = useMemo(
+  const normalizedEvidenceText = useMemo(
     () =>
       history
-        .map((entry) =>
-          [
-            entry.node.situation,
-            entry.node.reading,
-            entry.node.reason,
-            entry.node.consequence,
-            entry.node.explanation,
-            entry.chosen,
-          ]
-            .filter(Boolean)
-            .join(" "),
-        )
+        .map((entry) => [entry.node.reading, entry.chosen].filter(Boolean).join(" "))
         .join(" ")
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "")
@@ -172,13 +161,15 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
   }
 
   function componentState(component: string) {
+    if (!started) return "Não verificado";
+
     const tokens = componentTokens(component);
     const faultText = diagCase.fault
       .normalize("NFD")
       .replace(/[\u0300-\u036f]/g, "")
       .toLowerCase();
 
-    const mentioned = tokens.some((token) => normalizedHistoryText.includes(token));
+    const investigated = tokens.some((token) => normalizedEvidenceText.includes(token));
     const confirmed = finished && tokens.some((token) => faultText.includes(token));
 
     const normalEvidence = history.some((entry) => {
@@ -188,13 +179,15 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
         .replace(/[\u0300-\u036f]/g, "")
         .toLowerCase();
       const mentionsToken = tokens.some((token) => reading.includes(token));
-      const saysNormal = /normal|estavel|integro|compativel|equilibrad|corret|sem sobreposicao/.test(reading);
+      const saysNormal = /normal|estavel|integro|compativel|equilibrad|corret|sem sobreposicao|sem falha|dentro da faixa/.test(
+        reading,
+      );
       return mentionsToken && saysNormal;
     });
 
     if (confirmed) return "Falha confirmada";
     if (normalEvidence) return "Normal";
-    if (mentioned) return "Suspeito";
+    if (investigated) return "Em análise";
     return "Não verificado";
   }
 
@@ -439,7 +432,7 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
                           ? "border-destructive/40 bg-destructive/10 text-destructive"
                           : state === "Normal"
                             ? "border-success/40 bg-success/10 text-success"
-                            : state === "Suspeito"
+                            : state === "Em análise"
                               ? "border-primary/40 bg-primary/10 text-primary"
                               : "border-border text-muted-foreground"
                       }`}
