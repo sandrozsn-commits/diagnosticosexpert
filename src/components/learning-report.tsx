@@ -10,9 +10,9 @@ export function LearningReportView({
   compact?: boolean;
 }) {
   return (
-    <section className={compact ? "mt-6" : "mx-auto max-w-4xl"}>
-      <div className="rounded-xl border border-border bg-card p-6 print:border-0 print:p-0">
-        <div className="flex flex-wrap items-start justify-between gap-4">
+    <section className={`learning-report ${compact ? "mt-6" : "mx-auto max-w-4xl"}`}>
+      <div className="learning-report-sheet rounded-xl border border-border bg-card p-6 print:border-0 print:p-0">
+        <div className="learning-report-header flex flex-wrap items-start justify-between gap-4">
           <div>
             <p className="font-mono text-xs uppercase tracking-widest text-primary">
               Relatório de aprendizagem
@@ -20,7 +20,7 @@ export function LearningReportView({
             <h1 className="mt-2 text-2xl font-semibold">
               {report.occurrenceCode} — {report.title}
             </h1>
-            <p className="mt-2 text-sm text-muted-foreground">
+            <p className="learning-report-intro mt-2 text-sm text-muted-foreground">
               Este relatório registra seu raciocínio para que você possa rever a ocorrência e
               entender como chegar ao diagnóstico de forma mais eficiente.
             </p>
@@ -35,14 +35,14 @@ export function LearningReportView({
           </button>
         </div>
 
-        <div className="mt-6 grid gap-3 sm:grid-cols-4">
+        <div className="learning-report-metrics mt-6 grid gap-3 sm:grid-cols-4">
           <Metric label="Tempo" value={formatDuration(report.metrics.seconds)} />
           <Metric label="Ações" value={String(report.metrics.actions)} />
           <Metric label="Erros" value={String(report.metrics.mistakes)} />
           <Metric label="Precisão" value={`${report.metrics.accuracy}%`} />
         </div>
 
-        <div className="mt-6 grid gap-4 sm:grid-cols-2">
+        <div className="learning-report-info mt-6 grid gap-4 sm:grid-cols-2">
           <Info label="Sistema" value={report.system} />
           <Info label="Equipamento" value={report.equipment} />
           <Info label="Categoria" value={report.category} />
@@ -58,10 +58,10 @@ export function LearningReportView({
           <p className="mt-2">{report.technical}</p>
         </Block>
 
-        <Block title="Seu caminho de investigação">
-          <ol className="space-y-3">
+        <Block title="Seu caminho de investigação" className="learning-report-decisions">
+          <ol className="learning-report-decision-list space-y-3">
             {report.decisions.map((decision) => (
-              <li key={decision.step} className="rounded-lg border border-border p-4">
+              <li key={decision.step} className="learning-report-decision rounded-lg border border-border p-4">
                 <div className="flex items-start gap-3">
                   <DecisionIcon classification={decision.classification} />
                   <div className="min-w-0">
@@ -75,7 +75,7 @@ export function LearningReportView({
                     </div>
                     <p className="mt-1 text-sm font-medium">{decision.action}</p>
                     {decision.evidence && (
-                      <div className="mt-3 rounded-md bg-secondary/70 p-3">
+                      <div className="learning-report-evidence mt-3 rounded-md bg-secondary/70 p-3">
                         <span className="block text-[10px] uppercase tracking-wide text-muted-foreground">
                           Evidência obtida
                         </span>
@@ -83,7 +83,7 @@ export function LearningReportView({
                       </div>
                     )}
                     {decision.feedback && (
-                      <div className="mt-3 rounded-md border border-border p-3">
+                      <div className="learning-report-feedback mt-3 rounded-md border border-border p-3">
                         <span className="block text-[10px] uppercase tracking-wide text-muted-foreground">
                           O que aprender com esta decisão
                         </span>
@@ -97,7 +97,7 @@ export function LearningReportView({
           </ol>
         </Block>
 
-        <Block title="Evidências decisivas">
+        <Block title="Evidências decisivas" className="learning-report-evidence-block">
           <ul className="space-y-2">
             {report.evidence.map((item, index) => (
               <li key={`${index}-${item}`} className="flex gap-2 text-sm">
@@ -108,7 +108,7 @@ export function LearningReportView({
           </ul>
         </Block>
 
-        <Block title="Procedimento técnico recomendado">
+        <Block title="Procedimento técnico recomendado" className="learning-report-checklist-block">
           <ol className="space-y-2">
             {report.checklist.map((item, index) => (
               <li key={item} className="flex gap-3 text-sm">
@@ -119,7 +119,7 @@ export function LearningReportView({
           </ol>
         </Block>
 
-        <Block title="Pontos para revisar">
+        <Block title="Pontos para revisar" className="learning-report-review-block">
           <ul className="space-y-2">
             {report.lessons.map((item) => (
               <li key={item} className="flex gap-2 text-sm">
@@ -156,13 +156,15 @@ function Block({
   title,
   children,
   emphasis = false,
+  className = "",
 }: {
   title: string;
   children: React.ReactNode;
   emphasis?: boolean;
+  className?: string;
 }) {
   return (
-    <section className={`mt-7 rounded-xl border p-5 ${emphasis ? "border-primary/30 bg-primary/5" : "border-border"}`}>
+    <section className={`learning-report-block mt-7 rounded-xl border p-5 ${emphasis ? "border-primary/30 bg-primary/5" : "border-border"} ${className}`}>
       <h2 className="text-sm font-semibold">{title}</h2>
       <div className="mt-3 text-sm leading-relaxed text-muted-foreground">{children}</div>
     </section>
