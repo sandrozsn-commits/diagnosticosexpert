@@ -18,7 +18,12 @@ export type Progress = {
   lastDay: string | null;
 };
 
-const KEY = "ldce.progress.v1";
+const LEGACY_KEY = "ldce.progress.v1";
+const KEY_PREFIX = "ldce.progress.v2";
+
+function keyFor(userId: string) {
+  return `${KEY_PREFIX}.${userId}`;
+}
 
 const EMPTY: Progress = { xp: 0, results: [], streak: 0, lastDay: null };
 
@@ -31,10 +36,21 @@ function xpFromBestResults(results: CaseResult[]) {
   return Array.from(bestByCase.values()).reduce((sum, xp) => sum + xp, 0);
 }
 
-function read(): Progress {
+function read(userId: string): Progress {
   if (typeof window === "undefined") return EMPTY;
   try {
-    const raw = window.localStorage.getItem(KEY);
+    const key = keyFor(userId);
+    let raw = window.localStorage.getItem(key);
+
+    if (!raw) {
+      const legacy = window.localStorage.getItem(LEGACY_KEY);
+      if (legacy) {
+        raw = legacy;
+        window.localStorage.setItem(key, legacy);
+        window.localStorage.removeItem(LEGACY_KEY);
+      }
+    }
+
     if (!raw) return EMPTY;
     const parsed = { ...EMPTY, ...(JSON.parse(raw) as Progress) };
     const results = Array.isArray(parsed.results) ? parsed.results : [];
@@ -116,25 +132,25 @@ export function statsOf(p: Progress, cases: CaseRef[] = []) {
   };
 }
 
-export function useProgress() {
+export function useProgress(userId: string) {
   const [progress, setProgress] = useState<Progress>(EMPTY);
 
   useEffect(() => {
-    setProgress(read());
-  }, []);
+    setProgress(read(userId));
+  }, [userId]);
 
   const save = useCallback((next: Progress) => {
     setProgress(next);
     try {
-      window.localStorage.setItem(KEY, JSON.stringify(next));
+      window.localStorage.setItem(keyFor(userId), JSON.stringify(next));
     } catch {
       /* storage indisponível */
     }
-  }, []);
+  }, [userId]);
 
   const recordResult = useCallback(
     (result: CaseResult) => {
-      const p = read();
+      const p = read(userId);
       const day = today();
       const streak = p.lastDay === day ? p.streak : p.lastDay === yesterday() ? p.streak + 1 : 1;
       const results = [...p.results, result];
@@ -147,7 +163,7 @@ export function useProgress() {
       save(next);
       return next;
     },
-    [save],
+    [save, userId],
   );
 
   const reset = useCallback(() => save(EMPTY), [save]);
