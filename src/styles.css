@@ -174,3 +174,203 @@
   visibility: hidden !important;
   pointer-events: none !important;
 }
+
+
+@media print {
+  @page {
+    size: A4 portrait;
+    margin: 7mm 8mm;
+  }
+
+  html,
+  body {
+    background: #fff !important;
+    color: #111827 !important;
+    font-size: 9pt !important;
+  }
+
+  body > div {
+    min-height: auto !important;
+  }
+
+  header,
+  footer,
+  .print\:hidden {
+    display: none !important;
+  }
+
+  main {
+    max-width: none !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .learning-report {
+    width: 100% !important;
+    max-width: none !important;
+    margin: 0 !important;
+    font-size: 8.7pt !important;
+    line-height: 1.22 !important;
+  }
+
+  .learning-report-sheet {
+    padding: 0 !important;
+    border: 0 !important;
+    box-shadow: none !important;
+  }
+
+  .learning-report-header {
+    display: block !important;
+    margin-bottom: 3mm !important;
+  }
+
+  .learning-report-header h1 {
+    margin-top: 1.5mm !important;
+    font-size: 15pt !important;
+    line-height: 1.12 !important;
+  }
+
+  .learning-report-header p:first-child {
+    font-size: 7.5pt !important;
+    letter-spacing: 0.08em !important;
+  }
+
+  .learning-report-intro {
+    margin-top: 1.5mm !important;
+    font-size: 8pt !important;
+    line-height: 1.2 !important;
+  }
+
+  .learning-report-metrics {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 2mm !important;
+    margin-top: 3mm !important;
+  }
+
+  .learning-report-metrics > div {
+    padding: 2mm 2.5mm !important;
+    border-radius: 2mm !important;
+  }
+
+  .learning-report-metrics span:first-child {
+    font-size: 6.7pt !important;
+  }
+
+  .learning-report-metrics span:last-child {
+    margin-top: 0.5mm !important;
+    font-size: 12pt !important;
+  }
+
+  .learning-report-info {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 2mm 3mm !important;
+    margin-top: 3mm !important;
+  }
+
+  .learning-report-info span:first-child {
+    font-size: 6.7pt !important;
+  }
+
+  .learning-report-info span:last-child {
+    margin-top: 0.4mm !important;
+    font-size: 8.2pt !important;
+    line-height: 1.15 !important;
+  }
+
+  .learning-report-block {
+    margin-top: 3mm !important;
+    padding: 2.5mm 3mm !important;
+    border-radius: 2mm !important;
+    break-inside: auto !important;
+  }
+
+  .learning-report-block > h2 {
+    font-size: 9pt !important;
+    line-height: 1.1 !important;
+  }
+
+  .learning-report-block > div {
+    margin-top: 1.5mm !important;
+    font-size: 8pt !important;
+    line-height: 1.22 !important;
+  }
+
+  .learning-report-block p.mt-2 {
+    margin-top: 1.2mm !important;
+  }
+
+  .learning-report-decision-list {
+    display: grid !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    gap: 2mm !important;
+  }
+
+  .learning-report-decision {
+    padding: 2mm !important;
+    border-radius: 1.5mm !important;
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  .learning-report-decision > div {
+    gap: 1.5mm !important;
+  }
+
+  .learning-report-decision svg {
+    width: 3mm !important;
+    height: 3mm !important;
+  }
+
+  .learning-report-decision span {
+    font-size: 6.4pt !important;
+  }
+
+  .learning-report-decision p {
+    margin-top: 0.8mm !important;
+    font-size: 7.5pt !important;
+    line-height: 1.18 !important;
+  }
+
+  .learning-report-evidence,
+  .learning-report-feedback {
+    margin-top: 1.5mm !important;
+    padding: 1.5mm 2mm !important;
+    border-radius: 1.2mm !important;
+  }
+
+  .learning-report-evidence p,
+  .learning-report-feedback p {
+    font-size: 7.2pt !important;
+    line-height: 1.18 !important;
+  }
+
+  .learning-report-evidence-block ul,
+  .learning-report-checklist-block ol,
+  .learning-report-review-block ul {
+    column-count: 2;
+    column-gap: 6mm;
+  }
+
+  .learning-report-evidence-block li,
+  .learning-report-checklist-block li,
+  .learning-report-review-block li {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 1mm !important;
+    font-size: 7.6pt !important;
+    line-height: 1.18 !important;
+  }
+
+  .learning-report-checklist-block,
+  .learning-report-review-block {
+    break-inside: avoid !important;
+    page-break-inside: avoid !important;
+  }
+
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+}
