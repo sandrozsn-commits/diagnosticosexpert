@@ -1,7 +1,14 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { caseQuery, occurrenceCode, type CaseNode, type DiagCase, type Level } from "@/lib/cases";
+import {
+  caseQuery,
+  occurrenceCode,
+  type CaseNode,
+  type ComponentInvestigationState,
+  type DiagCase,
+  type Level,
+} from "@/lib/cases";
 import { useProgress } from "@/lib/progress";
 import { AppShell } from "@/components/app-shell";
 import {
@@ -44,6 +51,81 @@ const LEVEL_LABEL: Record<Level, string> = {
 };
 
 type Entry = { node: CaseNode; chosen?: string; wrong?: boolean };
+
+type DisplayComponentState = "Não verificado" | ComponentInvestigationState;
+
+const COMPONENT_STATE_RANK: Record<DisplayComponentState, number> = {
+  "Não verificado": 0,
+  "Em análise": 1,
+  Normal: 2,
+  "Falha confirmada": 3,
+};
+
+function normalizeComponentText(value: string) {
+  return value
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, " ")
+    .trim()
+    .replace(/\s+/g, " ");
+}
+
+function referenceTokens(value: string) {
+  return normalizeComponentText(value).match(/\b[a-z]{1,8}\d+[a-z0-9/-]*\b/g) ?? [];
+}
+
+function inferredComponentsFromAction(label: string, components: string[]) {
+  const normalizedLabel = normalizeComponentText(label);
+
+  const exactMatches = components.filter((component) => {
+    const normalizedComponent = normalizeComponentText(component);
+    return normalizedComponent.length >= 4 && normalizedLabel.includes(normalizedComponent);
+  });
+  if (exactMatches.length > 0) return exactMatches;
+
+  const labelRefs = new Set(referenceTokens(label));
+  if (labelRefs.size > 0) {
+    const byReference = components.filter((component) =>
+      referenceTokens(component).some((token) => labelRefs.has(token)),
+    );
+    if (byReference.length > 0) return byReference;
+  }
+
+  const semanticTerms = [
+    "motor",
+    "fusivel",
+    "pressostato",
+    "potenciometro",
+    "inversor",
+    "soft starter",
+    "retificador",
+    "entreferro",
+    "revestimento",
+    "valvula",
+    "linha de descarga",
+    "botoeira",
+    "temporizador",
+    "transformador",
+    "autotransformador",
+  ];
+
+  const candidates = components.filter((component) => {
+    const normalizedComponent = normalizeComponentText(component);
+    return semanticTerms.some(
+      (term) => normalizedLabel.includes(term) && normalizedComponent.includes(term),
+    );
+  });
+
+  return candidates.length === 1 ? candidates : [];
+}
+
+function advanceComponentState(
+  current: DisplayComponentState,
+  next: DisplayComponentState,
+): DisplayComponentState {
+  return COMPONENT_STATE_RANK[next] >= COMPONENT_STATE_RANK[current] ? next : current;
+}
 
 function newShuffleSeed() {
   return Math.floor(Math.random() * 0x7fffffff);
@@ -181,14 +263,22 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
   function componentState(component: string) {
     if (!started || decisions === 0) return "Não verificado";
 
-    let state: "Não verificado" | "Em análise" | "Normal" | "Falha confirmada" = "Não verificado";
+    let state: DisplayComponentState = "Não verificado";
 
-    // The first history entry is the opening state of the occurrence.
-    // Component statuses only change after the student makes a technical decision.
-    for (const entry of history.slice(1)) {
+    for (const entry of history) {
       const explicitState = entry.node.componentStates?.[component];
-      if (explicitState) state = explicitState;
+      if (explicitState) {
+        state = advanceComponentState(state, explicitState);
+      }
+
+      if (entry.chosen) {
+        const inferred = inferredComponentsFromAction(entry.chosen, diagCase.components);
+        if (inferred.includes(component)) {
+          state = advanceComponentState(state, "Em análise");
+        }
+      }
     }
+
     return state;
   }
 
