@@ -164,3 +164,13 @@
     letter-spacing: -0.02em;
   }
 }
+
+
+/* Hide the Lovable attribution badge injected by the hosting preview. */
+#lovable-badge,
+[data-lovable-badge],
+[class*="lovable-badge"] {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
