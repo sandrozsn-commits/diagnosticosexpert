@@ -125,6 +125,17 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
 
   const diagnosticStage = useMemo(() => {
     if (finished) return "Diagnóstico confirmado";
+
+    const currentOptions = current.options ?? [];
+    const isFinalDiagnosisStep =
+      currentOptions.length > 0 &&
+      currentOptions.every((option) => {
+        const nextNode = diagCase.nodes[option.next];
+        return nextNode?.outcome === "solved" || nextNode?.outcome === "wrong";
+      });
+
+    if (isFinalDiagnosisStep) return "Confirmação";
+
     const maxMainStep = history.reduce((max, entry) => {
       const match = entry.node.id.match(/^s(\d+)$/);
       return match ? Math.max(max, Number(match[1])) : max;
@@ -133,7 +144,7 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
     if (maxMainStep <= 2) return "Coleta de evidências";
     if (maxMainStep <= 3) return "Teste de hipótese";
     return "Confirmação";
-  }, [history, finished]);
+  }, [history, finished, current, diagCase.nodes]);
 
   function componentState(component: string) {
     if (!started) return "Não verificado";
