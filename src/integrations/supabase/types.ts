@@ -106,6 +106,7 @@ export type Database = {
           mistakes: number
           occurred_at: string
           practice_day: string
+          report: Json | null
           seconds: number
           solved: boolean
           steps: number
@@ -119,6 +120,7 @@ export type Database = {
           mistakes: number
           occurred_at: string
           practice_day: string
+          report?: Json | null
           seconds: number
           solved?: boolean
           steps: number
@@ -132,6 +134,7 @@ export type Database = {
           mistakes?: number
           occurred_at?: string
           practice_day?: string
+          report?: Json | null
           seconds?: number
           solved?: boolean
           steps?: number
