@@ -25,7 +25,7 @@ export async function loadAccount(userId: string, email: string): Promise<Accoun
   if (status === "blocked") effective = "blocked";
   else if (status === "expired") effective = "expired";
   else if (status === "active") {
-    effective = expiresAt && new Date(expiresAt).getTime() > Date.now() ? "active" : "expired";
+    effective = !expiresAt || new Date(expiresAt).getTime() > Date.now() ? "active" : "expired";
   }
   return { email, fullName: profile?.full_name ?? null, status, expiresAt, effective };
 }
