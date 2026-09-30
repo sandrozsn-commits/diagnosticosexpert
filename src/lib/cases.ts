@@ -6,6 +6,7 @@ export type Level = "iniciante" | "intermediario" | "avancado";
 export type Option = { label: string; next: string; useful?: boolean };
 
 export type CaseNodeKind = "investigation" | "detour" | "unsafe";
+export type ComponentInvestigationState = "Em análise" | "Normal" | "Falha confirmada";
 
 export type CaseNode = {
   id: string;
@@ -18,6 +19,7 @@ export type CaseNode = {
   explanation?: string;
   reason?: string;
   consequence?: string;
+  componentStates?: Record<string, ComponentInvestigationState>;
 };
 
 export type OccurrenceBriefing = {
