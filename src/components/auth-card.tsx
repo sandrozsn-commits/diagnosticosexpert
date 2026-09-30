@@ -1,21 +1,21 @@
 import type { ReactNode } from "react";
-import { Zap } from "lucide-react";
+import { BrandLogo, InstitutionalFooter } from "@/components/brand";
 
 export function AuthCard({ title, children }: { title: string; children: ReactNode }) {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background px-5">
-      <div className="w-full max-w-sm">
-        <div className="mb-6 flex items-center justify-center gap-2 text-sm font-semibold">
-          <span className="flex size-7 items-center justify-center rounded-md bg-primary text-primary-foreground">
-            <Zap className="size-4" />
-          </span>
-          Diagnósticos Expert
+    <div className="flex min-h-screen flex-col bg-background">
+      <main className="flex flex-1 items-center justify-center px-5 py-10">
+        <div className="w-full max-w-sm">
+          <div className="mb-6 flex justify-center">
+            <BrandLogo className="h-20 w-auto" />
+          </div>
+          <div className="rounded-xl border border-border bg-card p-6">
+            <h1 className="text-xl font-semibold">{title}</h1>
+            <div className="mt-5">{children}</div>
+          </div>
         </div>
-        <div className="rounded-xl border border-border bg-card p-6">
-          <h1 className="text-xl font-semibold">{title}</h1>
-          <div className="mt-5">{children}</div>
-        </div>
-      </div>
+      </main>
+      <InstitutionalFooter />
     </div>
   );
 }
