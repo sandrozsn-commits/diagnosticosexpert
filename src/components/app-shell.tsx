@@ -14,12 +14,12 @@ export function AppShell({ children }: { children: ReactNode }) {
           <Link
             to="/"
             className="flex min-w-0 items-center gap-3"
-            aria-label="Central de Diagnóstico — Academia do Eletricista"
+            aria-label="TiraDefeito Expert — Academia do Eletricista"
           >
             <BrandLogo className="h-9 w-9 shrink-0 object-contain" />
             <span className="min-w-0 leading-tight">
               <span className="block truncate text-sm font-semibold text-foreground">
-                Central de Diagnóstico
+                TiraDefeito Expert
               </span>
               <span className="block truncate text-[11px] font-medium text-muted-foreground">
                 By Academia do Eletricista
