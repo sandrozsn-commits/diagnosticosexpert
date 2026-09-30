@@ -83,6 +83,7 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
   const [decisions, setDecisions] = useState(0);
   const [seconds, setSeconds] = useState(0);
   const [finished, setFinished] = useState(false);
+  const [awardedXp, setAwardedXp] = useState(0);
   const startedRef = useRef(Date.now());
   const bottomRef = useRef<HTMLDivElement>(null);
 
@@ -123,7 +124,7 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
     if (isMistake) setMistakes((m) => m + 1);
     if (next.outcome === "solved") {
       setFinished(true);
-      recordResult({
+      const result = recordResult({
         caseId: diagCase.id,
         solved: true,
         steps: decisions + 1,
@@ -132,6 +133,7 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
         xp: earnedXp,
         at: new Date().toISOString(),
       });
+      setAwardedXp(result.awardedXp);
     }
   }
 
@@ -149,6 +151,7 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
     setMistakes(0);
     setDecisions(0);
     setFinished(false);
+    setAwardedXp(0);
     startedRef.current = Date.now();
     setSeconds(0);
   }
@@ -250,7 +253,7 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
                   <div className="mt-5 grid gap-3 sm:grid-cols-3">
                     <Metric label="Tempo total" value={formatDuration(seconds)} />
                     <Metric label="Erros" value={String(mistakes)} />
-                    <Metric label="XP ganho" value={`+${earnedXp}`} highlight />
+                    <Metric label="XP ganho" value={`+${awardedXp}`} highlight />
                   </div>
 
                   <div className="mt-4 rounded-lg border border-primary/40 bg-primary/10 p-4">
@@ -267,7 +270,7 @@ function CasePage({ diagCase }: { diagCase: DiagCase }) {
                       system: briefing.system,
                       seconds,
                       mistakes,
-                      xp: earnedXp,
+                      xp: awardedXp,
                       accuracy,
                       percentile,
                       statusLine,
