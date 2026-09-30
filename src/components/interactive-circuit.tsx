@@ -5,7 +5,7 @@
  */
 
 import { useEffect, useRef, useState } from "react";
-import { CircuitDiagram } from "./circuit-diagram";
+import { CircuitDiagram, type DiagramSpec } from "./circuit-diagram";
 
 type Part = {
   id: string;
@@ -74,7 +74,13 @@ const PARTS: Record<string, Part> = {
 /** fases da animação: 0 parado · 1 comando pronto · 2 S1 pressionado · 3 selado/motor girando */
 type Phase = 0 | 1 | 2 | 3;
 
-export function InteractiveCircuit({ className, spec }: { className?: string; spec?: any }) {
+export function InteractiveCircuit({ className, spec }: { className?: string; spec?: DiagramSpec }) {
+  const [selected, setSelected] = useState<string | null>(null);
+  const [phase, setPhase] = useState<Phase>(0);
+  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
+
+  useEffect(() => () => timers.current.forEach(clearTimeout), []);
+
   if (spec) {
     return (
       <div className={className}>
@@ -85,12 +91,6 @@ export function InteractiveCircuit({ className, spec }: { className?: string; sp
       </div>
     );
   }
-
-  const [selected, setSelected] = useState<string | null>(null);
-  const [phase, setPhase] = useState<Phase>(0);
-  const timers = useRef<ReturnType<typeof setTimeout>[]>([]);
-
-  useEffect(() => () => timers.current.forEach(clearTimeout), []);
 
   const clear = () => {
     timers.current.forEach(clearTimeout);
