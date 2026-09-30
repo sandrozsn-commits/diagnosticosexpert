@@ -167,8 +167,9 @@ export function useProgress(userId: string) {
         streak,
         lastDay: day,
       };
+      const awardedXp = Math.max(next.xp - p.xp, 0);
       save(next);
-      return next;
+      return { progress: next, awardedXp };
     },
     [save, userId],
   );
