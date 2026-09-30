@@ -9,17 +9,22 @@ import { STATUS_LABEL, type AccountInfo } from "@/lib/access";
 export function AppShell({ children }: { children: ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col bg-background">
-      <header className="sticky top-0 z-20 border-b border-border bg-background/85 backdrop-blur">
-        <div className="mx-auto flex h-14 max-w-6xl items-center gap-6 px-5">
+      <header className="sticky top-0 z-20 border-b border-border bg-background/90 backdrop-blur">
+        <div className="mx-auto flex h-16 max-w-6xl items-center gap-6 px-5">
           <Link
             to="/"
-            className="flex items-center gap-2 text-sm font-semibold"
-            aria-label="Central de Diagnóstico"
+            className="flex min-w-0 items-center gap-3"
+            aria-label="Central de Diagnóstico — Academia do Eletricista"
           >
-            <span className="flex size-7 items-center justify-center overflow-hidden rounded-md">
-              <BrandLogo className="h-7 w-7 object-contain" />
+            <BrandLogo className="h-9 w-9 shrink-0 object-contain" />
+            <span className="min-w-0 leading-tight">
+              <span className="block truncate text-sm font-semibold text-foreground">
+                Central de Diagnóstico
+              </span>
+              <span className="block truncate text-[11px] font-medium text-muted-foreground">
+                By Academia do Eletricista
+              </span>
             </span>
-            Central de Diagnóstico
           </Link>
           <nav className="ml-auto flex items-center gap-1 text-sm">
             <NavLink to="/">Ocorrências</NavLink>
