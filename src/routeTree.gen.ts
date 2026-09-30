@@ -16,6 +16,7 @@ import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedProgressoRouteImport } from './routes/_authenticated/progresso'
+import { Route as AuthenticatedRelatorioResultIdRouteImport } from './routes/_authenticated/relatorio.$resultId'
 import { Route as AuthenticatedCasoCaseIdRouteImport } from './routes/_authenticated/caso.$caseId'
 
 const SitemapDotxmlRoute = SitemapDotxmlRouteImport.update({
@@ -52,6 +53,11 @@ const AuthenticatedProgressoRoute = AuthenticatedProgressoRouteImport.update({
   path: '/progresso',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedRelatorioResultIdRoute = AuthenticatedRelatorioResultIdRouteImport.update({
+  id: '/relatorio/$resultId',
+  path: '/relatorio/$resultId',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedCasoCaseIdRoute = AuthenticatedCasoCaseIdRouteImport.update({
   id: '/caso/$caseId',
   path: '/caso/$caseId',
@@ -65,6 +71,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/progresso': typeof AuthenticatedProgressoRoute
+  '/relatorio/$resultId': typeof AuthenticatedRelatorioResultIdRoute
   '/caso/$caseId': typeof AuthenticatedCasoCaseIdRoute
 }
 export interface FileRoutesByTo {
@@ -73,6 +80,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/progresso': typeof AuthenticatedProgressoRoute
+  '/relatorio/$resultId': typeof AuthenticatedRelatorioResultIdRoute
   '/': typeof AuthenticatedIndexRoute
   '/caso/$caseId': typeof AuthenticatedCasoCaseIdRoute
 }
@@ -84,6 +92,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/progresso': typeof AuthenticatedProgressoRoute
+  '/_authenticated/relatorio/$resultId': typeof AuthenticatedRelatorioResultIdRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/caso/$caseId': typeof AuthenticatedCasoCaseIdRoute
 }
@@ -96,6 +105,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sitemap.xml'
     | '/progresso'
+    | '/relatorio/$resultId'
     | '/caso/$caseId'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -104,6 +114,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sitemap.xml'
     | '/progresso'
+    | '/relatorio/$resultId'
     | '/'
     | '/caso/$caseId'
   id:
@@ -114,6 +125,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sitemap.xml'
     | '/_authenticated/progresso'
+    | '/_authenticated/relatorio/$resultId'
     | '/_authenticated/'
     | '/_authenticated/caso/$caseId'
   fileRoutesById: FileRoutesById
@@ -177,6 +189,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProgressoRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/relatorio/$resultId': {
+      id: '/_authenticated/relatorio/$resultId'
+      path: '/relatorio/$resultId'
+      fullPath: '/relatorio/$resultId'
+      preLoaderRoute: typeof AuthenticatedRelatorioResultIdRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/caso/$caseId': {
       id: '/_authenticated/caso/$caseId'
       path: '/caso/$caseId'
@@ -189,12 +208,14 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedProgressoRoute: typeof AuthenticatedProgressoRoute
+  AuthenticatedRelatorioResultIdRoute: typeof AuthenticatedRelatorioResultIdRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedCasoCaseIdRoute: typeof AuthenticatedCasoCaseIdRoute
 }
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedProgressoRoute: AuthenticatedProgressoRoute,
+  AuthenticatedRelatorioResultIdRoute: AuthenticatedRelatorioResultIdRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedCasoCaseIdRoute: AuthenticatedCasoCaseIdRoute,
 }
