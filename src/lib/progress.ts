@@ -60,14 +60,21 @@ function read(userId: string): Progress {
   }
 }
 
+function localDateKey(d = new Date()) {
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+}
+
 function today() {
-  return new Date().toISOString().slice(0, 10);
+  return localDateKey();
 }
 
 function yesterday() {
   const d = new Date();
   d.setDate(d.getDate() - 1);
-  return d.toISOString().slice(0, 10);
+  return localDateKey(d);
 }
 
 export const LEVELS = [
