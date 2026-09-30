@@ -1,10 +1,42 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import type { Tables } from "@/integrations/supabase/types";
+import type { Json, Tables } from "@/integrations/supabase/types";
 
 type CaseRef = { id: string; category: string };
 
+export type LearningReportDecision = {
+  step: number;
+  action: string;
+  correct: boolean;
+  classification: "correta" | "desvio" | "insegura" | "incorreta";
+  evidence?: string;
+  feedback?: string;
+};
+
+export type LearningReport = {
+  occurrenceCode: string;
+  title: string;
+  category: string;
+  difficulty: string;
+  equipment: string;
+  system: string;
+  symptom: string;
+  diagnosis: string;
+  technical: string;
+  checklist: string[];
+  lessons: string[];
+  evidence: string[];
+  decisions: LearningReportDecision[];
+  metrics: {
+    seconds: number;
+    mistakes: number;
+    actions: number;
+    accuracy: number;
+  };
+};
+
 export type CaseResult = {
+  id: string;
   caseId: string;
   solved: boolean;
   steps: number;
@@ -12,6 +44,7 @@ export type CaseResult = {
   seconds: number;
   xp: number;
   at: string;
+  report?: LearningReport;
 };
 
 export type Progress = {
@@ -23,6 +56,7 @@ export type Progress = {
 
 type RemoteResultRow = Pick<
   Tables<"user_case_results">,
+  | "id"
   | "case_id"
   | "solved"
   | "steps"
@@ -31,6 +65,7 @@ type RemoteResultRow = Pick<
   | "xp"
   | "occurred_at"
   | "practice_day"
+  | "report"
 >;
 
 const LEGACY_KEY = "ldce.progress.v1";
@@ -51,6 +86,14 @@ function pendingKeyFor(userId: string) {
 }
 
 const EMPTY: Progress = { xp: 0, results: [], streak: 0, lastDay: null };
+
+export function newResultId() {
+  return globalThis.crypto.randomUUID();
+}
+
+function ensureResultId(result: CaseResult): CaseResult {
+  return result.id ? result : { ...result, id: newResultId() };
+}
 
 function xpFromBestResults(results: CaseResult[]) {
   const bestByCase = new Map<string, number>();
@@ -106,7 +149,9 @@ function resultDay(result: CaseResult) {
 }
 
 function progressFromResults(results: CaseResult[], days?: string[]): Progress {
-  const ordered = [...results].sort((a, b) => a.at.localeCompare(b.at));
+  const ordered = results
+    .map(ensureResultId)
+    .sort((a, b) => a.at.localeCompare(b.at));
   const sequence = streakFromDays(days ?? ordered.map(resultDay));
   return {
     xp: xpFromBestResults(ordered),
@@ -155,7 +200,7 @@ function readPending(userId: string): CaseResult[] {
     const raw = window.localStorage.getItem(pendingKeyFor(userId));
     if (!raw) return [];
     const parsed = JSON.parse(raw);
-    return Array.isArray(parsed) ? (parsed as CaseResult[]) : [];
+    return Array.isArray(parsed) ? (parsed as CaseResult[]).map(ensureResultId) : [];
   } catch {
     return [];
   }
@@ -176,6 +221,7 @@ function writePending(userId: string, results: CaseResult[]) {
 
 function toRemoteInsert(userId: string, result: CaseResult) {
   return {
+    id: result.id,
     user_id: userId,
     case_id: result.caseId,
     solved: result.solved,
@@ -185,11 +231,23 @@ function toRemoteInsert(userId: string, result: CaseResult) {
     xp: result.xp,
     practice_day: resultDay(result),
     occurred_at: result.at,
+    report: (result.report ?? null) as Json,
   };
+}
+
+function isLearningReport(value: Json | null): value is LearningReport & Json {
+  return Boolean(
+    value &&
+      typeof value === "object" &&
+      !Array.isArray(value) &&
+      "occurrenceCode" in value &&
+      "decisions" in value,
+  );
 }
 
 function fromRemote(row: RemoteResultRow): CaseResult {
   return {
+    id: row.id,
     caseId: row.case_id,
     solved: row.solved,
     steps: row.steps,
@@ -197,6 +255,7 @@ function fromRemote(row: RemoteResultRow): CaseResult {
     seconds: row.seconds,
     xp: row.xp,
     at: row.occurred_at,
+    report: isLearningReport(row.report) ? (row.report as unknown as LearningReport) : undefined,
   };
 }
 
@@ -256,7 +315,7 @@ async function loadRemoteProgress(userId: string) {
 
   const { data, error } = await supabase
     .from("user_case_results")
-    .select("case_id,solved,steps,mistakes,seconds,xp,occurred_at,practice_day")
+    .select("id,case_id,solved,steps,mistakes,seconds,xp,occurred_at,practice_day,report")
     .eq("user_id", userId)
     .order("occurred_at", { ascending: true });
 
@@ -378,7 +437,8 @@ export function useProgress(userId: string) {
   }, [userId]);
 
   const recordResult = useCallback(
-    (result: CaseResult) => {
+    (input: Omit<CaseResult, "id"> & { id?: string }) => {
+      const result: CaseResult = { ...input, id: input.id ?? newResultId() };
       const p = progressRef.current;
       const day = resultDay(result);
       const streak = p.lastDay === day ? p.streak : p.lastDay === yesterday() ? p.streak + 1 : 1;
@@ -397,7 +457,7 @@ export function useProgress(userId: string) {
       writePending(userId, pending);
       void flushPending(userId);
 
-      return { progress: next, awardedXp };
+      return { progress: next, awardedXp, resultId: result.id };
     },
     [commit, userId],
   );
