@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "14.5"
+    PostgrestVersion: "14.18"
   }
   public: {
     Tables: {
@@ -97,6 +97,56 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      user_case_results: {
+        Row: {
+          case_id: string
+          created_at: string
+          id: string
+          mistakes: number
+          occurred_at: string
+          practice_day: string
+          seconds: number
+          solved: boolean
+          steps: number
+          user_id: string
+          xp: number
+        }
+        Insert: {
+          case_id: string
+          created_at?: string
+          id?: string
+          mistakes: number
+          occurred_at: string
+          practice_day: string
+          seconds: number
+          solved?: boolean
+          steps: number
+          user_id: string
+          xp: number
+        }
+        Update: {
+          case_id?: string
+          created_at?: string
+          id?: string
+          mistakes?: number
+          occurred_at?: string
+          practice_day?: string
+          seconds?: number
+          solved?: boolean
+          steps?: number
+          user_id?: string
+          xp?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_case_results_case_id_fkey"
+            columns: ["case_id"]
+            isOneToOne: false
+            referencedRelation: "diagnostic_cases"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
