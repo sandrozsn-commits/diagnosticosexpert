@@ -6,9 +6,9 @@ import { AuthCard, Field, btnCls, inputCls } from "@/components/auth-card";
 export const Route = createFileRoute("/reset-password")({
   head: () => ({
     meta: [
-      { title: "Redefinir senha — Diagnósticos Expert" },
+      { title: "Redefinir senha — TiraDefeito Expert" },
       { name: "description", content: "Defina uma nova senha para sua conta." },
-      { property: "og:title", content: "Redefinir senha — Diagnósticos Expert" },
+      { property: "og:title", content: "Redefinir senha — TiraDefeito Expert" },
       { property: "og:description", content: "Defina uma nova senha para sua conta." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
@@ -28,7 +28,7 @@ function Reset() {
     navigate({ to: "/" });
   };
   return (
-    <AuthCard title="Nova senha">
+    <AuthCard title="Nova senha" description="Defina uma nova senha para voltar a acessar sua conta.">
       <form onSubmit={submit} className="space-y-4">
         <Field label="Nova senha">
           <input type="password" minLength={6} required className={inputCls} value={password} onChange={(e) => setPassword(e.target.value)} />
