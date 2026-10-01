@@ -270,17 +270,24 @@ function AdminUsersPage() {
         )}
 
         {!isLoading && !isError && (
-          <div className="mt-5 overflow-x-auto rounded-xl border border-border">
-            <table className="w-full min-w-[1220px] text-left text-sm">
+          <div className="mt-5 overflow-hidden rounded-xl border border-border">
+            <table className="w-full table-fixed text-left text-sm">
+              <colgroup>
+                <col className="w-[25%]" />
+                <col className="w-[10%]" />
+                <col className="w-[16%]" />
+                <col className="w-[13%]" />
+                <col className="w-[14%]" />
+                <col className="w-[22%]" />
+              </colgroup>
               <thead className="bg-secondary/60 text-xs text-muted-foreground">
                 <tr>
-                  <th className="px-4 py-3 font-medium">Usuário</th>
-                  <th className="px-4 py-3 font-medium">Status</th>
-                  <th className="px-4 py-3 font-medium">Validade</th>
-                  <th className="px-4 py-3 font-medium">Origem</th>
-                  <th className="px-4 py-3 font-medium">Último acesso</th>
-                  <th className="px-4 py-3 font-medium">Aprendizado</th>
-                  <th className="px-4 py-3 font-medium">Ações</th>
+                  <th className="px-3 py-3 font-medium">Usuário</th>
+                  <th className="px-3 py-3 font-medium">Status</th>
+                  <th className="px-3 py-3 font-medium">Validade</th>
+                  <th className="px-3 py-3 font-medium">Último acesso</th>
+                  <th className="px-3 py-3 font-medium">Aprendizado</th>
+                  <th className="px-3 py-3 font-medium">Ações</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-border">
@@ -291,7 +298,7 @@ function AdminUsersPage() {
 
                   return (
                     <tr key={item.userId} className="align-top">
-                      <td className="px-4 py-4">
+                      <td className="px-3 py-4">
                         <div className="font-medium">
                           {item.fullName || "Nome não informado"}
                           {isSelf && (
@@ -300,7 +307,7 @@ function AdminUsersPage() {
                             </span>
                           )}
                         </div>
-                        <div className="mt-1 text-xs text-muted-foreground">
+                        <div className="mt-1 break-words text-xs text-muted-foreground">
                           {item.email || "E-mail não disponível"}
                         </div>
                         <div className="mt-1 text-[11px] text-muted-foreground">
@@ -308,24 +315,24 @@ function AdminUsersPage() {
                         </div>
                       </td>
 
-                      <td className="px-4 py-4">
+                      <td className="px-3 py-4">
                         <StatusBadge status={status} />
                       </td>
 
-                      <td className="px-4 py-4 text-xs">
+                      <td className="px-3 py-4 text-xs">
                         <div>
                           Início: {item.accessStartedAt ? formatDate(item.accessStartedAt) : "—"}
                         </div>
                         <div className="mt-1">
                           Vencimento: {item.accessExpiresAt ? formatDate(item.accessExpiresAt) : "—"}
                         </div>
+                        <div className="mt-2 flex items-center gap-1.5 text-muted-foreground">
+                          <span>Origem:</span>
+                          <SourceBadge source={item.accessSource} />
+                        </div>
                       </td>
 
-                      <td className="px-4 py-4 text-xs">
-                        <SourceBadge source={item.accessSource} />
-                      </td>
-
-                      <td className="px-4 py-4 text-xs">
+                      <td className="px-3 py-4 text-xs">
                         <div>{item.lastSeenAt ? formatDateTime(item.lastSeenAt) : "—"}</div>
                         {item.lastAttemptAt && (
                           <div className="mt-1 text-muted-foreground">
@@ -334,15 +341,15 @@ function AdminUsersPage() {
                         )}
                       </td>
 
-                      <td className="px-4 py-4 text-xs">
+                      <td className="px-3 py-4 text-xs">
                         <div>{item.solvedCount} ocorrência{item.solvedCount === 1 ? "" : "s"} concluída{item.solvedCount === 1 ? "" : "s"}</div>
                         <div className="mt-1 text-muted-foreground">
                           {item.attempts} tentativa{item.attempts === 1 ? "" : "s"} • {item.xp} XP
                         </div>
                       </td>
 
-                      <td className="px-4 py-4">
-                        <div className="flex max-w-sm flex-wrap gap-2">
+                      <td className="px-3 py-4">
+                        <div className="flex flex-wrap gap-1.5">
                           {(status === "pending" || status === "expired" || status === "blocked") && (
                             <ActionButton
                               disabled={busy}
@@ -472,7 +479,7 @@ function BonusMenu({
   return (
     <details className="relative">
       <summary
-        className={`inline-flex cursor-pointer list-none items-center gap-1.5 rounded-md border border-primary/30 px-2.5 py-1.5 text-xs text-primary hover:bg-primary/5 ${disabled ? "pointer-events-none opacity-50" : ""}`}
+        className={`inline-flex cursor-pointer list-none whitespace-nowrap items-center gap-1.5 rounded-md border border-primary/30 px-2 py-1.5 text-xs text-primary hover:bg-primary/5 ${disabled ? "pointer-events-none opacity-50" : ""}`}
       >
         <Gift className="size-3.5" />
         Conceder bônus
@@ -526,8 +533,8 @@ function ActionButton({
       onClick={onClick}
       className={
         destructive
-          ? "inline-flex items-center gap-1.5 rounded-md border border-destructive/30 px-2.5 py-1.5 text-xs text-destructive hover:bg-destructive/5 disabled:opacity-50"
-          : "inline-flex items-center gap-1.5 rounded-md border border-border px-2.5 py-1.5 text-xs hover:bg-secondary disabled:opacity-50"
+          ? "inline-flex whitespace-nowrap items-center gap-1.5 rounded-md border border-destructive/30 px-2 py-1.5 text-xs text-destructive hover:bg-destructive/5 disabled:opacity-50"
+          : "inline-flex whitespace-nowrap items-center gap-1.5 rounded-md border border-border px-2 py-1.5 text-xs hover:bg-secondary disabled:opacity-50"
       }
     >
       {icon}
