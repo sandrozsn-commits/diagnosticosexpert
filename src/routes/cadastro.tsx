@@ -6,10 +6,10 @@ import { AuthCard, Field, btnCls, inputCls } from "@/components/auth-card";
 export const Route = createFileRoute("/cadastro")({
   head: () => ({
     meta: [
-      { title: "Criar conta — Diagnósticos Expert" },
-      { name: "description", content: "Crie sua conta no Diagnósticos Expert." },
-      { property: "og:title", content: "Criar conta — Diagnósticos Expert" },
-      { property: "og:description", content: "Crie sua conta no Diagnósticos Expert." },
+      { title: "Criar conta — TiraDefeito Expert" },
+      { name: "description", content: "Crie sua conta no TiraDefeito Expert." },
+      { property: "og:title", content: "Criar conta — TiraDefeito Expert" },
+      { property: "og:description", content: "Crie sua conta no TiraDefeito Expert." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -44,7 +44,7 @@ function Cadastro() {
 
   if (done)
     return (
-      <AuthCard title="Confirme seu e-mail">
+      <AuthCard title="Confirme seu e-mail" description="Falta apenas confirmar seu endereço de e-mail.">
         <p className="text-sm text-muted-foreground">
           Enviamos um link de confirmação para {email}. Após confirmar, entre com sua conta.
         </p>
@@ -53,7 +53,7 @@ function Cadastro() {
     );
 
   return (
-    <AuthCard title="Criar conta">
+    <AuthCard title="Criar conta" description="Cadastre seus dados para acessar a plataforma.">
       <form onSubmit={submit} className="space-y-4">
         <Field label="Nome"><input required className={inputCls} value={name} onChange={(e) => setName(e.target.value)} /></Field>
         <Field label="E-mail"><input type="email" required className={inputCls} value={email} onChange={(e) => setEmail(e.target.value)} /></Field>
