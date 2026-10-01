@@ -462,7 +462,17 @@ export function useProgress(userId: string) {
     [commit, userId],
   );
 
-  const reset = useCallback(() => {
+  const reset = useCallback(async () => {
+    const { error } = await supabase
+      .from("user_case_results")
+      .delete()
+      .eq("user_id", userId);
+
+    if (error) {
+      console.error("[Progress] Não foi possível zerar o progresso remoto.", error);
+      throw error;
+    }
+
     commit(EMPTY);
     writePending(userId, []);
 
@@ -473,14 +483,6 @@ export function useProgress(userId: string) {
         /* armazenamento local indisponível */
       }
     }
-
-    void supabase
-      .from("user_case_results")
-      .delete()
-      .eq("user_id", userId)
-      .then(({ error }) => {
-        if (error) console.error("[Progress] Não foi possível zerar o progresso remoto.", error);
-      });
   }, [commit, userId]);
 
   return { progress, recordResult, reset };
