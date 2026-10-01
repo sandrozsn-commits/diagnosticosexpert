@@ -1,7 +1,7 @@
 import { createFileRoute, redirect } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { Ban, CheckCircle2, Clock3, Search, ShieldCheck, UserRoundCog } from "lucide-react";
+import { Ban, CheckCircle2, Clock3, Gift, Search, ShieldCheck, UserRoundCog } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { supabase } from "@/integrations/supabase/client";
 import { STATUS_LABEL, type AccessStatus } from "@/lib/access";
@@ -15,6 +15,7 @@ type AdminUser = {
   status: AccessStatus;
   accessStartedAt: string | null;
   accessExpiresAt: string | null;
+  accessSource: string | null;
   solvedCount: number;
   attempts: number;
   xp: number;
@@ -48,7 +49,7 @@ const adminUsersQuery = {
         .order("created_at", { ascending: true }),
       supabase
         .from("user_access")
-        .select("user_id,status,access_started_at,access_expires_at"),
+        .select("user_id,status,access_started_at,access_expires_at,access_source"),
       supabase
         .from("user_case_results")
         .select("user_id,case_id,solved,xp,occurred_at"),
@@ -111,6 +112,7 @@ const adminUsersQuery = {
         status: (access?.status as AccessStatus | undefined) ?? "pending",
         accessStartedAt: access?.access_started_at ?? null,
         accessExpiresAt: access?.access_expires_at ?? null,
+        accessSource: access?.access_source ?? null,
         solvedCount: result?.solvedIds.size ?? 0,
         attempts: result?.attempts ?? 0,
         xp,
@@ -131,7 +133,7 @@ function AdminUsersPage() {
     const term = search.trim().toLocaleLowerCase("pt-BR");
     if (!term) return users;
     return users.filter((item) =>
-      [item.fullName, item.email, item.status]
+      [item.fullName, item.email, item.status, item.accessSource]
         .filter(Boolean)
         .some((value) => String(value).toLocaleLowerCase("pt-BR").includes(term)),
     );
@@ -149,7 +151,7 @@ function AdminUsersPage() {
     [users],
   );
 
-  async function updateAccess(target: AdminUser, action: "activate180" | "add30" | "add90" | "add180" | "block" | "expire") {
+  async function updateAccess(target: AdminUser, action: "activate180" | "add30" | "add90" | "add180" | "bonus30" | "bonus90" | "bonus180" | "block" | "expire") {
     if (target.userId === user.id && (action === "block" || action === "expire")) return;
 
     const now = new Date();
@@ -157,6 +159,7 @@ function AdminUsersPage() {
       status?: AccessStatus;
       access_started_at?: string;
       access_expires_at?: string;
+      access_source?: string;
       updated_at: string;
     } = { updated_at: now.toISOString() };
 
@@ -168,10 +171,11 @@ function AdminUsersPage() {
       patch.status = "expired";
       patch.access_expires_at = now.toISOString();
     } else {
+      const isBonus = action.startsWith("bonus");
       const days =
-        action === "activate180" || action === "add180"
+        action === "activate180" || action === "add180" || action === "bonus180"
           ? 180
-          : action === "add90"
+          : action === "add90" || action === "bonus90"
             ? 90
             : 30;
       const currentExpiry = target.accessExpiresAt ? new Date(target.accessExpiresAt) : null;
@@ -182,9 +186,17 @@ function AdminUsersPage() {
       const expires = new Date(base);
       expires.setDate(expires.getDate() + days);
 
+      if (isBonus) {
+        const confirmed = window.confirm(
+          `Conceder bônus de ${days} dias para ${target.fullName || target.email || "este usuário"}?`,
+        );
+        if (!confirmed) return;
+      }
+
       patch.status = "active";
       patch.access_started_at = target.accessStartedAt ?? now.toISOString();
       patch.access_expires_at = expires.toISOString();
+      patch.access_source = isBonus ? "bonus" : "manual";
     }
 
     setBusyUserId(target.userId);
@@ -259,12 +271,13 @@ function AdminUsersPage() {
 
         {!isLoading && !isError && (
           <div className="mt-5 overflow-x-auto rounded-xl border border-border">
-            <table className="w-full min-w-[1100px] text-left text-sm">
+            <table className="w-full min-w-[1220px] text-left text-sm">
               <thead className="bg-secondary/60 text-xs text-muted-foreground">
                 <tr>
                   <th className="px-4 py-3 font-medium">Usuário</th>
                   <th className="px-4 py-3 font-medium">Status</th>
                   <th className="px-4 py-3 font-medium">Validade</th>
+                  <th className="px-4 py-3 font-medium">Origem</th>
                   <th className="px-4 py-3 font-medium">Último acesso</th>
                   <th className="px-4 py-3 font-medium">Aprendizado</th>
                   <th className="px-4 py-3 font-medium">Ações</th>
@@ -309,6 +322,10 @@ function AdminUsersPage() {
                       </td>
 
                       <td className="px-4 py-4 text-xs">
+                        <SourceBadge source={item.accessSource} />
+                      </td>
+
+                      <td className="px-4 py-4 text-xs">
                         <div>{item.lastSeenAt ? formatDateTime(item.lastSeenAt) : "—"}</div>
                         {item.lastAttemptAt && (
                           <div className="mt-1 text-muted-foreground">
@@ -349,6 +366,13 @@ function AdminUsersPage() {
                               </ActionButton>
                             </>
                           )}
+
+                          <BonusMenu
+                            disabled={busy}
+                            onSelect={(days) =>
+                              updateAccess(item, days === 30 ? "bonus30" : days === 90 ? "bonus90" : "bonus180")
+                            }
+                          />
 
                           {!isSelf && status !== "blocked" && (
                             <ActionButton
@@ -416,6 +440,60 @@ function StatusBadge({ status }: { status: AccessStatus }) {
       {status === "active" && <ShieldCheck className="size-3.5" />}
       {STATUS_LABEL[status]}
     </span>
+  );
+}
+
+function SourceBadge({ source }: { source: string | null }) {
+  const label =
+    source === "bonus"
+      ? "Bônus"
+      : source === "greenn"
+        ? "Greenn"
+        : source === "pagarme"
+          ? "Pagar.me"
+          : source === "manual"
+            ? "Manual"
+            : "—";
+
+  return (
+    <span className="inline-flex rounded-full bg-secondary px-2.5 py-1 text-xs font-medium text-foreground">
+      {label}
+    </span>
+  );
+}
+
+function BonusMenu({
+  disabled,
+  onSelect,
+}: {
+  disabled?: boolean;
+  onSelect: (days: 30 | 90 | 180) => void;
+}) {
+  return (
+    <details className="relative">
+      <summary
+        className={`inline-flex cursor-pointer list-none items-center gap-1.5 rounded-md border border-primary/30 px-2.5 py-1.5 text-xs text-primary hover:bg-primary/5 ${disabled ? "pointer-events-none opacity-50" : ""}`}
+      >
+        <Gift className="size-3.5" />
+        Conceder bônus
+      </summary>
+      <div className="absolute right-0 z-20 mt-1 flex min-w-40 flex-col rounded-md border border-border bg-card p-1 shadow-md">
+        {([30, 90, 180] as const).map((days) => (
+          <button
+            key={days}
+            type="button"
+            disabled={disabled}
+            onClick={(event) => {
+              onSelect(days);
+              event.currentTarget.closest("details")?.removeAttribute("open");
+            }}
+            className="rounded px-3 py-2 text-left text-xs hover:bg-secondary disabled:opacity-50"
+          >
+            +{days} dias
+          </button>
+        ))}
+      </div>
+    </details>
   );
 }
 
