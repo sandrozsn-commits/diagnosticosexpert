@@ -8,26 +8,38 @@ export type AccountInfo = {
   status: AccessStatus;
   expiresAt: string | null;
   effective: "active" | "pending" | "expired" | "blocked";
+  isAdmin: boolean;
 };
 
 export async function loadAccount(userId: string, email: string): Promise<AccountInfo> {
-  const [{ data: profile }, { data: access }] = await Promise.all([
+  const [{ data: profile }, { data: access }, { data: admin }] = await Promise.all([
     supabase.from("profiles").select("full_name").eq("user_id", userId).maybeSingle(),
     supabase
       .from("user_access")
       .select("status, access_expires_at")
       .eq("user_id", userId)
       .maybeSingle(),
+    supabase.from("app_admins").select("user_id").eq("user_id", userId).maybeSingle(),
   ]);
+
   const status = ((access?.status as AccessStatus) ?? "pending") as AccessStatus;
   const expiresAt = access?.access_expires_at ?? null;
   let effective: AccountInfo["effective"] = "pending";
+
   if (status === "blocked") effective = "blocked";
   else if (status === "expired") effective = "expired";
   else if (status === "active") {
     effective = !expiresAt || new Date(expiresAt).getTime() > Date.now() ? "active" : "expired";
   }
-  return { email, fullName: profile?.full_name ?? null, status, expiresAt, effective };
+
+  return {
+    email,
+    fullName: profile?.full_name ?? null,
+    status,
+    expiresAt,
+    effective,
+    isAdmin: Boolean(admin),
+  };
 }
 
 export const STATUS_LABEL: Record<AccountInfo["effective"], string> = {
