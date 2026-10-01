@@ -9,6 +9,12 @@ export const Route = createFileRoute("/_authenticated")({
   beforeLoad: async () => {
     const { data, error } = await supabase.auth.getUser();
     if (error || !data.user) throw redirect({ to: "/login" });
+
+    await supabase
+      .from("profiles")
+      .update({ last_seen_at: new Date().toISOString() })
+      .eq("user_id", data.user.id);
+
     const account = await loadAccount(data.user.id, data.user.email ?? "");
     return { user: data.user, account };
   },
@@ -18,11 +24,11 @@ export const Route = createFileRoute("/_authenticated")({
 const MESSAGES = {
   pending: {
     title: "Acesso aguardando liberação",
-    text: "Seu cadastro foi realizado com sucesso. Seu acesso ao Diagnósticos Expert ainda está aguardando liberação.",
+    text: "Seu cadastro foi realizado com sucesso. Seu acesso ao TiraDefeito Expert ainda está aguardando liberação.",
   },
   expired: {
     title: "Seu acesso expirou",
-    text: "O período de acesso ao Diagnósticos Expert terminou.",
+    text: "O período de acesso ao TiraDefeito Expert terminou.",
   },
   blocked: { title: "Acesso indisponível", text: "" },
 } as const;
