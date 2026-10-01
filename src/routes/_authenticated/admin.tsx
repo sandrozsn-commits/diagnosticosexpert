@@ -128,6 +128,7 @@ function AdminUsersPage() {
   const { data: users = [], isLoading, isError, refetch } = useQuery(adminUsersQuery);
   const [search, setSearch] = useState("");
   const [busyUserId, setBusyUserId] = useState<string | null>(null);
+  const [bonusUserId, setBonusUserId] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
     const term = search.trim().toLocaleLowerCase("pt-BR");
@@ -179,10 +180,13 @@ function AdminUsersPage() {
             ? 90
             : 30;
       const currentExpiry = target.accessExpiresAt ? new Date(target.accessExpiresAt) : null;
-      const base =
-        action === "activate180" || !currentExpiry || currentExpiry.getTime() < now.getTime()
-          ? now
-          : currentExpiry;
+      const targetStatus = effectiveStatus(target);
+      const restartFromNow =
+        action === "activate180" ||
+        (isBonus && targetStatus !== "active") ||
+        !currentExpiry ||
+        currentExpiry.getTime() < now.getTime();
+      const base = restartFromNow ? now : currentExpiry;
       const expires = new Date(base);
       expires.setDate(expires.getDate() + days);
 
@@ -194,7 +198,10 @@ function AdminUsersPage() {
       }
 
       patch.status = "active";
-      patch.access_started_at = target.accessStartedAt ?? now.toISOString();
+      patch.access_started_at =
+        isBonus && targetStatus !== "active"
+          ? now.toISOString()
+          : target.accessStartedAt ?? now.toISOString();
       patch.access_expires_at = expires.toISOString();
       patch.access_source = isBonus ? "bonus" : "manual";
     }
@@ -211,6 +218,7 @@ function AdminUsersPage() {
       return;
     }
 
+    if (action.startsWith("bonus")) setBonusUserId(null);
     await queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
   }
 
@@ -374,10 +382,23 @@ function AdminUsersPage() {
                             </>
                           )}
 
-                          <BonusMenu
+                          <BonusControls
+                            open={bonusUserId === item.userId}
                             disabled={busy}
+                            onToggle={() =>
+                              setBonusUserId((current) =>
+                                current === item.userId ? null : item.userId,
+                              )
+                            }
                             onSelect={(days) =>
-                              updateAccess(item, days === 30 ? "bonus30" : days === 90 ? "bonus90" : "bonus180")
+                              updateAccess(
+                                item,
+                                days === 30
+                                  ? "bonus30"
+                                  : days === 90
+                                    ? "bonus90"
+                                    : "bonus180",
+                              )
                             }
                           />
 
@@ -469,38 +490,59 @@ function SourceBadge({ source }: { source: string | null }) {
   );
 }
 
-function BonusMenu({
+function BonusControls({
+  open,
   disabled,
+  onToggle,
   onSelect,
 }: {
+  open: boolean;
   disabled?: boolean;
+  onToggle: () => void;
   onSelect: (days: 30 | 90 | 180) => void;
 }) {
   return (
-    <details className="relative">
-      <summary
-        className={`inline-flex cursor-pointer list-none whitespace-nowrap items-center gap-1.5 rounded-md border border-primary/30 px-2 py-1.5 text-xs text-primary hover:bg-primary/5 ${disabled ? "pointer-events-none opacity-50" : ""}`}
+    <>
+      <button
+        type="button"
+        disabled={disabled}
+        onClick={onToggle}
+        aria-expanded={open}
+        className="inline-flex whitespace-nowrap items-center gap-1.5 rounded-md border border-primary/30 px-2 py-1.5 text-xs text-primary hover:bg-primary/5 disabled:opacity-50"
       >
         <Gift className="size-3.5" />
         Conceder bônus
-      </summary>
-      <div className="absolute right-0 z-20 mt-1 flex min-w-40 flex-col rounded-md border border-border bg-card p-1 shadow-md">
-        {([30, 90, 180] as const).map((days) => (
-          <button
-            key={days}
-            type="button"
-            disabled={disabled}
-            onClick={(event) => {
-              onSelect(days);
-              event.currentTarget.closest("details")?.removeAttribute("open");
-            }}
-            className="rounded px-3 py-2 text-left text-xs hover:bg-secondary disabled:opacity-50"
-          >
-            +{days} dias
-          </button>
-        ))}
-      </div>
-    </details>
+      </button>
+
+      {open && (
+        <div className="basis-full rounded-md border border-primary/20 bg-primary/[0.03] p-2">
+          <div className="mb-1.5 text-[11px] font-medium text-muted-foreground">
+            Selecione o período do bônus
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {([30, 90, 180] as const).map((days) => (
+              <button
+                key={days}
+                type="button"
+                disabled={disabled}
+                onClick={() => onSelect(days)}
+                className="rounded-md border border-primary/30 px-2.5 py-1.5 text-xs font-medium text-primary hover:bg-primary/10 disabled:opacity-50"
+              >
+                +{days} dias
+              </button>
+            ))}
+            <button
+              type="button"
+              disabled={disabled}
+              onClick={onToggle}
+              className="rounded-md px-2.5 py-1.5 text-xs text-muted-foreground hover:bg-secondary disabled:opacity-50"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
