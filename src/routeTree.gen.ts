@@ -16,6 +16,7 @@ import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedProgressoRouteImport } from './routes/_authenticated/progresso'
+import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedRelatorioResultIdRouteImport } from './routes/_authenticated/relatorio.$resultId'
 import { Route as AuthenticatedCasoCaseIdRouteImport } from './routes/_authenticated/caso.$caseId'
 
@@ -53,6 +54,11 @@ const AuthenticatedProgressoRoute = AuthenticatedProgressoRouteImport.update({
   path: '/progresso',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedRelatorioResultIdRoute = AuthenticatedRelatorioResultIdRouteImport.update({
   id: '/relatorio/$resultId',
   path: '/relatorio/$resultId',
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/progresso': typeof AuthenticatedProgressoRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/relatorio/$resultId': typeof AuthenticatedRelatorioResultIdRoute
   '/caso/$caseId': typeof AuthenticatedCasoCaseIdRoute
 }
@@ -80,6 +87,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/progresso': typeof AuthenticatedProgressoRoute
+  '/admin': typeof AuthenticatedAdminRoute
   '/relatorio/$resultId': typeof AuthenticatedRelatorioResultIdRoute
   '/': typeof AuthenticatedIndexRoute
   '/caso/$caseId': typeof AuthenticatedCasoCaseIdRoute
@@ -92,6 +100,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/progresso': typeof AuthenticatedProgressoRoute
+  '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/relatorio/$resultId': typeof AuthenticatedRelatorioResultIdRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
   '/_authenticated/caso/$caseId': typeof AuthenticatedCasoCaseIdRoute
@@ -105,6 +114,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sitemap.xml'
     | '/progresso'
+    | '/admin'
     | '/relatorio/$resultId'
     | '/caso/$caseId'
   fileRoutesByTo: FileRoutesByTo
@@ -114,6 +124,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sitemap.xml'
     | '/progresso'
+    | '/admin'
     | '/relatorio/$resultId'
     | '/'
     | '/caso/$caseId'
@@ -125,6 +136,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sitemap.xml'
     | '/_authenticated/progresso'
+    | '/_authenticated/admin'
     | '/_authenticated/relatorio/$resultId'
     | '/_authenticated/'
     | '/_authenticated/caso/$caseId'
@@ -189,6 +201,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProgressoRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/admin': {
+      id: '/_authenticated/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AuthenticatedAdminRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/relatorio/$resultId': {
       id: '/_authenticated/relatorio/$resultId'
       path: '/relatorio/$resultId'
@@ -208,6 +227,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedProgressoRoute: typeof AuthenticatedProgressoRoute
+  AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedRelatorioResultIdRoute: typeof AuthenticatedRelatorioResultIdRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
   AuthenticatedCasoCaseIdRoute: typeof AuthenticatedCasoCaseIdRoute
@@ -215,6 +235,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedProgressoRoute: AuthenticatedProgressoRoute,
+  AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedRelatorioResultIdRoute: AuthenticatedRelatorioResultIdRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
   AuthenticatedCasoCaseIdRoute: AuthenticatedCasoCaseIdRoute,
