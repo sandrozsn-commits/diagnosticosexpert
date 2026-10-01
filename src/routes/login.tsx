@@ -6,10 +6,10 @@ import { AuthCard, Field, btnCls, inputCls } from "@/components/auth-card";
 export const Route = createFileRoute("/login")({
   head: () => ({
     meta: [
-      { title: "Entrar — Diagnósticos Expert" },
-      { name: "description", content: "Acesse sua conta do Diagnósticos Expert." },
-      { property: "og:title", content: "Entrar — Diagnósticos Expert" },
-      { property: "og:description", content: "Acesse sua conta do Diagnósticos Expert." },
+      { title: "Entrar — TiraDefeito Expert" },
+      { name: "description", content: "Acesse sua conta do TiraDefeito Expert." },
+      { property: "og:title", content: "Entrar — TiraDefeito Expert" },
+      { property: "og:description", content: "Acesse sua conta do TiraDefeito Expert." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
     ],
@@ -43,7 +43,10 @@ function Login() {
   };
 
   return (
-    <AuthCard title="Entrar">
+    <AuthCard
+      title="Entre na sua conta"
+      description="Acesse suas ocorrências, seu progresso e seus relatórios de aprendizagem."
+    >
       <form onSubmit={submit} className="space-y-4">
         <Field label="E-mail">
           <input type="email" required className={inputCls} value={email} onChange={(e) => setEmail(e.target.value)} />
@@ -52,13 +55,13 @@ function Login() {
           <input type="password" required className={inputCls} value={password} onChange={(e) => setPassword(e.target.value)} />
         </Field>
         {msg && <p className="text-sm text-muted-foreground">{msg}</p>}
-        <button disabled={busy} className={btnCls}>Entrar</button>
+        <button disabled={busy} className={btnCls}>{busy ? "Entrando…" : "Entrar"}</button>
       </form>
-      <div className="mt-4 flex justify-between text-sm">
-        <button type="button" onClick={forgot} className="text-muted-foreground hover:text-foreground">
+      <div className="mt-5 flex flex-col gap-3 border-t border-border pt-5 text-sm sm:flex-row sm:items-center sm:justify-between">
+        <button type="button" onClick={forgot} className="text-left text-muted-foreground hover:text-foreground">
           Esqueci minha senha
         </button>
-        <Link to="/cadastro" className="font-medium text-primary">Criar conta</Link>
+        <Link to="/cadastro" className="font-medium text-primary hover:underline">Criar conta</Link>
       </div>
     </AuthCard>
   );
