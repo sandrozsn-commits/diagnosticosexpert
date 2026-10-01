@@ -128,7 +128,6 @@ function AdminUsersPage() {
   const { data: users = [], isLoading, isError, refetch } = useQuery(adminUsersQuery);
   const [search, setSearch] = useState("");
   const [busyUserId, setBusyUserId] = useState<string | null>(null);
-  const [bonusUserId, setBonusUserId] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
     const term = search.trim().toLocaleLowerCase("pt-BR");
@@ -152,7 +151,21 @@ function AdminUsersPage() {
     [users],
   );
 
-  async function updateAccess(target: AdminUser, action: "activate180" | "add30" | "add90" | "add180" | "bonus30" | "bonus90" | "bonus180" | "block" | "expire") {
+  async function updateAccess(
+    target: AdminUser,
+    action:
+      | "activate30"
+      | "activate90"
+      | "activate180"
+      | "add30"
+      | "add90"
+      | "add180"
+      | "bonus30"
+      | "bonus90"
+      | "bonus180"
+      | "block"
+      | "expire",
+  ) {
     if (target.userId === user.id && (action === "block" || action === "expire")) return;
 
     const now = new Date();
@@ -173,16 +186,12 @@ function AdminUsersPage() {
       patch.access_expires_at = now.toISOString();
     } else {
       const isBonus = action.startsWith("bonus");
-      const days =
-        action === "activate180" || action === "add180" || action === "bonus180"
-          ? 180
-          : action === "add90" || action === "bonus90"
-            ? 90
-            : 30;
+      const isActivation = action.startsWith("activate");
+      const days = action.endsWith("180") ? 180 : action.endsWith("90") ? 90 : 30;
       const currentExpiry = target.accessExpiresAt ? new Date(target.accessExpiresAt) : null;
       const targetStatus = effectiveStatus(target);
       const restartFromNow =
-        action === "activate180" ||
+        isActivation ||
         (isBonus && targetStatus !== "active") ||
         !currentExpiry ||
         currentExpiry.getTime() < now.getTime();
@@ -199,7 +208,7 @@ function AdminUsersPage() {
 
       patch.status = "active";
       patch.access_started_at =
-        isBonus && targetStatus !== "active"
+        isActivation || (isBonus && targetStatus !== "active")
           ? now.toISOString()
           : target.accessStartedAt ?? now.toISOString();
       patch.access_expires_at = expires.toISOString();
@@ -218,7 +227,6 @@ function AdminUsersPage() {
       return;
     }
 
-    if (action.startsWith("bonus")) setBonusUserId(null);
     await queryClient.invalidateQueries({ queryKey: ["admin", "users"] });
   }
 
@@ -359,48 +367,61 @@ function AdminUsersPage() {
                       <td className="px-3 py-4">
                         <div className="flex flex-wrap gap-1.5">
                           {(status === "pending" || status === "expired" || status === "blocked") && (
-                            <ActionButton
-                              disabled={busy}
-                              onClick={() => updateAccess(item, "activate180")}
-                              icon={<CheckCircle2 className="size-3.5" />}
-                            >
-                              Liberar 180 dias
-                            </ActionButton>
+                            <div className="basis-full">
+                              <div className="mb-1 flex items-center gap-1 text-[11px] font-medium text-muted-foreground">
+                                <CheckCircle2 className="size-3.5" />
+                                Liberar acesso
+                              </div>
+                              <div className="flex flex-wrap gap-1.5">
+                                <ActionButton disabled={busy} onClick={() => updateAccess(item, "activate30")}>
+                                  30 dias
+                                </ActionButton>
+                                <ActionButton disabled={busy} onClick={() => updateAccess(item, "activate90")}>
+                                  90 dias
+                                </ActionButton>
+                                <ActionButton disabled={busy} onClick={() => updateAccess(item, "activate180")}>
+                                  180 dias
+                                </ActionButton>
+                              </div>
+                            </div>
                           )}
 
                           {status === "active" && (
-                            <>
-                              <ActionButton disabled={busy} onClick={() => updateAccess(item, "add30")}>
-                                +30 dias
-                              </ActionButton>
-                              <ActionButton disabled={busy} onClick={() => updateAccess(item, "add90")}>
-                                +90 dias
-                              </ActionButton>
-                              <ActionButton disabled={busy} onClick={() => updateAccess(item, "add180")}>
-                                +180 dias
-                              </ActionButton>
-                            </>
+                            <div className="basis-full">
+                              <div className="mb-1 text-[11px] font-medium text-muted-foreground">
+                                Adicionar prazo
+                              </div>
+                              <div className="flex flex-wrap gap-1.5">
+                                <ActionButton disabled={busy} onClick={() => updateAccess(item, "add30")}>
+                                  +30 dias
+                                </ActionButton>
+                                <ActionButton disabled={busy} onClick={() => updateAccess(item, "add90")}>
+                                  +90 dias
+                                </ActionButton>
+                                <ActionButton disabled={busy} onClick={() => updateAccess(item, "add180")}>
+                                  +180 dias
+                                </ActionButton>
+                              </div>
+                            </div>
                           )}
 
-                          <BonusControls
-                            open={bonusUserId === item.userId}
-                            disabled={busy}
-                            onToggle={() =>
-                              setBonusUserId((current) =>
-                                current === item.userId ? null : item.userId,
-                              )
-                            }
-                            onSelect={(days) =>
-                              updateAccess(
-                                item,
-                                days === 30
-                                  ? "bonus30"
-                                  : days === 90
-                                    ? "bonus90"
-                                    : "bonus180",
-                              )
-                            }
-                          />
+                          <div className="basis-full">
+                            <div className="mb-1 flex items-center gap-1 text-[11px] font-medium text-primary">
+                              <Gift className="size-3.5" />
+                              Conceder bônus
+                            </div>
+                            <div className="flex flex-wrap gap-1.5">
+                              <ActionButton disabled={busy} onClick={() => updateAccess(item, "bonus30")}>
+                                30 dias
+                              </ActionButton>
+                              <ActionButton disabled={busy} onClick={() => updateAccess(item, "bonus90")}>
+                                90 dias
+                              </ActionButton>
+                              <ActionButton disabled={busy} onClick={() => updateAccess(item, "bonus180")}>
+                                180 dias
+                              </ActionButton>
+                            </div>
+                          </div>
 
                           {!isSelf && status !== "blocked" && (
                             <ActionButton
@@ -487,62 +508,6 @@ function SourceBadge({ source }: { source: string | null }) {
     <span className="inline-flex rounded-full bg-secondary px-2.5 py-1 text-xs font-medium text-foreground">
       {label}
     </span>
-  );
-}
-
-function BonusControls({
-  open,
-  disabled,
-  onToggle,
-  onSelect,
-}: {
-  open: boolean;
-  disabled?: boolean;
-  onToggle: () => void;
-  onSelect: (days: 30 | 90 | 180) => void;
-}) {
-  return (
-    <>
-      <button
-        type="button"
-        disabled={disabled}
-        onClick={onToggle}
-        aria-expanded={open}
-        className="inline-flex whitespace-nowrap items-center gap-1.5 rounded-md border border-primary/30 px-2 py-1.5 text-xs text-primary hover:bg-primary/5 disabled:opacity-50"
-      >
-        <Gift className="size-3.5" />
-        Conceder bônus
-      </button>
-
-      {open && (
-        <div className="basis-full rounded-md border border-primary/20 bg-primary/[0.03] p-2">
-          <div className="mb-1.5 text-[11px] font-medium text-muted-foreground">
-            Selecione o período do bônus
-          </div>
-          <div className="flex flex-wrap gap-1.5">
-            {([30, 90, 180] as const).map((days) => (
-              <button
-                key={days}
-                type="button"
-                disabled={disabled}
-                onClick={() => onSelect(days)}
-                className="rounded-md border border-primary/30 px-2.5 py-1.5 text-xs font-medium text-primary hover:bg-primary/10 disabled:opacity-50"
-              >
-                +{days} dias
-              </button>
-            ))}
-            <button
-              type="button"
-              disabled={disabled}
-              onClick={onToggle}
-              className="rounded-md px-2.5 py-1.5 text-xs text-muted-foreground hover:bg-secondary disabled:opacity-50"
-            >
-              Cancelar
-            </button>
-          </div>
-        </div>
-      )}
-    </>
   );
 }
 
