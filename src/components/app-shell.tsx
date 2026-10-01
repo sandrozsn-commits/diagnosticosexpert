@@ -1,7 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { Link, useMatch, useNavigate } from "@tanstack/react-router";
 import type { ReactNode } from "react";
-import { UserRound } from "lucide-react";
+import { Settings, UserRound } from "lucide-react";
 import { BrandLogo, InstitutionalFooter } from "@/components/brand";
 import { supabase } from "@/integrations/supabase/client";
 import { STATUS_LABEL, type AccountInfo } from "@/lib/access";
@@ -75,8 +75,14 @@ function AccountMenu() {
   };
   return (
     <details className="relative text-sm">
-      <summary className="flex cursor-pointer list-none items-center gap-1.5 rounded-md px-2 py-1.5 text-muted-foreground hover:bg-secondary hover:text-foreground">
-        <UserRound className="size-4" />
+      <summary className="flex cursor-pointer list-none items-center gap-2 rounded-md px-2 py-1.5 text-muted-foreground hover:bg-secondary hover:text-foreground">
+        {account.avatarUrl ? (
+          <img src={account.avatarUrl} alt="" className="size-7 rounded-full object-cover" />
+        ) : (
+          <span className="flex size-7 items-center justify-center rounded-full bg-secondary">
+            <UserRound className="size-4" />
+          </span>
+        )}
         <span className="hidden max-w-[10rem] truncate sm:inline">{account.fullName || account.email}</span>
       </summary>
       <div className="absolute right-0 mt-2 w-64 rounded-lg border border-border bg-card p-4 shadow-sm">
@@ -93,7 +99,14 @@ function AccountMenu() {
             <div className="flex justify-between"><dt className="text-muted-foreground">Vencimento</dt><dd>{new Date(account.expiresAt).toLocaleDateString("pt-BR")}</dd></div>
           )}
         </dl>
-        <button onClick={signOut} className="mt-4 w-full rounded-md border border-border px-3 py-1.5 text-xs hover:bg-secondary">Sair</button>
+        <Link
+          to="/minha-conta"
+          className="mt-4 flex w-full items-center justify-center gap-2 rounded-md border border-border px-3 py-2 text-xs font-medium hover:bg-secondary"
+        >
+          <Settings className="size-3.5" />
+          Minha conta
+        </Link>
+        <button onClick={signOut} className="mt-2 w-full rounded-md border border-border px-3 py-2 text-xs hover:bg-secondary">Sair</button>
       </div>
     </details>
   );
