@@ -16,6 +16,7 @@ import { Route as CadastroRouteImport } from './routes/cadastro'
 import { Route as AuthenticatedRouteRouteImport } from './routes/_authenticated/route'
 import { Route as AuthenticatedIndexRouteImport } from './routes/_authenticated/index'
 import { Route as AuthenticatedProgressoRouteImport } from './routes/_authenticated/progresso'
+import { Route as AuthenticatedMinhaContaRouteImport } from './routes/_authenticated/minha-conta'
 import { Route as AuthenticatedAdminRouteImport } from './routes/_authenticated/admin'
 import { Route as AuthenticatedRelatorioResultIdRouteImport } from './routes/_authenticated/relatorio.$resultId'
 import { Route as AuthenticatedCasoCaseIdRouteImport } from './routes/_authenticated/caso.$caseId'
@@ -54,6 +55,11 @@ const AuthenticatedProgressoRoute = AuthenticatedProgressoRouteImport.update({
   path: '/progresso',
   getParentRoute: () => AuthenticatedRouteRoute,
 } as any)
+const AuthenticatedMinhaContaRoute = AuthenticatedMinhaContaRouteImport.update({
+  id: '/minha-conta',
+  path: '/minha-conta',
+  getParentRoute: () => AuthenticatedRouteRoute,
+} as any)
 const AuthenticatedAdminRoute = AuthenticatedAdminRouteImport.update({
   id: '/admin',
   path: '/admin',
@@ -77,6 +83,7 @@ export interface FileRoutesByFullPath {
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/progresso': typeof AuthenticatedProgressoRoute
+  '/minha-conta': typeof AuthenticatedMinhaContaRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/relatorio/$resultId': typeof AuthenticatedRelatorioResultIdRoute
   '/caso/$caseId': typeof AuthenticatedCasoCaseIdRoute
@@ -87,6 +94,7 @@ export interface FileRoutesByTo {
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/progresso': typeof AuthenticatedProgressoRoute
+  '/minha-conta': typeof AuthenticatedMinhaContaRoute
   '/admin': typeof AuthenticatedAdminRoute
   '/relatorio/$resultId': typeof AuthenticatedRelatorioResultIdRoute
   '/': typeof AuthenticatedIndexRoute
@@ -100,6 +108,7 @@ export interface FileRoutesById {
   '/reset-password': typeof ResetPasswordRoute
   '/sitemap.xml': typeof SitemapDotxmlRoute
   '/_authenticated/progresso': typeof AuthenticatedProgressoRoute
+  '/_authenticated/minha-conta': typeof AuthenticatedMinhaContaRoute
   '/_authenticated/admin': typeof AuthenticatedAdminRoute
   '/_authenticated/relatorio/$resultId': typeof AuthenticatedRelatorioResultIdRoute
   '/_authenticated/': typeof AuthenticatedIndexRoute
@@ -114,6 +123,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sitemap.xml'
     | '/progresso'
+    | '/minha-conta'
     | '/admin'
     | '/relatorio/$resultId'
     | '/caso/$caseId'
@@ -124,6 +134,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sitemap.xml'
     | '/progresso'
+    | '/minha-conta'
     | '/admin'
     | '/relatorio/$resultId'
     | '/'
@@ -136,6 +147,7 @@ export interface FileRouteTypes {
     | '/reset-password'
     | '/sitemap.xml'
     | '/_authenticated/progresso'
+    | '/_authenticated/minha-conta'
     | '/_authenticated/admin'
     | '/_authenticated/relatorio/$resultId'
     | '/_authenticated/'
@@ -201,6 +213,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthenticatedProgressoRouteImport
       parentRoute: typeof AuthenticatedRouteRoute
     }
+    '/_authenticated/minha-conta': {
+      id: '/_authenticated/minha-conta'
+      path: '/minha-conta'
+      fullPath: '/minha-conta'
+      preLoaderRoute: typeof AuthenticatedMinhaContaRouteImport
+      parentRoute: typeof AuthenticatedRouteRoute
+    }
     '/_authenticated/admin': {
       id: '/_authenticated/admin'
       path: '/admin'
@@ -227,6 +246,7 @@ declare module '@tanstack/react-router' {
 
 interface AuthenticatedRouteRouteChildren {
   AuthenticatedProgressoRoute: typeof AuthenticatedProgressoRoute
+  AuthenticatedMinhaContaRoute: typeof AuthenticatedMinhaContaRoute
   AuthenticatedAdminRoute: typeof AuthenticatedAdminRoute
   AuthenticatedRelatorioResultIdRoute: typeof AuthenticatedRelatorioResultIdRoute
   AuthenticatedIndexRoute: typeof AuthenticatedIndexRoute
@@ -235,6 +255,7 @@ interface AuthenticatedRouteRouteChildren {
 
 const AuthenticatedRouteRouteChildren: AuthenticatedRouteRouteChildren = {
   AuthenticatedProgressoRoute: AuthenticatedProgressoRoute,
+  AuthenticatedMinhaContaRoute: AuthenticatedMinhaContaRoute,
   AuthenticatedAdminRoute: AuthenticatedAdminRoute,
   AuthenticatedRelatorioResultIdRoute: AuthenticatedRelatorioResultIdRoute,
   AuthenticatedIndexRoute: AuthenticatedIndexRoute,
