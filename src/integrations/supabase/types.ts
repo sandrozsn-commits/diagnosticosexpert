@@ -101,6 +101,7 @@ export type Database = {
       user_access: {
         Row: {
           access_expires_at: string | null
+          access_source: string | null
           access_started_at: string | null
           created_at: string
           status: string
@@ -109,6 +110,7 @@ export type Database = {
         }
         Insert: {
           access_expires_at?: string | null
+          access_source?: string | null
           access_started_at?: string | null
           created_at?: string
           status?: string
@@ -117,6 +119,7 @@ export type Database = {
         }
         Update: {
           access_expires_at?: string | null
+          access_source?: string | null
           access_started_at?: string | null
           created_at?: string
           status?: string
