@@ -19,6 +19,7 @@ export const Route = createFileRoute("/login")({
 
 function Login() {
   const navigate = useNavigate();
+  const [mode, setMode] = useState<"login" | "forgot">("login");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [msg, setMsg] = useState<string | null>(null);
@@ -28,19 +29,80 @@ function Login() {
     e.preventDefault();
     setBusy(true);
     setMsg(null);
+
     const { error } = await supabase.auth.signInWithPassword({ email, password });
+
     setBusy(false);
-    if (error) return setMsg("E-mail ou senha inválidos, ou e-mail ainda não confirmado.");
+    if (error) {
+      setMsg("E-mail ou senha inválidos, ou e-mail ainda não confirmado.");
+      return;
+    }
+
     navigate({ to: "/" });
   };
 
-  const forgot = async () => {
-    if (!email) return setMsg("Informe seu e-mail acima para redefinir a senha.");
+  const sendResetLink = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setBusy(true);
+    setMsg(null);
+
     const { error } = await supabase.auth.resetPasswordForEmail(email, {
       redirectTo: `${window.location.origin}/reset-password`,
     });
-    setMsg(error ? error.message : "Enviamos um link de redefinição para seu e-mail.");
+
+    setBusy(false);
+    if (error) {
+      setMsg("Não foi possível enviar o link de recuperação. Tente novamente.");
+      return;
+    }
+
+    setMsg("Enviamos um link de redefinição para seu e-mail.");
   };
+
+  if (mode === "forgot") {
+    return (
+      <AuthCard
+        title="Recuperar senha"
+        description="Informe seu e-mail para receber o link de redefinição de senha."
+      >
+        <form onSubmit={sendResetLink} className="space-y-4">
+          <Field label="E-mail">
+            <input
+              type="email"
+              required
+              autoFocus
+              className={inputCls}
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </Field>
+
+          {msg && (
+            <p className="text-sm text-muted-foreground" role="status">
+              {msg}
+            </p>
+          )}
+
+          <button disabled={busy} className={btnCls}>
+            {busy ? "Enviando…" : "Enviar link de recuperação"}
+          </button>
+        </form>
+
+        <div className="mt-5 border-t border-border pt-5 text-sm">
+          <button
+            type="button"
+            onClick={() => {
+              setMode("login");
+              setMsg(null);
+            }}
+            className="font-medium text-primary hover:underline"
+          >
+            Voltar para o login
+          </button>
+        </div>
+      </AuthCard>
+    );
+  }
 
   return (
     <AuthCard
@@ -49,19 +111,51 @@ function Login() {
     >
       <form onSubmit={submit} className="space-y-4">
         <Field label="E-mail">
-          <input type="email" required className={inputCls} value={email} onChange={(e) => setEmail(e.target.value)} />
+          <input
+            type="email"
+            required
+            className={inputCls}
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
         </Field>
+
         <Field label="Senha">
-          <input type="password" required className={inputCls} value={password} onChange={(e) => setPassword(e.target.value)} />
+          <input
+            type="password"
+            required
+            className={inputCls}
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
         </Field>
-        {msg && <p className="text-sm text-muted-foreground">{msg}</p>}
-        <button disabled={busy} className={btnCls}>{busy ? "Entrando…" : "Entrar"}</button>
+
+        {msg && (
+          <p className="text-sm text-muted-foreground" role="status">
+            {msg}
+          </p>
+        )}
+
+        <button disabled={busy} className={btnCls}>
+          {busy ? "Entrando…" : "Entrar"}
+        </button>
       </form>
+
       <div className="mt-5 flex flex-col gap-3 border-t border-border pt-5 text-sm sm:flex-row sm:items-center sm:justify-between">
-        <button type="button" onClick={forgot} className="text-left text-muted-foreground hover:text-foreground">
+        <button
+          type="button"
+          onClick={() => {
+            setMode("forgot");
+            setMsg(null);
+          }}
+          className="text-left text-muted-foreground hover:text-foreground"
+        >
           Esqueci minha senha
         </button>
-        <Link to="/cadastro" className="font-medium text-primary hover:underline">Criar conta</Link>
+
+        <Link to="/cadastro" className="font-medium text-primary hover:underline">
+          Criar conta
+        </Link>
       </div>
     </AuthCard>
   );
