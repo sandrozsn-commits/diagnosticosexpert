@@ -26,10 +26,7 @@ export function AppShell({ children }: { children: ReactNode }) {
               </span>
             </span>
           </Link>
-          <nav className="ml-auto flex items-center gap-1 text-sm">
-            <NavLink to="/">Ocorrências</NavLink>
-            <NavLink to="/progresso">Progresso</NavLink>
-          </nav>
+          <Navigation />
           <AccountMenu />
         </div>
       </header>
@@ -39,7 +36,20 @@ export function AppShell({ children }: { children: ReactNode }) {
   );
 }
 
-function NavLink({ to, children }: { to: string; children: ReactNode }) {
+function Navigation() {
+  const match = useMatch({ from: "/_authenticated", shouldThrow: false });
+  const account = (match?.context as { account?: AccountInfo } | undefined)?.account;
+
+  return (
+    <nav className="ml-auto flex items-center gap-1 text-sm">
+      <NavLink to="/">Ocorrências</NavLink>
+      <NavLink to="/progresso">Progresso</NavLink>
+      {account?.isAdmin && <NavLink to="/admin">Administração</NavLink>}
+    </nav>
+  );
+}
+
+function NavLink({ to, children }: { to: "/" | "/progresso" | "/admin"; children: ReactNode }) {
   return (
     <Link
       to={to}
@@ -72,6 +82,11 @@ function AccountMenu() {
       <div className="absolute right-0 mt-2 w-64 rounded-lg border border-border bg-card p-4 shadow-sm">
         <p className="truncate font-medium">{account.fullName || "—"}</p>
         <p className="truncate text-xs text-muted-foreground">{account.email}</p>
+        {account.isAdmin && (
+          <p className="mt-3 inline-flex rounded-full bg-primary/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wide text-primary">
+            Administrador
+          </p>
+        )}
         <dl className="mt-3 space-y-1 text-xs">
           <div className="flex justify-between"><dt className="text-muted-foreground">Status</dt><dd>{STATUS_LABEL[account.effective]}</dd></div>
           {account.expiresAt && (
